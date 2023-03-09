@@ -13,21 +13,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.green,
-          title: const Text('Flutter is fun!'),
-        ),
-        body: ElevatedButton(
-          child: Text('click here if you cool'),
-            onPressed: (){
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (_) => AboutScreen(),
-                  ),
-                );
-            },
-        )
+        backgroundColor: Color.fromRGBO(6, 10, 43, 1),
       )
     );
   }
