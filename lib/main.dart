@@ -27,6 +27,15 @@ class AboutScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return Scaffold(
+      body: Stack(
+        children: [
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Image.asset('assets/my_image.png'),
+          ),
+        ],
+      ),
       appBar: AppBar(
         title: Text('about'),
       ),
