@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'profile-page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,14 +29,27 @@ class ImageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Positioned(bottom: 0, left: 0, child: Image.asset(
+        Positioned(bottom: 5, left: 0, child: Image.asset(
           'assets/profile-icon.png',
-          width: 75.0, height: 75.0,
+          width: 65.0, height: 65.0,
         ),),
         Positioned(bottom: -5, right: -15, child: Image.asset(
           'assets/logo.png',
           width: 90.0, height: 90.0,
-        ),)
+        ),),
+        Positioned(bottom: 5, left: 0,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => ProfilePage()),
+                );
+              },
+              child: Container(
+                width: 65,
+                height: 65,
+                color: Colors.transparent,
+              ),
+            ),
+        ),
       ],
     );
   }
@@ -45,15 +59,6 @@ class ImageWidget extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
