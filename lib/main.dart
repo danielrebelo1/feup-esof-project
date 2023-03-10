@@ -16,39 +16,32 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
           backgroundColor: Color.fromRGBO(6, 10, 43, 1),
-            body: Container(
-              child: Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(padding: EdgeInsets.all(2.0),
-                child: Image.asset('assets/logo.png',width: 80.0, height: 80.0,),),
-              ),
+            body: ImageWidget(),
             ),
-        ),
-    );
+        );
   }
 }
 
-class AboutScreen extends StatelessWidget{
-  const AboutScreen({Key? key}) : super(key: key);
 
+class ImageWidget extends StatelessWidget {
   @override
-  Widget build(BuildContext context){
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Image.asset('assets/my_image.png'),
-          ),
-        ],
-      ),
-      appBar: AppBar(
-        title: Text('about'),
-      ),
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned(bottom: 0, left: 0, child: Image.asset(
+          'assets/profile-icon.png',
+          width: 75.0, height: 75.0,
+        ),),
+        Positioned(bottom: -5, right: -15, child: Image.asset(
+          'assets/logo.png',
+          width: 90.0, height: 90.0,
+        ),)
+      ],
     );
   }
 }
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
