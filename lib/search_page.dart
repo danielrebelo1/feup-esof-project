@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'movie_model.dart';
 
-/*Funções auxiliare spara limpar o texto da search bar*/
+/*Auxiliary functions to clean the search bar*/
 TextEditingController _textEditingController = TextEditingController();
 
 void clearTextInput() {
