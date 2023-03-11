@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'profile-page.dart';
 import 'movie_model.dart';
@@ -153,13 +155,33 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 }
+
 class _MyHomePageState extends State<MyHomePage> {
+  final List<String> _movies = [
+    'assets/inception.png',
+    'assets/silenceLambs.png',
+    'assets/llland.png'
+  ];
+  int _currentIndex = 0;
+
+  void _incrementIndex() {
+    setState(() {
+      _currentIndex = (_currentIndex + 1) % _movies.length;
+    });
+  }
+
+  void _decrementIndex() {
+    setState(() {
+      _currentIndex = (_currentIndex - 1) % _movies.length;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       body: Stack(
-        children: [
+        children: <Widget>[
           Positioned(
             bottom: 5,
             left: 0,
@@ -213,6 +235,74 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
           ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.35,
+            left: 5,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.asset(
+
+                  _currentIndex - 1 < 0
+                    ? _movies[_movies.length - 1]
+                    : _movies[_currentIndex - 1],
+
+
+
+                  width: 120,
+                  height: 170,
+                ),
+              ),
+            ),
+          ),
+
+
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.35,
+            right: 5,
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.0),
+                child: Image.asset(
+
+                  _currentIndex + 1 == _movies.length
+                    ?_movies[0]
+                    :_movies[_currentIndex + 1],
+
+                  width: 120,
+                  height: 170,
+                ),
+              ),
+            ),
+          ),
+
+
+
+          Center(
+            child: GestureDetector(
+              onHorizontalDragEnd: (DragEndDetails details) {
+                if (details.primaryVelocity! > 0) {
+                  _decrementIndex();
+                } else if (details.primaryVelocity! < 0) {
+                  _incrementIndex();
+                }
+              },
+              child: Container(
+                width: 250,
+                height: 350,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.0),
+                  image: DecorationImage(
+                    image: AssetImage(_movies[_currentIndex]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+            ),
+          ),
+
         ],
       ),
     );
