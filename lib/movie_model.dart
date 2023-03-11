@@ -1,8 +1,8 @@
 class MovieModel{
-  String? movie_title;
-  int? movie_release_year;
-  String? movie_poster;
+  String movieTitle;
+  String movieReleaseYear;
+  String moviePoster;
   double? rating;
 
-  MovieModel(this.movie_title, this.movie_release_year, this.rating, this.movie_poster);
+  MovieModel(this.movieTitle, this.movieReleaseYear, this.rating, this.moviePoster);
 }
