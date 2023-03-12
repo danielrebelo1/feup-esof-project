@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'movie_model.dart';
-import 'profile_page.dart';
-import 'search_page.dart';
+import 'movie_page.dart';
+import 'custom_nav_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -57,61 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
+      bottomNavigationBar: const CustomNavBar(),
       body: Stack(
         children: <Widget>[
-          Positioned(
-            bottom: 5,
-            left: 0,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                );
-              },
-              child: Container(
-                width: 65,
-                height: 65,
-                color: Colors.transparent,
-                child: Image.asset(
-                  'assets/profile-icon.png',
-                  width: 65.0,
-                  height: 65.0,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            bottom: -5,
-            right: -15,
-            child: Image.asset(
-              'assets/logo.png',
-              width: 90.0,
-              height: 90.0,
-            ),
-          ),
-          Positioned(
-            bottom: 5,
-            right: 170,
-            child: GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SearchPage()),
-                );
-              },
-              child: Container(
-                width: 65,
-                height: 65,
-                color: Colors.transparent,
-                child: const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 50.0,
-                ),
-              ),
-            ),
-          ),
+
           Positioned(
             top: MediaQuery.of(context).size.height * 0.35,
             left: 5,
@@ -150,8 +99,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
 
-
-
           Center(
             child: GestureDetector(
               onHorizontalDragEnd: (DragEndDetails details) {
@@ -161,60 +108,72 @@ class _MyHomePageState extends State<MyHomePage> {
                   _incrementIndex();
                 }
               },
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 250,
-                    height: 350,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.0),
-                      image: DecorationImage(
-                        image: AssetImage(_movies[_currentIndex].moviePoster),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(top: 15),
-                        child: Text(
-                          _movies[_currentIndex].movieTitle,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 25,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 65.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MoviePage()),
+                        );
+                      },
+                      child:Container(
+                        width: 250,
+                        height: 350,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: AssetImage(_movies[_currentIndex].moviePoster),
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(left: 15, top: 15),
-                        child: Text(
-                          _movies[_currentIndex].movieReleaseYear,
-                          style: const TextStyle(
-                            color: Colors.white70,
-                            fontSize: 15,
-                          )
-                        ),
-                      )
-                    ],
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(top: 15),
-                    child: Text(
-                      _movies[_currentIndex].rating.toString(),
-                      style: const TextStyle(
-                        color: Colors.amber,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                      ),
                     ),
-                  )
-                ],
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          child: Text(
+                            _movies[_currentIndex].movieTitle,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(left: 15, top: 15),
+                          child: Text(
+                            _movies[_currentIndex].movieReleaseYear,
+                            style: const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 15,
+                            )
+                          ),
+                        )
+                      ],
+                    ),
+                    Container(
+                      margin: const EdgeInsets.only(top: 15),
+                      child: Text(
+                        _movies[_currentIndex].rating.toString(),
+                        style: const TextStyle(
+                          color: Colors.amber,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),
