@@ -64,13 +64,13 @@ class _MoviePageState extends State<MoviePage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Transform.translate(
-                              offset: const Offset(0, 40),
+                              offset: const Offset(0, 20),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset(
@@ -82,7 +82,7 @@ class _MoviePageState extends State<MoviePage> {
                             ),
                             const SizedBox(width: 15),
                             Transform.translate(
-                              offset: const Offset(0, 40),
+                              offset: const Offset(0, 20),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset("assets/netflix.png",
@@ -91,7 +91,7 @@ class _MoviePageState extends State<MoviePage> {
                             ),
                             const SizedBox(width: 15),
                             Transform.translate(
-                              offset: const Offset(0, 40),
+                              offset: const Offset(0, 20),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.asset("assets/amazon-prime.png",
@@ -113,7 +113,7 @@ class _MoviePageState extends State<MoviePage> {
                       Row(
                         children: const [
                           Text(
-                            "La la land",
+                            "La La Land",
                             style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -129,13 +129,13 @@ class _MoviePageState extends State<MoviePage> {
                             fontSize: 30,
                           ),
                           ),
-                          SizedBox(width: 90),
+                          SizedBox(width: 60),
                           Text(
                             "8.0",
                             style: TextStyle(
                               color: Colors.amber,
                               fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                              fontSize: 24,
                             ),
                           )
                         ],

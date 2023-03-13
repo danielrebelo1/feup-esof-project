@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       debugShowCheckedModeBanner: false, // set to false to remove debug banner
       home: Scaffold(
-        body: MyHomePage(title: "myApp"),
+        body: MyHomePage(title: "Cinem8"),
       ),
     );
   }
