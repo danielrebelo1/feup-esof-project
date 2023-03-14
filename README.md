@@ -16,7 +16,6 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Domain Model
-![alt text](umlee.drawio (1).svg)
 <img src="umlee.drawio (1).svg">
 This model contains the following classes:
   * App - This class represents the whole application in an abstract context. This class has 2 key fields, the name and description
@@ -43,3 +42,9 @@ This model contains the following classes:
   * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies.
   
   * Search- This class represents the search for a movie and it´s used sucessfully when a user enter a movie title. Feed can show infinite movies ,but the search         feature can show only one movie at a time.
+## Physical Architecture
+![alt text](physicalarch.jpg)
+Cinem8 app architecture follows a simple path. First the smartphone containing the application(cinem8.apk) is connected to an application server (flutter server), where multiple user services files are written in dart files. The connection between smartphone and application server is made by protocol TCP which belongs to the
+family of HTTP/HTTPS protocols. The application server gets data both from IMDb API and a databasse where the server stores data or reads data. The database system is
+firebase which helps keeping data like login, user settings and others ... .Both Database and IMDb API can be acessed with HTTP protocl.
+
