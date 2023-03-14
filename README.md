@@ -17,6 +17,7 @@ samples, guidance on mobile development, and a full API reference.
 
 ## Domain Model
 ![alt text](umlee.drawio (1).svg)
+<img src="umlee.drawio (1).svg">
 This model contains the following classes:
   * App - This class represents the whole application in an abstract context. This class has 2 key fields, the name and description
     of the app.
