@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      title: 'Cinem8',
       debugShowCheckedModeBanner: false, // set to false to remove debug banner
       home: const LoginPage(),
     );

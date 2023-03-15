@@ -102,6 +102,12 @@ class ImageWidget extends StatelessWidget {
                       color: Colors.white,
                     ),
                   )
+                ),
+                const SizedBox(
+                  height: 60,
+                ),
+                ElevatedButton(onPressed: (){ }, child: Text('Logout',style: TextStyle(color:Colors.black, fontSize: 22),),
+                  style: ElevatedButton.styleFrom(primary: Colors.white,),
                 )
             ],
           )
