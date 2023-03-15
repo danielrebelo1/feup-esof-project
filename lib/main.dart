@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'movie_model.dart';
 import 'movie_page.dart';
 import 'custom_nav_bar.dart';
+import 'login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,9 +18,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Cinem8',
       debugShowCheckedModeBanner: false, // set to false to remove debug banner
-      home: Scaffold(
-        body: MyHomePage(title: "Cinem8"),
-      ),
+      home: const LoginPage(),
     );
   }
 }
