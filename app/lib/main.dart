@@ -167,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         _movies[_currentIndex].rating.toString(),
                         style: const TextStyle(
                           color: Colors.amber,
-                          fontSize: 20,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
