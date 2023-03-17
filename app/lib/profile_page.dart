@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/login_page.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -106,9 +107,20 @@ class ImageWidget extends StatelessWidget {
                 const SizedBox(
                   height: 60,
                 ),
-                ElevatedButton(onPressed: (){ }, child: Text('Logout',style: TextStyle(color:Colors.black, fontSize: 22),),
-                  style: ElevatedButton.styleFrom(primary: Colors.white,),
-                )
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.white, // background color
+                    onPrimary: Colors.black,
+                    minimumSize: Size(150, 50),// text color
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LoginPage()),
+                    );
+                  },
+                  child: Text('Logout',style: TextStyle(fontSize: 25, color: Colors.blueGrey),),
+                ),
             ],
           )
         )
