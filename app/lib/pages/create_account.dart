@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:project/pages/create_account.dart';
 import 'home_page.dart';
 
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class CreateAccountPage extends StatefulWidget {
+  const CreateAccountPage({Key? key}) : super(key: key);
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  _CreateAccountPageState createState() => _CreateAccountPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _CreateAccountPageState extends State<CreateAccountPage> {
+  TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
@@ -42,7 +41,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
   Widget _page() {
     return SingleChildScrollView(
       child: Padding(
@@ -53,12 +51,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               _icon(),
               const SizedBox(height: 50),
+              _inputField("Email", emailController),
+              const SizedBox(height: 20),
               _inputField("Username", usernameController),
               const SizedBox(height: 20),
               _inputField("Password", passwordController, isPassword: true),
               const SizedBox(height: 50),
-              _loginBtn(),
-              const SizedBox(height: 20),
               _createAccountBtn(),
             ],
           ),
@@ -94,43 +92,33 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _loginBtn() {
+  Widget _createAccountBtn() {
     return ElevatedButton(
       onPressed: () {
+        debugPrint("Email : ${emailController.text}");
         debugPrint("Username : ${usernameController.text}");
         debugPrint("Password : ${passwordController.text}");
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const MyHomePage(title : 'myApp'))
+            MaterialPageRoute(
+                builder: (context) => const MyHomePage(title: 'myApp'))
         );
       },
       style: ElevatedButton.styleFrom(
-        foregroundColor: const Color.fromRGBO(6, 10, 43, 1), shape: const StadiumBorder(), backgroundColor: Colors.white,
+        foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
+        shape: const StadiumBorder(),
+        backgroundColor: Colors.white,
         padding: const EdgeInsets.symmetric(vertical: 16),
       ),
       child: const SizedBox(
           width: double.infinity,
           child: Text(
-            "Login ",
+            "Create Account",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           )),
     );
   }
 
-  Widget _createAccountBtn() {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateAccountPage()),
-        );
-      },
-      child: const Text(
-        "Or create an account now",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: Colors.white),
-      ),
-    );
-  }
+
 }
