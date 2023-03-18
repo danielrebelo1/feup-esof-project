@@ -1,10 +1,15 @@
+
 import 'package:flutter/material.dart';
 import '../pages/search_page.dart';
 import '../pages/profile_page.dart';
 import '../pages/home_page.dart';
 
 class CustomNavBar extends StatelessWidget {
-  const CustomNavBar({Key? key}) : super(key: key);
+  final String email;
+  final String password;
+
+  const CustomNavBar({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +30,7 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const MyHomePage(title: 'myApp',)),
+                MaterialPageRoute(builder: (context) => MyHomePage(email: email, password: password,)),
               );
             },
             child: const Icon(
@@ -52,7 +57,7 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const ProfilePage()),
+                MaterialPageRoute(builder: (context) => ProfilePage(email: email, password: password,)),
               );
             },
             child: const Icon(

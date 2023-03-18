@@ -7,9 +7,11 @@ import 'movie_page.dart';
 
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  final String email;
+  final String password;
 
-  final String title;
+  const MyHomePage({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -40,7 +42,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
-      bottomNavigationBar: const CustomNavBar(),
+      bottomNavigationBar: CustomNavBar(email: widget.email, password: widget.password,),
       body: Stack(
         children: <Widget>[
 
@@ -101,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const MoviePage()),
+                          MaterialPageRoute(builder: (context) => MoviePage(email: widget.email, password: widget.email,)),
                         );
                       },
                       child:Container(
