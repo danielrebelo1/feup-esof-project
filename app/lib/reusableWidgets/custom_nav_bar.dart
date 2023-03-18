@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
-import 'search_page.dart';
-import 'profile_page.dart';
-
+import '../pages/search_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/home_page.dart';
 
 class CustomNavBar extends StatelessWidget {
   const CustomNavBar({Key? key}) : super(key: key);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'home_page.dart';
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -39,8 +40,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-
-
 
 
   Widget _page() {
@@ -97,13 +96,17 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginBtn() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("Username : " + usernameController.text);
-        debugPrint("Password : " + passwordController.text);
+        debugPrint("Username : ${usernameController.text}");
+        debugPrint("Password : ${passwordController.text}");
         Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => MyHomePage(title : 'myApp'))
+            MaterialPageRoute(builder: (context) => const MyHomePage(title : 'myApp'))
         );
       },
+      style: ElevatedButton.styleFrom(
+        foregroundColor: const Color.fromRGBO(6, 10, 43, 1), shape: const StadiumBorder(), backgroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
       child: const SizedBox(
           width: double.infinity,
           child: Text(
@@ -111,10 +114,6 @@ class _LoginPageState extends State<LoginPage> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           )),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Color.fromRGBO(6, 10, 43, 1), shape: const StadiumBorder(), backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
     );
   }
 
