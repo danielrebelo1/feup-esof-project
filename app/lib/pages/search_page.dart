@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'movie_model.dart';
+import '../reusableWidgets/movie_model.dart';
 
 /*Auxiliary functions to clean the search bar*/
 TextEditingController _textEditingController = TextEditingController();

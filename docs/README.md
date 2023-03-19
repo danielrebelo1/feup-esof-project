@@ -1,6 +1,6 @@
-# project
+# Cinem8
 
-A new Flutter project.
+The most revolutionary cinema-related app.
 
 ## Getting Started
 
