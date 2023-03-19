@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:project/custom_nav_bar.dart';
+import 'package:project/reusableWidgets/custom_nav_bar.dart';
 
 class MoviePage extends StatefulWidget {
-  const MoviePage({Key? key}) : super(key: key);
+  final String email;
+  final String password;
+
+  const MoviePage({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MoviePageState();
@@ -12,7 +16,7 @@ class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomNavBar(),
+      bottomNavigationBar:  CustomNavBar(email: widget.email, password: widget.password,),
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       body: Stack(
         children: [

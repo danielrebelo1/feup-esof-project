@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'package:project/pages/create_account.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -9,14 +11,14 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController usernameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
@@ -40,9 +42,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-
-
-
   Widget _page() {
     return SingleChildScrollView(
       child: Padding(
@@ -53,13 +52,13 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               _icon(),
               const SizedBox(height: 50),
-              _inputField("Username", usernameController),
+              _inputField("Email", emailController),
               const SizedBox(height: 20),
               _inputField("Password", passwordController, isPassword: true),
               const SizedBox(height: 50),
               _loginBtn(),
               const SizedBox(height: 20),
-              _extraText(),
+              _createAccountBtn(),
             ],
           ),
         ),
@@ -97,13 +96,23 @@ class _LoginPageState extends State<LoginPage> {
   Widget _loginBtn() {
     return ElevatedButton(
       onPressed: () {
-        debugPrint("Username : " + usernameController.text);
-        debugPrint("Password : " + passwordController.text);
-        Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyHomePage(title : 'myApp'))
-        );
+        FirebaseAuth.instance
+            .signInWithEmailAndPassword(
+                email: emailController.text, password: passwordController.text)
+            .then((value) => {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                               MyHomePage(email: emailController.text, password: passwordController.text,)))
+                });
       },
+      style: ElevatedButton.styleFrom(
+        foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
+        shape: const StadiumBorder(),
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+      ),
       child: const SizedBox(
           width: double.infinity,
           child: Text(
@@ -111,18 +120,22 @@ class _LoginPageState extends State<LoginPage> {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20),
           )),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Color.fromRGBO(6, 10, 43, 1), shape: const StadiumBorder(), backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
-      ),
     );
   }
 
-  Widget _extraText() {
-    return const Text(
-      "Forgot your password ?",
-      textAlign: TextAlign.center,
-      style: TextStyle(fontSize: 16, color: Colors.white),
+  Widget _createAccountBtn() {
+    return TextButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const CreateAccountPage()),
+        );
+      },
+      child: const Text(
+        "Or create an account now",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 16, color: Colors.white),
+      ),
     );
   }
 }
