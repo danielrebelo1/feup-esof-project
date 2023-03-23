@@ -21,11 +21,9 @@ This model contains the following classes:
   * App - This class represents the whole application in an abstract context. This class has 2 key fields, the name and description
     of the app.
     
-  * user_App - This class represents the whole application, but this time this application is referent to one user only. The class App contains one or more
-    user_App classes because the application is used by many Users.
-    
-  * User - This class represents the user of the app. A user can have a firstname and a lastname. One user can only have one user_App for the same login.
-    One user can have only one of two roles on the app. A user is an ## administrator (full control of developer tools), or a ## public user (only access to the           frontend of the app).
+  * User - This class represents the user of the app. A user can have a profile-page and a login.
+
+  * Profile page- A user can view and set is username,password and profile picture.
 
   * Login- This class represents the authentication of the user in the app. A login in the app must contain two fields, both username and password. Login also has a id
     that is unique and generated automatically for the case different users have the same username and/or password. In this app user must have an account to access all
@@ -35,13 +33,11 @@ This model contains the following classes:
   
   * Filter- This class represents the different ways how feed can be shown to the user. Filters like genre,actor and awards can be applied to satisfy the user.
 
-  * Watchlist - This class represents the watchlist, which contains a list of movies that user set to be watched later. A user can change the name of his watchlist.
+  * Movie - This class represents a movie .  A movie can have multiple fields like title,genre,duration... . This movies contains reviews , where users can comment       about the movie and assign a rating. 
 
-  * Movie - This class represents a movie .  A movie can have multiple fields like title,genre,duration... . This movies contains reviews , where users can comment       about the movie and assign a rating. Movie is a generalized class of Liked movie and Reviewed Movie. This two features are not necessary and can be both set for an     object belonging to movie.
-
-  * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies.
-  
-  * Search- This class represents the search for a movie and it´s used sucessfully when a user enter a movie title. Feed can show infinite movies ,but the search         feature can show only one movie at a time.
+  * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies
+ 
+  * Search- This class represents the search for a movie and it´s used sucessfully when a user enter a movie title.
 
 ## Physical Architecture
 ![alt text](physicalarch.jpg)
