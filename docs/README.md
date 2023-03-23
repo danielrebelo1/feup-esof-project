@@ -43,9 +43,7 @@ This model contains the following classes:
 
 <img src="physicalarch.drawio.svg"> 
 
-Cinem8 app physical architecture follows a simple path. First the smartphone containing the application(cinem8.apk) is connected to an application server (flutter server), where multiple user services files are written in dart files. The connection between smartphone and application server is made by protocol TCP which belongs to the
-family of HTTP/HTTPS protocols. The application server gets data both from IMDb API and a databasse where the server stores data or reads data. The database system is
-firebase which helps keeping data like login, user settings and others ... .Both Database and IMDb API can be acessed with HTTP protocl.
+Cinem8 app physical architecture follows a simple path. First the smartphone containing the application running it in dart code. There are a lot of users in the app, so we must save and get the details of each user storing the data in one database common to everybody. All the data exterior to the user informatios is stored in API server(IMDb).
 
 ## Logical Architecture
 ![alt text](logicalarch.jpg)
