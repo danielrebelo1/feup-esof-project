@@ -40,7 +40,8 @@ This model contains the following classes:
   * Search- This class represents the search for a movie and it´s used sucessfully when a user enter a movie title.
 
 ## Physical Architecture
-![alt text](physicalarch.jpg)
+
+<img src="physicalarch.drawio.svg"> 
 
 Cinem8 app physical architecture follows a simple path. First the smartphone containing the application(cinem8.apk) is connected to an application server (flutter server), where multiple user services files are written in dart files. The connection between smartphone and application server is made by protocol TCP which belongs to the
 family of HTTP/HTTPS protocols. The application server gets data both from IMDb API and a databasse where the server stores data or reads data. The database system is
