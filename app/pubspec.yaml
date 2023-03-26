@@ -45,9 +45,9 @@ dev_dependencies:
 
 flutter_icons:
   android: true
-  image_path: "assets/cinem8-app-logo.png"
+  image_path: "assets/new-logo.png"
   adaptive_icon_background: "#060A2B"
-  adaptive_icon_foreground: "assets/play_store_512.png"
+  adaptive_icon_foreground: "assets/new-logo.png"
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
