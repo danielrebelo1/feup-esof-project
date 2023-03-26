@@ -14,8 +14,8 @@ class CustomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 65,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      height: MediaQuery.of(context).size.height * 0.1,
+      padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.05),
       decoration: const BoxDecoration(
         color: Color(0xff302360),
         borderRadius: BorderRadius.only(

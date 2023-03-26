@@ -14,8 +14,10 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    final double textFieldWidth = MediaQuery.of(context).size.width * 0.08;
     return Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(
@@ -35,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+          padding:  EdgeInsets.symmetric(horizontal: textFieldWidth, vertical: 0),
           child: _page(),
         ),
       ),
@@ -45,21 +47,24 @@ class _LoginPageState extends State<LoginPage> {
   Widget _page() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.008, vertical: 0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _icon(),
-              const SizedBox(height: 30),
+              Positioned(
+                top: MediaQuery.of(context).size.height * 0.001,
+                child: _icon(),
+              ),
+              SizedBox(height: 0),
               _inputField("Email", emailController),
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _inputField("Password", passwordController, isPassword: true),
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _loginBtn(),
-              const SizedBox(height: 20),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _forgotPasswordBtn(),
-              const SizedBox(height: 60),
+              SizedBox(height: 0),
               _createAccountBtn(),
             ],
           ),
@@ -68,10 +73,11 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+
   Widget _icon() {
     return SizedBox(
-      width: 200,
-      height: 200,
+      width: MediaQuery.of(context).size.width * 0.4,
+      height: MediaQuery.of(context).size.height * 0.4,
       child: Image.asset('assets/logo.png'),
     );
   }
@@ -113,14 +119,14 @@ class _LoginPageState extends State<LoginPage> {
         foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
         shape: const StadiumBorder(),
         backgroundColor: Colors.white,
-        padding: const EdgeInsets.symmetric(vertical: 16),
+        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.01),
       ),
-      child: const SizedBox(
+      child: SizedBox(
           width: double.infinity,
           child: Text(
             "Login ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 22),
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
           )),
     );
   }
@@ -188,10 +194,10 @@ class _LoginPageState extends State<LoginPage> {
               },
             );
           },
-          child: const Text(
+          child: Text(
             "Forgot your password?",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20, color: Colors.white,decoration: TextDecoration.underline),
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.035, color: Colors.white,decoration: TextDecoration.underline),
           ),
         ),
       ),
@@ -210,10 +216,10 @@ class _LoginPageState extends State<LoginPage> {
               MaterialPageRoute(builder: (context) => const CreateAccountPage()),
             );
           },
-          child: const Text(
+          child: Text(
             "Don't have an account? Create now",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.04, color: Colors.white),
           ),
         ),
       ),

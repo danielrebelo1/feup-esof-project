@@ -39,7 +39,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
         ),
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+          padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.001, vertical: 0),
           child: _page(),
         ),
       ),
@@ -49,7 +49,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget _page() {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.001, vertical: 0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

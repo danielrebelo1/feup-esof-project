@@ -57,8 +57,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   _currentIndex - 1 < 0
                       ? _movies[_movies.length - 1].moviePoster
                       : _movies[_currentIndex - 1].moviePoster,
-                  width: 120,
-                  height: 170,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.3,
                 ),
               ),
             ),
@@ -77,8 +77,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       ?_movies[0].moviePoster
                       :_movies[_currentIndex + 1].moviePoster,
 
-                  width: 120,
-                  height: 170,
+                  width: MediaQuery.of(context).size.width * 0.4,
+                  height: MediaQuery.of(context).size.height * 0.3,
                 ),
               ),
             ),
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
               },
               child: Padding(
-                padding: const EdgeInsets.only(top: 65.0),
+                padding:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.17),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -107,8 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
                         );
                       },
                       child:Container(
-                        width: 250,
-                        height: 350,
+                        width: MediaQuery.of(context).size.width * 0.7,
+                        height: MediaQuery.of(context).size.width * 0.9,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           image: DecorationImage(
@@ -124,35 +124,35 @@ class _MyHomePageState extends State<MyHomePage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          margin: const EdgeInsets.only(top: 15),
+                          margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.01),
                           child: Text(
                             _movies[_currentIndex].movieTitle,
-                            style: const TextStyle(
+                            style: TextStyle(
                               color: Colors.white70,
                               fontWeight: FontWeight.bold,
-                              fontSize: 25,
+                              fontSize: MediaQuery.of(context).size.height * 0.03,
                             ),
                           ),
                         ),
                         Container(
-                          margin: const EdgeInsets.only(left: 15, top: 15),
+                          margin: EdgeInsets.only(left: 15, top: MediaQuery.of(context).size.height * 0.008),
                           child: Text(
                               _movies[_currentIndex].movieReleaseYear,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 color: Colors.white70,
-                                fontSize: 15,
+                                fontSize: MediaQuery.of(context).size.height * 0.02,
                               )
                           ),
                         )
                       ],
                     ),
                     Container(
-                      margin: const EdgeInsets.only(top: 15),
+                      margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.0001),
                       child: Text(
                         _movies[_currentIndex].rating.toString(),
-                        style: const TextStyle(
+                        style: TextStyle(
                           color: Colors.amber,
-                          fontSize: 25,
+                          fontSize: MediaQuery.of(context).size.height * 0.02,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

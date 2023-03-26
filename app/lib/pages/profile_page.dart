@@ -34,34 +34,33 @@ class ImageWidget extends StatelessWidget {
       children: [
         Positioned(
           bottom: 0,
-          left: 160,
+          right: 0,
           child: Image.asset(
             'assets/logo.png',
             width: 100.0,
             height: 100.0,
           ),
         ),
-        const Positioned(
-            top: 10,
+         Positioned(
+            top: MediaQuery.of(context).size.height * 0.03,
             left: 0,
             right: 0,
             child: SizedBox(
-              height: 50,
               child: Center(
                 child: Text(
-                  'PROFILE',
-                  style: TextStyle(color: Colors.white, fontSize: 50),
+                  'Profile',
+                  style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height * 0.05),
                 ),
               ),
             )),
         Positioned(
-          top: 95,
+          top: MediaQuery.of(context).size.height * 0.1,
           left: 0,
           right: 0,
           child: Image.asset(
             "assets/profile-icon.png",
-            width: 120.0,
-            height: 120.0,
+            width: MediaQuery.of(context).size.width * 0.03,
+            height: MediaQuery.of(context).size.height * 0.2,
           ),
         ),
         Center(
@@ -70,39 +69,39 @@ class ImageWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin: const EdgeInsets.only(top: 60),
-              child: const Text(
+              margin:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
+              child:  Text(
                 "Your e-email associated with this account:",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(left: 20, top: 10),
+              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02, top: MediaQuery.of(context).size.height * 0.02),
               child: Text(
                 email,
-                style: const TextStyle(
+                style:  TextStyle(
                   fontWeight: FontWeight.normal,
                   color: Colors.white,
-                  fontSize: 15,
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
                 ),
               ),
             ),
             Container(
-              margin: const EdgeInsets.only(top: 30),
-              child: const Text(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
+              child:  Text(
                 "Your password:",
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontSize: 20),
+                    fontSize: MediaQuery.of(context).size.height * 0.03),
               ),
             ),
             Container(
-                margin: const EdgeInsets.only(top: 10),
+                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
                 child: Text(
                   password,
                   style: const TextStyle(
@@ -111,14 +110,14 @@ class ImageWidget extends StatelessWidget {
                     color: Colors.white,
                   ),
                 )),
-            const SizedBox(
-              height: 60,
+             SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: Colors.white,
-                minimumSize: const Size(150, 50), // text color
+                minimumSize: Size(MediaQuery.of(context).size.width * 0.04, MediaQuery.of(context).size.height * 0.06), // text color
               ),
               onPressed: () {
                 FirebaseAuth.instance.signOut().then((value) => {
@@ -129,9 +128,9 @@ class ImageWidget extends StatelessWidget {
                       )
                     });
               },
-              child: const Text(
+              child: Text(
                 'Logout',
-                style: TextStyle(fontSize: 25, color: Colors.blueGrey),
+                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.03, color: Colors.blueGrey),
               ),
             ),
           ],
