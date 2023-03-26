@@ -51,13 +51,15 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _icon(),
-              const SizedBox(height: 50),
+              const SizedBox(height: 30),
               _inputField("Email", emailController),
               const SizedBox(height: 20),
               _inputField("Password", passwordController, isPassword: true),
-              const SizedBox(height: 50),
+              const SizedBox(height: 20),
               _loginBtn(),
               const SizedBox(height: 20),
+              _forgotPasswordBtn(),
+              const SizedBox(height: 60),
               _createAccountBtn(),
             ],
           ),
@@ -118,24 +120,103 @@ class _LoginPageState extends State<LoginPage> {
           child: Text(
             "Login ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 22),
           )),
     );
   }
 
-  Widget _createAccountBtn() {
-    return TextButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const CreateAccountPage()),
-        );
-      },
-      child: const Text(
-        "Or create an account now",
-        textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 16, color: Colors.white),
+
+  Widget _forgotPasswordBtn() {
+    TextEditingController emailController = TextEditingController();
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: FractionallySizedBox(
+        widthFactor: 0.8,
+        child: TextButton(
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text("Forgot Password"),
+                  content: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text("Enter your email address to reset your password."),
+                      SizedBox(height: 10),
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: "Email",
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text("Reset Password"),
+                      onPressed: () {
+                        String email = emailController.text;
+                        FirebaseAuth.instance.sendPasswordResetEmail(email: email)
+                            .then((value) {
+                          // Show a success message to the user
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Password reset email sent to $email."),
+                            duration: Duration(seconds: 3),
+                          ));
+                          Navigator.of(context).pop();
+                        })
+                            .catchError((error) {
+                          // Show an error message to the user
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Failed to send password reset email. Please check your email and try again."),
+                            duration: Duration(seconds: 3),
+                          ));
+                        });
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          child: const Text(
+            "Forgot your password?",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20, color: Colors.white,decoration: TextDecoration.underline),
+          ),
+        ),
       ),
     );
+  }
+
+  Widget _createAccountBtn() {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: FractionallySizedBox(
+        widthFactor: 0.8,
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const CreateAccountPage()),
+            );
+          },
+          child: const Text(
+            "Don't have an account? Create now",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 18, color: Colors.white),
+          ),
+        ),
+      ),
+      );
   }
 }
