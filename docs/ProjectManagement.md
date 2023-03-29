@@ -15,3 +15,9 @@ hello!
 
 ![Sprint 1](images/sprint1.PNG)
 
+<h5> Board at the end of sprint </h5>
+
+![Sprint 1](images/sprint2.PNG)
+
+<h5> Retro </h5>
+
