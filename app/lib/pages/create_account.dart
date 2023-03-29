@@ -118,13 +118,25 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               .createUserWithEmailAndPassword(
               email: emailController.text, password: passwordController.text)
               .then((value) {
-            print("Created new account");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Welcome ' + usernameController.text + ' !'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(0 , 150 , 100, 1),
+              ),
+            );
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => MyHomePage(email: emailController.text, password: passwordController.text,)));
           }).onError((error, stackTrace) {
-            print("Error ${error.toString()}");
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('ERROR! Please fill all fields and check if password has at least 6 characters'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(80 , 0 , 100, 1),
+              ),
+            );
           });
         },
         style: ElevatedButton.styleFrom(

@@ -108,12 +108,28 @@ class _LoginPageState extends State<LoginPage> {
             .signInWithEmailAndPassword(
                 email: emailController.text, password: passwordController.text)
             .then((value) => {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text('Welcome back!'),
+                        duration: Duration(seconds: 3),
+                        backgroundColor: Color.fromRGBO(0 , 150 , 100, 1),
+                      ),
+                   ),
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                           builder: (context) =>
                                MyHomePage(email: emailController.text, password: passwordController.text,)))
-                });
+                })
+        .catchError((e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Invalid email/password combination. Try again'),
+              duration: Duration(seconds: 5),
+              backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+            ),
+        );
+        });
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
