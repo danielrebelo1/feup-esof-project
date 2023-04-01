@@ -4,8 +4,10 @@ import 'package:project/reusableWidgets/custom_nav_bar.dart';
 class MoviePage extends StatefulWidget {
   final String email;
   final String password;
+  final List topRatedMovies;
+  final int currentIndex;
 
-  const MoviePage({Key? key, required this.email, required this.password})
+   const MoviePage({Key? key, required this.email, required this.password, required this.topRatedMovies, required this.currentIndex})
       : super(key: key);
 
   @override
@@ -24,8 +26,8 @@ class _MoviePageState extends State<MoviePage> {
             children: [
               Opacity(
                 opacity: 0.4,
-                child: Image.asset(
-                  "assets/llland.png",
+                child: Image.network(
+                  'https://image.tmdb.org/t/p/w500' + widget.topRatedMovies[widget.currentIndex]['poster_path'],
                   height: MediaQuery.of(context).size.height * 0.3,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -62,8 +64,8 @@ class _MoviePageState extends State<MoviePage> {
                             ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: Image.asset(
-                                "assets/llland.png",
+                              child: Image.network(
+                                'https://image.tmdb.org/t/p/w500' + widget.topRatedMovies[widget.currentIndex]['poster_path'],
                                 height: 220,
                                 width: 180,
                               ),
@@ -108,38 +110,41 @@ class _MoviePageState extends State<MoviePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children:  [
                           Row(
-                            children:  [
-                              Text(
-                                "La La Land",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: MediaQuery.of(context).size.height * 0.05,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  widget.topRatedMovies[widget.currentIndex]['original_title'],
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: MediaQuery.of(context).size.height * 0.05,
+                                  ),
                                 ),
                               ),
                               SizedBox(width: MediaQuery.of(context).size.height * 0.02),
                               Text(
-                                "(2016)",
+                                widget.topRatedMovies[widget.currentIndex]['release_date'].toString().substring(0,4),
                                 style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: MediaQuery.of(context).size.height * 0.03,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: MediaQuery.of(context).size.height * 0.02,
+                                ),
                               ),
-                              ),
-                              SizedBox(width: MediaQuery.of(context).size.width * 0.1),
+                              SizedBox(width: MediaQuery.of(context).size.width * 0.05),
                               Text(
-                                "8.0",
+                                widget.topRatedMovies[widget.currentIndex]['vote_average'].toString(),
                                 style: TextStyle(
                                   color: Colors.amber,
                                   fontWeight: FontWeight.bold,
                                   fontSize: MediaQuery.of(context).size.height * 0.03,
                                 ),
-                              )
+                              ),
                             ],
                           ),
+
                           const SizedBox(width: 10,),
                            Text(
-                            "While navigating their careers in Los Angeles, a pianist and an actress fall in love while attempting to reconcile their aspirations for the future.",
+                            widget.topRatedMovies[widget.currentIndex]['overview'].toString(),
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: MediaQuery.of(context).size.height * 0.02,
