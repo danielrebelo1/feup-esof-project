@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
-import '../reusableWidgets/movie_model.dart';
 import '../reusableWidgets/custom_nav_bar.dart';
 import 'movie_page.dart';
 
@@ -141,6 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 password: widget.password,
                                 topRatedMovies: topRatedMovies,
                                 currentIndex: _currentIndex,
+                                movieModel: null,
                               )),
                         );
                       },
