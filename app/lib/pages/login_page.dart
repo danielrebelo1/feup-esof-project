@@ -52,11 +52,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Positioned(
-                top: MediaQuery.of(context).size.height * 0.001,
-                child: _icon(),
-              ),
-              SizedBox(height: 0),
+              _icon(),
               _inputField("Email", emailController),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _inputField("Password", passwordController, isPassword: true),

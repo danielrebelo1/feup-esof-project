@@ -1,5 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import '../reusableWidgets/movie_model.dart';
+import 'movie_page.dart';
 
 /*Auxiliary functions to clean the search bar*/
 TextEditingController _textEditingController = TextEditingController();
@@ -9,32 +13,71 @@ void clearTextInput() {
 }
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({Key? key}) : super(key: key);
+  final String email;
+  final String password;
+  final List topRatedMovies;
+  final int currentIndex;
+
+  SearchPage({
+    Key? key,
+    required this.email,
+    required this.password,
+    required this.topRatedMovies,
+    required this.currentIndex,
+  }) : super(key: key);
+
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  static List<MovieModel> mainMoviesList = [
-    MovieModel("La la land", "2016", 8, "assets/llland.png"),
-    MovieModel("Inception", "2010", 8.8, "assets/inception.png"),
-    MovieModel("Silence of the Lambs", "1991", 8.6, "assets/silenceLambs.png"),
-    MovieModel("Incendies", "2010", 8.3, "assets/Incendies.png")
-  ];
+  Future<List<MovieModel>> searchMedia(String query) async {
+    final url =
+        'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${query}';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final results = data['results'] as List<dynamic>;
+      return results
+          .map((result) => MovieModel(
+          result['title'] ?? result['name'],
+          result['release_date'] ?? result['first_air_date'],
+          result['vote_average'],
+          result['poster_path'] != null
+              ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}'
+              : 'null',
+          result['overview']))
+          .toList();
+    } else {
+      throw Exception('Failed to load search results');
+    }
+  }
 
-  List<MovieModel> displayList = List.from(mainMoviesList);
+  List<MovieModel> displayList = [];
 
   void updateList(String value) {
-    setState(() {
-      displayList = mainMoviesList
-          .where((element) =>
-          element.movieTitle.toLowerCase().contains(value.toLowerCase()))
-          .toList();
-    });
+    if (value.isEmpty) {
+      setState(() {
+        displayList = [];
+      });
+    } else {
+      searchMedia(value).then((results) {
+        setState(() {
+          displayList = results;
+        });
+      }).catchError((error) {
+        print(error);
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    if(displayList.isNotEmpty){
+      print(displayList[0].moviePoster);
+    }
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       appBar: AppBar(
@@ -84,40 +127,60 @@ class _SearchPageState extends State<SearchPage> {
             Expanded(
               child: displayList.isEmpty
                   ? const Center(
-                child: Text(
-                  "No results found :(",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 22.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              )
+                      child: Text(
+                        "No results found :(",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    )
                   : ListView.builder(
-                itemCount: displayList.length,
-                itemBuilder: (context, index) => ListTile(
-                  contentPadding: const EdgeInsets.all(8.0),
-                  title: Text(
-                    displayList[index].movieTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      itemCount: displayList.length,
+                      itemBuilder: (context, index) {
+                        final movie = displayList[index];
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MoviePage(
+                                  email: widget.email,
+                                  password: widget.password,
+                                  topRatedMovies: displayList,
+                                  currentIndex: index,
+                                  movieModel: displayList[index],
+                                ),
+                              ),
+                            );
+                          },
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(8.0),
+                            title: Text(
+                              movie.movieTitle,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Text(
+                              movie.movieReleaseYear,
+                              style: const TextStyle(
+                                color: Colors.white60,
+                              ),
+                            ),
+                            trailing: Text(
+                              '${movie.rating}',
+                              style: const TextStyle(color: Colors.amber),
+                            ),
+                            leading: movie.moviePoster != "null"
+                                ? Image.network(movie.moviePoster)
+                                : Image.asset('assets/no-image.png')
+                          ),
+                        );
+                      },
                     ),
-                  ),
-                  subtitle: Text(
-                    displayList[index].movieReleaseYear,
-                    style: const TextStyle(
-                      color: Colors.white60,
-                    ),
-                  ),
-                  trailing: Text(
-                    '${displayList[index].rating}',
-                    style: const TextStyle(color: Colors.amber),
-                  ),
-                  leading:
-                  Image.asset(displayList[index].moviePoster),
-                ),
-              ), // <-- add comma here
             )
           ],
         ),

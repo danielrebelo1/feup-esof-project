@@ -15,3 +15,14 @@ hello!
 
 ![Sprint 1](images/sprint1.PNG)
 
+<h5> Board at the end of sprint </h5>
+
+![Sprint 1](images/sprint2.PNG)
+
+<h5> Retro </h5>
+
+1. This sprint went really well. We finished all the tasks way earlier, due to an efficient task selection and assignment.
+2. Initially, we allocated more than we could handle for the sprint. After discussing with the professor, we realized that this wasn't a good approach and quickly redefined it.
+3. It has been a really good way to learn about how the project flow is in real life. There is a lot of stuff that happens in a project, from Mockups to Project Board to Acceptance Tests, that we weren't aware about.
+4. We feel like there is nothing that we didn't understand but we are sure that, throughout the next sprints, we will consolidate our understanding of Project Management even more.
+

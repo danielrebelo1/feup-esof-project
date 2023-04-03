@@ -18,27 +18,13 @@ samples, guidance on mobile development, and a full API reference.
 ## Domain Model
 <img src="umlee.drawio (1).drawio.svg"> 
 This model contains the following classes:
-  * App - This class represents the whole application in an abstract context. This class has 2 key fields, the name and description
-    of the app.
+
     
-  * User - This class represents the user of the app. A user can have a profile-page and a login.
-
-  * Profile page- A user can view and set is username,password and profile picture.
-
-  * Login- This class represents the authentication of the user in the app. A login in the app must contain two fields, both username and password. Login also has a id
-    that is unique and generated automatically for the case different users have the same username and/or password. In this app user must have an account to access all
-    funcionalities.
-
-  * Feed - This class represents the main page of the app. In this page the user can see an infinite loop of a list of movies. This movies are shown by their trailers    and they can be accessed by clicking on them. The state of the feed can be changed with filters.
+  * User - This class represents the user of the app. A user must have a login on the app and can acess a lot of movies.
   
-  * Filter- This class represents the different ways how feed can be shown to the user. Filters like genre,actor and awards can be applied to satisfy the user.
-
   * Movie - This class represents a movie .  A movie can have multiple fields like title,genre,duration... . This movies contains reviews , where users can comment       about the movie and assign a rating. 
 
   * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies
- 
-  * Search- This class represents the search for a movie and it´s used sucessfully when a user enter a movie title.
-
 ## Physical Architecture
 
 <img src="physicalarch.drawio.svg"> 
