@@ -155,7 +155,7 @@ class _MoviePageState extends State<MoviePage> {
                               child: Text(
                                 widget.movieModel == null
                                     ? widget.topRatedMovies[widget.currentIndex]
-                                        ['original_title']
+                                        ['title']
                                     : widget.movieModel?.movieTitle ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
