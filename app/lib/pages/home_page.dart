@@ -223,7 +223,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             : '',
                         style: TextStyle(
                           color: Colors.amber,
-                          fontSize: MediaQuery.of(context).size.height * 0.02,
+                          fontSize: MediaQuery.of(context).size.height * 0.03,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

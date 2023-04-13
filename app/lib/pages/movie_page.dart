@@ -23,10 +23,13 @@ class MoviePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MoviePageState();
 }
 
+
+
 class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
         password: widget.password,
@@ -158,7 +161,7 @@ class _MoviePageState extends State<MoviePage> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize:
-                                      MediaQuery.of(context).size.height * 0.05,
+                                      MediaQuery.of(context).size.height * 0.04,
                                 ),
                               ),
                             ),
@@ -194,7 +197,7 @@ class _MoviePageState extends State<MoviePage> {
                                 color: Colors.amber,
                                 fontWeight: FontWeight.bold,
                                 fontSize:
-                                    MediaQuery.of(context).size.height * 0.03,
+                                    MediaQuery.of(context).size.height * 0.04,
                               ),
                             ),
                           ],
@@ -202,6 +205,7 @@ class _MoviePageState extends State<MoviePage> {
                         const SizedBox(
                           width: 10,
                         ),
+                        const SizedBox(height: 10),
                         Text(
                           widget.movieModel == null
                               ? widget.topRatedMovies[widget.currentIndex]
@@ -217,30 +221,35 @@ class _MoviePageState extends State<MoviePage> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          backgroundImage: AssetImage('assets/user.png'),
-                          radius: 15,
-                          backgroundColor: Color.fromRGBO(6, 10, 43, 1),
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          "This is a great movie",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.02,
-                          ),
-                        ),
-                      ],
+                  GestureDetector(
+                    onTap: () {
+                      // Call function to dismiss the keyboard
+                    },
+                    child:
+                  TextField(
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Give us your opinion',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide.none,
+                      ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          // Add your publish comment logic here
+                        },
+                        icon: Icon(Icons.arrow_forward),
+                      ),
                     ),
                   ),
-                ]),
+                  ),
+                SizedBox(height: 16.0),
+                ]
               ),
             ),
-          ],
+            )],
         ),
       ),
     );

@@ -31,7 +31,14 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+
+  void initState() {
+    super.initState();
+    clearTextInput(); // Call the clearTextInput() function here
+  }
+
   Future<List<MovieModel>> searchMedia(String query) async {
+
     final url =
         'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${query}';
     final response = await http.get(Uri.parse(url));
@@ -42,7 +49,7 @@ class _SearchPageState extends State<SearchPage> {
           .map((result) => MovieModel(
           result['title'] ?? result['name'],
           result['release_date'] ?? result['first_air_date'],
-          result['vote_average'],
+          double.parse(result['vote_average'].toStringAsFixed(1)),
           result['poster_path'] != null
               ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}'
               : 'null',
@@ -112,6 +119,7 @@ class _SearchPageState extends State<SearchPage> {
                   borderSide: BorderSide.none,
                 ),
                 hintText: "example: Mad men",
+                hintStyle: TextStyle(color: Colors.white),
                 prefixIcon: const Icon(Icons.search, size: 30.0),
                 prefixIconColor: Colors.white,
                 suffixIcon: const IconButton(
@@ -172,7 +180,7 @@ class _SearchPageState extends State<SearchPage> {
                             ),
                             trailing: Text(
                               '${movie.rating}',
-                              style: const TextStyle(color: Colors.amber),
+                              style: const TextStyle(color: Colors.amber,fontSize: 24.0),
                             ),
                             leading: movie.moviePoster != "null"
                                 ? Image.network(movie.moviePoster)

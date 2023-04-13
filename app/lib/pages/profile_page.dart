@@ -69,7 +69,7 @@ class ImageWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Container(
-              margin:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.25),
+              margin:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
               child:  Text(
                 "Your e-email associated with this account:",
                 style: TextStyle(
@@ -90,29 +90,7 @@ class ImageWidget extends StatelessWidget {
                 ),
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.04),
-              child:  Text(
-                "Your password:",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                    fontSize: MediaQuery.of(context).size.height * 0.03),
-              ),
-            ),
-            Container(
-                margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
-                child: Text(
-                  password,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.white,
-                  ),
-                )),
-             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
-            ),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
@@ -127,7 +105,7 @@ class ImageWidget extends StatelessWidget {
                             builder: (context) => const LoginPage()),
                       )
                     });
-              },
+              }, // Add space between email and logout button
               child: Text(
                 'Logout',
                 style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.03, color: Colors.blueGrey),
