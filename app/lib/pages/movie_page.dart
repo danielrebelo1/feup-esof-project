@@ -46,17 +46,7 @@ class _MoviePageState extends State<MoviePage> {
           children: [
             Opacity(
                 opacity: 0.4,
-                child: widget.movieModel == null
-                    ? Image.network(
-                        widget.path +
-                            widget.topRatedMovies[widget.currentIndex]
-                                ['poster_path'],
-                        height: MediaQuery.of(context).size.height * 0.35,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        alignment: const Alignment(0, 0.7),
-                      )
-                    : (widget.movieModel?.moviePoster != "null"
+                child: (widget.movieModel?.moviePoster != "null"
                         ? Image.network(
                             widget.movieModel?.moviePoster ?? "",
                             height: MediaQuery.of(context).size.height * 0.35,
@@ -102,14 +92,7 @@ class _MoviePageState extends State<MoviePage> {
                           ),
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
-                              child: widget.movieModel == null
-                                  ? Image.network(
-                                      widget.path +
-                                          widget.topRatedMovies[widget
-                                              .currentIndex]['poster_path'],
-                                      height: 220,
-                                      width: 180)
-                                  : (widget.movieModel?.moviePoster != "null"
+                              child: (widget.movieModel?.moviePoster != "null"
                                       ? Image.network(
                                           widget.movieModel?.moviePoster ?? "",
                                           height: 220,
@@ -159,10 +142,7 @@ class _MoviePageState extends State<MoviePage> {
                           children: [
                             Flexible(
                               child: Text(
-                                widget.movieModel == null
-                                    ? widget.topRatedMovies[widget.currentIndex]
-                                        ['title']
-                                    : widget.movieModel?.movieTitle ?? "",
+                                widget.movieModel?.movieTitle ?? "",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -175,13 +155,8 @@ class _MoviePageState extends State<MoviePage> {
                                 width:
                                     MediaQuery.of(context).size.height * 0.02),
                             Text(
-                              widget.movieModel == null
-                                  ? widget.topRatedMovies[widget.currentIndex]
-                                          ['release_date']
-                                      .toString()
-                                      .substring(0, 4)
-                                  : widget.movieModel?.movieReleaseYear
-                                          .toString() ??
+                              widget.movieModel?.movieReleaseYear
+                                          .toString().substring(0, 4) ??
                                       "",
                               style: TextStyle(
                                 color: Colors.white,
@@ -194,11 +169,7 @@ class _MoviePageState extends State<MoviePage> {
                                 width:
                                     MediaQuery.of(context).size.width * 0.05),
                             Text(
-                              widget.movieModel == null
-                                  ? widget.topRatedMovies[widget.currentIndex]
-                                          ['vote_average']
-                                      .toString()
-                                  : widget.movieModel?.rating.toString() ?? "",
+                              widget.movieModel?.rating.toString() ?? "",
                               style: TextStyle(
                                 color: Colors.amber,
                                 fontWeight: FontWeight.bold,
@@ -213,11 +184,7 @@ class _MoviePageState extends State<MoviePage> {
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          widget.movieModel == null
-                              ? widget.topRatedMovies[widget.currentIndex]
-                                      ['overview']
-                                  .toString()
-                              : widget.movieModel?.description.toString() ?? "",
+                          widget.movieModel?.description.toString() ?? "",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: MediaQuery.of(context).size.height * 0.02,
