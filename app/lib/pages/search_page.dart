@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -53,7 +54,7 @@ class _SearchPageState extends State<SearchPage> {
           result['poster_path'] != null
               ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}'
               : 'null',
-          result['overview']))
+          result['overview'], result['id']))
           .toList();
     } else {
       throw Exception('Failed to load search results');
