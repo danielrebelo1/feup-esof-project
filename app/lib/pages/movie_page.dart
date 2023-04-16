@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 class MoviePage extends StatefulWidget {
   final String email;
@@ -26,6 +29,9 @@ class MoviePage extends StatefulWidget {
 
 
 class _MoviePageState extends State<MoviePage> {
+  String userComment = "";
+  TextEditingController commentController = TextEditingController();
+  CollectionReference comments = FirebaseFirestore.instance.collection('comments');
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,7 +233,9 @@ class _MoviePageState extends State<MoviePage> {
                     },
                     child:
                   TextField(
+                    onChanged: (value){userComment = value;},
                     maxLines: null,
+                    controller: commentController,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: Colors.white,
@@ -237,7 +245,17 @@ class _MoviePageState extends State<MoviePage> {
                         borderSide: BorderSide.none,
                       ),
                       suffixIcon: IconButton(
-                        onPressed: () {
+                        onPressed: () async{
+                          await comments.add({
+                            'content': userComment,
+                            'idMovie': widget.movieModel!.id ?? -1,
+                            'timestamp': DateTime.now(),
+                          }).then((value) => print("Comment added!"));
+                          setState(() {
+                            userComment = ''; // Clear userComment after adding the comment
+                          });
+                          commentController.clear(); // Clear the text field
+                          FocusScope.of(context).unfocus();
                           // Add your publish comment logic here
                         },
                         icon: Icon(Icons.arrow_forward),
