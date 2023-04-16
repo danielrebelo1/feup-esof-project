@@ -17,21 +17,23 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List topRatedMovies = [];
+  List<dynamic> topRatedMovies = [];
   final String apikey = '51b20269b73105d2fd84257214e53cc3';
   final readAcessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWIyMDI2OWI3MzEwNWQyZmQ4NDI1NzIxNGU1M2NjMyIsInN1YiI6IjY0MjdmZGU4OWNjNjdiMDViZjZlZWZmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rXi6vsFhTtCqdUNv2UPukvqW5_D3wUbnTlamH8UzhA4';
-
-
+  int page_number = 1;
   int _currentIndex = 0;
 
   void _incrementIndex() {
+    print(_currentIndex);
     setState(() {
+      if(_currentIndex == topRatedMovies.length - 2){loadMovies();}
       _currentIndex = (_currentIndex + 1) % topRatedMovies.length;
     });
   }
 
   void _decrementIndex() {
+    print(_currentIndex);
     setState(() {
       _currentIndex = (_currentIndex - 1) % topRatedMovies.length;
     });
@@ -50,10 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
             showLogs: true,
             showErrorLogs: true,
           ));
-      Map moviesResults = await tmdbWithCustomLogs.v3.movies.getTopRated();
+      Map movieResults = await tmdbWithCustomLogs.v3.movies.getTopRated(page: page_number );
+      page_number = page_number + 1;
+      print(page_number);
 
       setState(() {
-        topRatedMovies = moviesResults['results'];
+        topRatedMovies.addAll(movieResults['results']);
       });
       print(topRatedMovies);
     } catch (e) {
@@ -173,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: topRatedMovies.isNotEmpty
                                 ? Text(
                               topRatedMovies[_currentIndex]
-                              ['original_title'],
+                              ['title'],
                               style: TextStyle(
                                 color: Colors.white70,
                                 fontWeight: FontWeight.bold,
