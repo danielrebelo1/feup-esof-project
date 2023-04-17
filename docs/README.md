@@ -16,18 +16,18 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Domain Model
-<img src="umlee.drawio (1).drawio.svg"> 
+<img src="domain.png"> 
 This model contains the following classes:
 
     
   * User - This class represents the user of the app. A user must have a login on the app and can acess a lot of movies.
   
-  * Movie - This class represents a movie .  A movie can have multiple fields like title,genre,duration... . This movies contains reviews , where users can comment       about the movie and assign a rating. 
+  * Media - This class represents the media that can be either a movie or a series. All the information regarding each one will be acessed through the api.
 
   * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies
 ## Physical Architecture
 
-<img src="physicalarch.drawio.svg"> 
+<img src="physical.png"> 
 
 Cinem8 app physical architecture follows a simple path. First the smartphone containing the application running it in dart code. There are a lot of users in the app, so we must save and get the details of each user storing the data in one database common to everybody. All the data exterior to the user informatios is stored in API server(IMDb).
 
