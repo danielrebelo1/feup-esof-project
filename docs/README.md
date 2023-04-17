@@ -22,7 +22,7 @@ This model contains the following classes:
     
   * User - This class represents the user of the app. A user must have a login on the app and can acess a lot of movies.
   
-  * Movie - This class represents a movie .  A movie can have multiple fields like title,genre,duration... . This movies contains reviews , where users can comment       about the movie and assign a rating. 
+  * Media - This class represents the media that can be either a movie or a series. All the information regarding each one will be acessed through the api.
 
   * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies
 ## Physical Architecture
