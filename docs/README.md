@@ -16,7 +16,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Domain Model
-<img src="umlee.drawio (1).drawio.svg"> 
+<img src="domain.png"> 
 This model contains the following classes:
 
     
