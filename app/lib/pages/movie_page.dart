@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 
 
@@ -25,7 +26,6 @@ class MoviePage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _MoviePageState();
 }
-
 
 
 class _MoviePageState extends State<MoviePage> {
@@ -187,7 +187,7 @@ class _MoviePageState extends State<MoviePage> {
                           widget.movieModel?.description.toString() ?? "",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.02,
+                            fontSize: MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
                       ],
@@ -231,6 +231,48 @@ class _MoviePageState extends State<MoviePage> {
                   ),
                   ),
                 SizedBox(height: 16.0),
+                  StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('comments')
+                        .where('idMovie', isEqualTo: widget.movieModel?.id ?? -1) // replace 'comments' with your collection name
+                        .snapshots(),
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+
+                      // Extract comments from the snapshot
+                      final comments = snapshot.data?.docs;
+
+                      return Container(
+                        color: Colors.white,
+                        child:
+                        Column(
+                        children: [
+                          SizedBox(height: 16.0),
+                          if (comments != null && comments.isNotEmpty)
+                            ...comments.map((commentDoc) {
+                              final commentData = commentDoc.data() as Map<String, dynamic>;
+                              final content = commentData['content'] as String;
+                              final timestamp = commentData['timestamp'] as Timestamp;
+                              final commentTime = DateFormat('MMM dd, yyyy HH:mm').format(timestamp.toDate()); // or format the timestamp as desired
+
+                              return Container(// Use the background color of the app
+                              padding: EdgeInsets.symmetric(vertical: 8.0),
+                              child: ListTile(
+                                title: Text(content),
+                                subtitle: Text(commentTime),
+                              ),
+                              );
+                            }).toList(),
+                        ],
+                        ));
+                    },
+                  ),
                 ]
               ),
             ),
