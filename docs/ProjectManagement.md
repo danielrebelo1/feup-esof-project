@@ -26,6 +26,7 @@ hello!
 3. It has been a really good way to learn about how the project flow is in real life. There is a lot of stuff that happens in a project, from Mockups to Project Board to Acceptance Tests, that we weren't aware about.
 4. We feel like there is nothing that we didn't understand but we are sure that, throughout the next sprints, we will consolidate our understanding of Project Management even more.
 
+<h3> Sprint 2</h3>
 
 <h5> Board at sprint's beggining </h5>
 
