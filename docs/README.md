@@ -33,6 +33,7 @@ Cinem8 app physical architecture follows a simple path. First the smartphone con
 
 ## Logical Architecture
 ![alt text]("./logcalarch.drawio.svg")
+<img src="./logcalarch.drawio.svg">
 
 The cinem8 app is divided into two main packages, the external devices packages, and Cinem8 system packages. Inside of the external devices packages , there are the
 IMDb API package and Firebase package which represents the database content. Both this packages are core packages for the cinem8 logic package, which depends on the external device packages. Cinem8 packages contains a Cinem8 UI package that contains everything related to non-graphical and graphical user interfaces. This package implements the logic of Cinem8 logic package,
