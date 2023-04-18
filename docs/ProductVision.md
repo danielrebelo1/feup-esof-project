@@ -2,8 +2,7 @@
 
 ### Vision Statement
 
-Cinemate's promotes the discovering of cinema while fostering user debate and engagement.
-
+Cinemate's promotes cinema discovery while fostering user interaction and engagement through dedicated comment sections for each movie or series.
 
 ### Main Features
 
