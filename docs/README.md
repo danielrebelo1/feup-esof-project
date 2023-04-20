@@ -27,6 +27,9 @@ This model contains the following classes:
   * Review - This class represents a review where a user can give his opinion about the movie and give a rating for the movie. A user can have multiple reviews for all   movies
 ## Physical Architecture
 
+
+<img src="physical_arch.png"> 
+
 <img src="physicalarch.drawio.svg"> 
 
 Cinem8 app physical architecture follows a simple path. First the smartphone containing the application running it in dart code. There are a lot of users in the app, so we must save and get the details of each user storing the data in one database common to everybody. All the data exterior to the user informatios is stored in API server(IMDb).
