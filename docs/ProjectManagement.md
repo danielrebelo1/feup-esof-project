@@ -32,5 +32,11 @@ hello!
 
 ![Sprint 2](images/sprint2.PNG)
 
+<h5> Board at sprint's end </h5>
+
+![Sprint 2 end](images/final_sprint2.PNG)
+
+
+
 
 
