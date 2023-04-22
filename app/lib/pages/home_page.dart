@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
       switch (methodName) {
         case 'getTopRatedMovies':
           Map movieResults =
-              await tmdbWithCustomLogs.v3.movies.getTopRated(page: page_number);
+          await tmdbWithCustomLogs.v3.movies.getTopRated(page: page_number);
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 'getPopular':
           Map movieResults =
-              await tmdbWithCustomLogs.v3.movies.getPopular(page: page_number);
+          await tmdbWithCustomLogs.v3.movies.getPopular(page: page_number);
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 'getTopRatedSeries':
           Map movieResults =
-              await tmdbWithCustomLogs.v3.tv.getTopRated(page: page_number);
+          await tmdbWithCustomLogs.v3.tv.getTopRated(page: page_number);
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
@@ -146,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       color: _buttonPressedIndex == 1
                           ? Colors.white
@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       color: _buttonPressedIndex == 2
                           ? Colors.white
@@ -208,7 +208,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   },
                   child: Container(
                     padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
                       color: _buttonPressedIndex == 3
                           ? Colors.white
@@ -244,12 +244,12 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Image.network(
                         _currentIndex - 1 < 0
                             ? displayMovies.isEmpty
-                                ? ''
-                                : 'https://image.tmdb.org/t/p/w500' +
-                                    displayMovies[displayMovies.length - 1]
-                                        ['poster_path']
+                            ? ''
                             : 'https://image.tmdb.org/t/p/w500' +
-                                displayMovies[_currentIndex - 1]['poster_path'],
+                            displayMovies[displayMovies.length - 1]
+                            ['poster_path']
+                            : 'https://image.tmdb.org/t/p/w500' +
+                            displayMovies[_currentIndex - 1]['poster_path'],
                         width: MediaQuery.of(context).size.width * 0.4,
                         height: MediaQuery.of(context).size.height * 0.3,
                       ),
@@ -264,15 +264,15 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(10.0),
                       child: displayMovies.isEmpty ||
-                              _currentIndex + 1 >= displayMovies.length
+                          _currentIndex + 1 >= displayMovies.length
                           ? SizedBox.shrink()
                           : Image.network(
-                              'https://image.tmdb.org/t/p/w500' +
-                                  displayMovies[_currentIndex + 1]
-                                      ['poster_path'],
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height * 0.3,
-                            ),
+                        'https://image.tmdb.org/t/p/w500' +
+                            displayMovies[_currentIndex + 1]
+                            ['poster_path'],
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                      ),
                     ),
                   ),
                 ),
@@ -298,31 +298,31 @@ class _MyHomePageState extends State<MyHomePage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MoviePage(
-                                          email: widget.email,
-                                          password: widget.password,
-                                          topRatedMovies: displayMovies,
-                                          currentIndex: _currentIndex,
-                                          movieModel: MovieModel(
-                                              methodName == 'getTopRatedSeries'
-                                                  ? displayMovies[_currentIndex]
-                                                      ['name']
-                                                  : displayMovies[_currentIndex]
-                                                      ['title'],
-                                              methodName == 'getTopRatedSeries'
-                                                  ? displayMovies[_currentIndex]
-                                                      ['first_air_date']
-                                                  : displayMovies[_currentIndex]
-                                                      ['release_date'],
+                                      email: widget.email,
+                                      password: widget.password,
+                                      topRatedMovies: displayMovies,
+                                      currentIndex: _currentIndex,
+                                      movieModel: MovieModel(
+                                          methodName == 'getTopRatedSeries'
+                                              ? displayMovies[_currentIndex]
+                                          ['name']
+                                              : displayMovies[_currentIndex]
+                                          ['title'],
+                                          methodName == 'getTopRatedSeries'
+                                              ? displayMovies[_currentIndex]
+                                          ['first_air_date']
+                                              : displayMovies[_currentIndex]
+                                          ['release_date'],
+                                          displayMovies[_currentIndex]
+                                          ['vote_average'],
+                                          'https://image.tmdb.org/t/p/w500' +
                                               displayMovies[_currentIndex]
-                                                  ['vote_average'],
-                                              'https://image.tmdb.org/t/p/w500' +
-                                                  displayMovies[_currentIndex]
-                                                      ['poster_path'],
-                                              displayMovies[_currentIndex]
-                                                  ['overview'],
-                                              displayMovies[_currentIndex]
-                                                  ['id']),
-                                        )),
+                                              ['poster_path'],
+                                          displayMovies[_currentIndex]
+                                          ['overview'],
+                                          displayMovies[_currentIndex]
+                                          ['id']),
+                                    )),
                               );
                             },
                             child: Container(
@@ -332,12 +332,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 borderRadius: BorderRadius.circular(10.0),
                                 image: displayMovies.isNotEmpty
                                     ? DecorationImage(
-                                        image: NetworkImage(
-                                            'https://image.tmdb.org/t/p/w500' +
-                                                displayMovies[_currentIndex]
-                                                    ['poster_path']),
-                                        fit: BoxFit.cover,
-                                      )
+                                  image: NetworkImage(
+                                      'https://image.tmdb.org/t/p/w500' +
+                                          displayMovies[_currentIndex]
+                                          ['poster_path']),
+                                  fit: BoxFit.cover,
+                                )
                                     : null,
                               ),
                             ),
@@ -354,20 +354,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                           0.01),
                                   child: displayMovies.isNotEmpty
                                       ? Text(
-                                          methodName == 'getTopRatedSeries'
-                                              ? displayMovies[_currentIndex]
-                                                  ['name']
-                                              : displayMovies[_currentIndex]
-                                                  ['title'],
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.03,
-                                          ),
-                                        )
+                                    methodName == 'getTopRatedSeries'
+                                        ? displayMovies[_currentIndex]
+                                    ['name']
+                                        : displayMovies[_currentIndex]
+                                    ['title'],
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: MediaQuery.of(context)
+                                          .size
+                                          .height *
+                                          0.03,
+                                    ),
+                                  )
                                       : SizedBox.shrink(),
                                 ),
                               ),
@@ -380,25 +380,25 @@ class _MyHomePageState extends State<MyHomePage> {
                                           0.008),
                                   child: Text(
                                     (displayMovies.isNotEmpty &&
-                                            (displayMovies[_currentIndex]
-                                                    .containsKey(
-                                                        'release_date') ||
-                                                displayMovies[_currentIndex]
-                                                    .containsKey(
-                                                        'first_air_date')))
+                                        (displayMovies[_currentIndex]
+                                            .containsKey(
+                                            'release_date') ||
+                                            displayMovies[_currentIndex]
+                                                .containsKey(
+                                                'first_air_date')))
                                         ? (methodName == 'getTopRatedSeries'
-                                            ? displayMovies[_currentIndex]
-                                                    ['first_air_date'].toString().substring(0,4)
-                                            : displayMovies[_currentIndex]
-                                                    ['release_date']
-                                                .toString()
-                                                .substring(0, 4))
+                                        ? displayMovies[_currentIndex]
+                                    ['first_air_date'].toString().substring(0,4)
+                                        : displayMovies[_currentIndex]
+                                    ['release_date']
+                                        .toString()
+                                        .substring(0, 4))
                                         : '',
                                     style: TextStyle(
                                       color: Colors.white70,
                                       fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              0.02,
+                                      MediaQuery.of(context).size.height *
+                                          0.02,
                                     ),
                                   ),
                                 ),
@@ -411,15 +411,15 @@ class _MyHomePageState extends State<MyHomePage> {
                                     0.0001),
                             child: Text(
                               displayMovies.isNotEmpty &&
-                                      displayMovies[_currentIndex]
-                                          .containsKey('vote_average')
+                                  displayMovies[_currentIndex]
+                                      .containsKey('vote_average')
                                   ? displayMovies[_currentIndex]['vote_average']
-                                      .toString()
+                                  .toString()
                                   : '',
                               style: TextStyle(
                                 color: Colors.amber,
                                 fontSize:
-                                    MediaQuery.of(context).size.height * 0.03,
+                                MediaQuery.of(context).size.height * 0.03,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
