@@ -4,6 +4,7 @@ import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../reusableWidgets/custom_nav_bar.dart';
+
 import 'movie_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -18,49 +19,102 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> topRatedMovies = [];
+  List<dynamic> displayMovies = [];
   final String apikey = '51b20269b73105d2fd84257214e53cc3';
   final readAcessToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWIyMDI2OWI3MzEwNWQyZmQ4NDI1NzIxNGU1M2NjMyIsInN1YiI6IjY0MjdmZGU4OWNjNjdiMDViZjZlZWZmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rXi6vsFhTtCqdUNv2UPukvqW5_D3wUbnTlamH8UzhA4';
   int page_number = 1;
   int _currentIndex = 0;
+  String methodName = 'getTopRatedMovies';
+  int _selectedButtonPressed = 0;
+
+  void topRatedMoviesButton() {
+    _currentIndex = 0;
+    displayMovies.clear();
+    page_number = 1;
+    methodName = 'getTopRatedMovies';
+    loadMovies(methodName);
+  }
+
+  void popularButton() {
+    _currentIndex = 0;
+    displayMovies.clear();
+    page_number = 1;
+    methodName = 'getPopular';
+    loadMovies(methodName);
+  }
+
+  void topRatedSeriesButton(){
+    _currentIndex = 0;
+    displayMovies.clear();
+    page_number = 1;
+    methodName ='getTopRatedSeries';
+    loadMovies(methodName);
+  }
 
   void _incrementIndex() {
     print(_currentIndex);
     setState(() {
-      if(_currentIndex == topRatedMovies.length - 2){loadMovies();}
-      _currentIndex = (_currentIndex + 1) % topRatedMovies.length;
+      if (_currentIndex == displayMovies.length - 2) {
+        loadMovies(methodName);
+      }
+      _currentIndex = (_currentIndex + 1) % displayMovies.length;
     });
   }
 
   void _decrementIndex() {
     print(_currentIndex);
     setState(() {
-      _currentIndex = (_currentIndex - 1) % topRatedMovies.length;
+      _currentIndex = (_currentIndex - 1) % displayMovies.length;
     });
   }
 
   @override
   void initState() {
-    loadMovies();
+    loadMovies(methodName);
     super.initState();
   }
 
-  loadMovies() async {
+  loadMovies(String methodName) async {
     try {
       TMDB tmdbWithCustomLogs = TMDB(ApiKeys(apikey, readAcessToken),
           logConfig: ConfigLogger(
             showLogs: true,
             showErrorLogs: true,
           ));
-      Map movieResults = await tmdbWithCustomLogs.v3.movies.getTopRated(page: page_number );
-      page_number = page_number + 1;
-      print(page_number);
+      switch (methodName) {
+        case 'getTopRatedMovies':
+          Map movieResults =
+              await tmdbWithCustomLogs.v3.movies.getTopRated(page: page_number);
+          page_number = page_number + 1;
+          setState(() {
+            displayMovies.addAll(movieResults['results']);
+          });
+          print(displayMovies);
+          break;
+        case 'getPopular':
+          Map movieResults =
+              await tmdbWithCustomLogs.v3.movies.getPopular(page: page_number);
+          page_number = page_number + 1;
+          setState(() {
+            displayMovies.addAll(movieResults['results']);
+          });
+          break;
+        case 'getTopRatedSeries':
+          Map movieResults =
+            await tmdbWithCustomLogs.v3.tv.getTopRated(page: page_number);
+          page_number = page_number + 1;
+          setState(() {
+            displayMovies.addAll(movieResults['results']);
+            print(movieResults);
 
-      setState(() {
-        topRatedMovies.addAll(movieResults['results']);
-      });
-      print(topRatedMovies);
+          });
+          break;
+
+        default:
+          print('Invalid method name: $methodName');
+          break;
+      }
     } catch (e) {
       print('Error occurred while loading movies: $e');
     }
@@ -71,182 +125,290 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
-      bottomNavigationBar: CustomNavBar(
-        email: widget.email,
-        password: widget.password,
-      ),
-      body: Stack(
-        children: <Widget>[
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.35,
-            left: 5,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Image.network(
-                  _currentIndex - 1 < 0
-                      ? topRatedMovies.isEmpty
-                      ? ''
-                      : 'https://image.tmdb.org/t/p/w500' +
-                      topRatedMovies[topRatedMovies.length - 1]
-                      ['poster_path']
-                      : 'https://image.tmdb.org/t/p/w500' +
-                      topRatedMovies[_currentIndex - 1]['poster_path'],
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                ),
-              ),
+        backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
+        bottomNavigationBar: CustomNavBar(
+          email: widget.email,
+          password: widget.password,
+        ),
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.1,
             ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.35,
-            right: 5,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: topRatedMovies.isEmpty ||
-                    _currentIndex + 1 >= topRatedMovies.length
-                    ? SizedBox.shrink()
-                    : Image.network(
-                  'https://image.tmdb.org/t/p/w500' +
-                      topRatedMovies[_currentIndex + 1]['poster_path'],
-                  width: MediaQuery.of(context).size.width * 0.4,
-                  height: MediaQuery.of(context).size.height * 0.3,
-                ),
-              ),
-            ),
-          ),
-          Center(
-            child: GestureDetector(
-              onHorizontalDragEnd: (DragEndDetails details) {
-                if (details.primaryVelocity! > 0) {
-                  _decrementIndex();
-                } else if (details.primaryVelocity! < 0) {
-                  _incrementIndex();
-                }
-              },
-              child: Padding(
-                padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).size.height * 0.17),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => MoviePage(
-                                email: widget.email,
-                                password: widget.password,
-                                topRatedMovies: topRatedMovies,
-                                currentIndex: _currentIndex,
-                                movieModel: MovieModel(
-                                    topRatedMovies[_currentIndex]
-                                    ['title'],topRatedMovies[_currentIndex]
-                                ['release_date'],topRatedMovies[_currentIndex]
-                                ['vote_average'] ,'https://image.tmdb.org/t/p/w500' + topRatedMovies[_currentIndex]
-                                ['poster_path'],
-                                    topRatedMovies[_currentIndex]
-                                    ['overview'], topRatedMovies[_currentIndex]['id']),
-                              )),
-                        );
-                      },
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.7,
-                        height: MediaQuery.of(context).size.width * 0.9,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10.0),
-                          image: topRatedMovies.isNotEmpty
-                              ? DecorationImage(
-                            image: NetworkImage(
-                                'https://image.tmdb.org/t/p/w500' +
-                                    topRatedMovies[_currentIndex]
-                                    ['poster_path']),
-                            fit: BoxFit.cover,
-                          )
-                              : null,
-                        ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedButtonPressed = 0;
+                      topRatedMoviesButton();
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: _selectedButtonPressed == 0 ? Colors.white : Colors.transparent,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Text(
+                      "Top rated movies",
+                      style: TextStyle(
+                        color: _selectedButtonPressed == 0
+                            ? Color.fromRGBO(6, 10, 43, 1)
+                            : Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                top: MediaQuery.of(context).size.height * 0.01),
-                            child: topRatedMovies.isNotEmpty
-                                ? Text(
-                              topRatedMovies[_currentIndex]
-                              ['title'],
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                MediaQuery.of(context).size.height *
-                                    0.03,
-                              ),
-                            )
-                                : SizedBox.shrink(),
-                          ),
-                        ),
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                left: 15,
-                                top:
-                                MediaQuery.of(context).size.height * 0.008),
-                            child: Text(
-                              topRatedMovies.isNotEmpty &&
-                                  topRatedMovies[_currentIndex]
-                                      .containsKey('release_date')
-                                  ? topRatedMovies[_currentIndex]
-                              ['release_date']
-                                  .toString()
-                                  .substring(0, 4)
-                                  : '',
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize:
-                                MediaQuery.of(context).size.height * 0.02,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedButtonPressed = 1;
+                      popularButton();
+                    });
+                  },
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: _selectedButtonPressed == 1 ? Colors.white : Colors.transparent,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Text(
+                      "Popular",
+                      style: TextStyle(
+                        color: _selectedButtonPressed == 1
+                            ? Color.fromRGBO(6, 10, 43, 1)
+                            : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedButtonPressed = 2;
+                      topRatedSeriesButton();
+                    });
+                  },
+                  child: Container(
+                    padding:
+                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    decoration: BoxDecoration(
+                      color: _selectedButtonPressed == 2 ? Colors.white : Colors.transparent,
+                      border: Border.all(
+                        color: Colors.white,
+                        width: 2.0,
+                      ),
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Text(
+                      "Top rated series",
+                      style: TextStyle(
+                        color: _selectedButtonPressed == 2
+                            ? Color.fromRGBO(6, 10, 43, 1)
+                            : Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Stack(
+              children: <Widget>[
+                Positioned(
+                  top: MediaQuery.of(context).size.height * 0.20,
+                  left: 5,
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: Image.network(
+                        _currentIndex - 1 < 0
+                            ? displayMovies.isEmpty
+                                ? ''
+                                : 'https://image.tmdb.org/t/p/w500' +
+                                    displayMovies[displayMovies.length - 1]
+                                        ['poster_path']
+                            : 'https://image.tmdb.org/t/p/w500' +
+                                displayMovies[_currentIndex - 1]['poster_path'],
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.3,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: MediaQuery.of(context).size.height * 0.2,
+                  right: 5,
+                  child: ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10.0),
+                      child: displayMovies.isEmpty ||
+                              _currentIndex + 1 >= displayMovies.length
+                          ? SizedBox.shrink()
+                          : Image.network(
+                              'https://image.tmdb.org/t/p/w500' +
+                                  displayMovies[_currentIndex + 1]
+                                      ['poster_path'],
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: MediaQuery.of(context).size.height * 0.3,
+                            ),
+                    ),
+                  ),
+                ),
+                Center(
+                  child: GestureDetector(
+                    onHorizontalDragEnd: (DragEndDetails details) {
+                      if (details.primaryVelocity! > 0) {
+                        _decrementIndex();
+                      } else if (details.primaryVelocity! < 0) {
+                        _incrementIndex();
+                      }
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.of(context).size.height * 0.08),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MoviePage(
+                                          email: widget.email,
+                                          password: widget.password,
+                                          topRatedMovies: displayMovies,
+                                          currentIndex: _currentIndex,
+                                          movieModel: MovieModel(
+                                              displayMovies[_currentIndex]
+                                                  ['title'],
+                                              displayMovies[_currentIndex]
+                                                  ['release_date'],
+                                              displayMovies[_currentIndex]
+                                                  ['vote_average'],
+                                              'https://image.tmdb.org/t/p/w500' +
+                                                  displayMovies[_currentIndex]
+                                                      ['poster_path'],
+                                              displayMovies[_currentIndex]
+                                                  ['overview'],
+                                              displayMovies[_currentIndex]
+                                                  ['id']),
+                                        )),
+                              );
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              height: MediaQuery.of(context).size.width * 0.9,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10.0),
+                                image: displayMovies.isNotEmpty
+                                    ? DecorationImage(
+                                        image: NetworkImage(
+                                            'https://image.tmdb.org/t/p/w500' +
+                                                displayMovies[_currentIndex]
+                                                    ['poster_path']),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : null,
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.0001),
-                      child: Text(
-                        topRatedMovies.isNotEmpty &&
-                            topRatedMovies[_currentIndex]
-                                .containsKey('vote_average')
-                            ? topRatedMovies[_currentIndex]['vote_average']
-                            .toString()
-                            : '',
-                        style: TextStyle(
-                          color: Colors.amber,
-                          fontSize: MediaQuery.of(context).size.height * 0.03,
-                          fontWeight: FontWeight.bold,
-                        ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      top: MediaQuery.of(context).size.height *
+                                          0.01),
+                                  child: displayMovies.isNotEmpty
+                                      ? Text(
+                                    (methodName == "getTopRatedSeries")
+                                        ? displayMovies[_currentIndex]['name']
+                                        : displayMovies[_currentIndex]['title'],
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: MediaQuery.of(context).size.height * 0.03,
+                                    ),
+                                  )
+                                      : SizedBox.shrink(),
+                                ),
+                              ),
+                              Flexible(
+                                fit: FlexFit.loose,
+                                child: Container(
+                                  margin: EdgeInsets.only(
+                                      left: 15,
+                                      top: MediaQuery.of(context).size.height *
+                                          0.008),
+                                  child: Text(
+                                    displayMovies.isNotEmpty &&
+                                            displayMovies[_currentIndex]
+                                                .containsKey('release_date')
+                                        ? displayMovies[_currentIndex]
+                                                ['release_date']
+                                            .toString()
+                                            .substring(0, 4)
+                                        : '',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize:
+                                          MediaQuery.of(context).size.height *
+                                              0.02,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(
+                                top: MediaQuery.of(context).size.height *
+                                    0.0001),
+                            child: Text(
+                              displayMovies.isNotEmpty &&
+                                      displayMovies[_currentIndex]
+                                          .containsKey('vote_average')
+                                  ? displayMovies[_currentIndex]['vote_average']
+                                      .toString()
+                                  : '',
+                              style: TextStyle(
+                                color: Colors.amber,
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.03,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ));
   }
 }
