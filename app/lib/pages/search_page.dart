@@ -1,6 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../reusableWidgets/movie_model.dart';
@@ -39,7 +38,6 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Future<List<MovieModel>> searchMedia(String query) async {
-
     final url =
         'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${query}';
     final response = await http.get(Uri.parse(url));
@@ -61,6 +59,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Timer? _debounceTimer ;
   List<MovieModel> displayList = [];
 
   void updateList(String value) {
@@ -110,7 +109,10 @@ class _SearchPageState extends State<SearchPage> {
             ),
             TextField(
               controller: _textEditingController,
-              onChanged: (value) => updateList(value),
+              onChanged: (value) async {
+                await Future.delayed(const Duration(seconds: 1));
+                updateList(value);
+              },
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 filled: true,
