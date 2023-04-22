@@ -26,7 +26,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int page_number = 1;
   int _currentIndex = 0;
   String methodName = 'getTopRatedMovies';
-  int _selectedButtonPressed = 0;
+  int _buttonPressedIndex = 1;
 
   void topRatedMoviesButton() {
     _currentIndex = 0;
@@ -44,11 +44,11 @@ class _MyHomePageState extends State<MyHomePage> {
     loadMovies(methodName);
   }
 
-  void topRatedSeriesButton(){
+  void topRatedSeriesButton() {
     _currentIndex = 0;
     displayMovies.clear();
     page_number = 1;
-    methodName ='getTopRatedSeries';
+    methodName = 'getTopRatedSeries';
     loadMovies(methodName);
   }
 
@@ -102,12 +102,11 @@ class _MyHomePageState extends State<MyHomePage> {
           break;
         case 'getTopRatedSeries':
           Map movieResults =
-            await tmdbWithCustomLogs.v3.tv.getTopRated(page: page_number);
+              await tmdbWithCustomLogs.v3.tv.getTopRated(page: page_number);
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
             print(movieResults);
-
           });
           break;
 
@@ -141,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedButtonPressed = 0;
+                      _buttonPressedIndex = 1;
                       topRatedMoviesButton();
                     });
                   },
@@ -149,7 +148,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     padding:
                         EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
-                      color: _selectedButtonPressed == 0 ? Colors.white : Colors.transparent,
+                      color: _buttonPressedIndex == 1
+                          ? Colors.white
+                          : Colors.transparent,
                       border: Border.all(
                         color: Colors.white,
                         width: 2.0,
@@ -159,7 +160,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       "Top rated movies",
                       style: TextStyle(
-                        color: _selectedButtonPressed == 0
+                        color: _buttonPressedIndex == 1
                             ? Color.fromRGBO(6, 10, 43, 1)
                             : Colors.white,
                         fontWeight: FontWeight.bold,
@@ -170,15 +171,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedButtonPressed = 1;
+                      _buttonPressedIndex = 2;
                       popularButton();
                     });
                   },
                   child: Container(
                     padding:
-                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
-                      color: _selectedButtonPressed == 1 ? Colors.white : Colors.transparent,
+                      color: _buttonPressedIndex == 2
+                          ? Colors.white
+                          : Colors.transparent,
                       border: Border.all(
                         color: Colors.white,
                         width: 2.0,
@@ -188,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       "Popular",
                       style: TextStyle(
-                        color: _selectedButtonPressed == 1
+                        color: _buttonPressedIndex == 2
                             ? Color.fromRGBO(6, 10, 43, 1)
                             : Colors.white,
                         fontWeight: FontWeight.bold,
@@ -199,15 +202,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 GestureDetector(
                   onTap: () {
                     setState(() {
-                      _selectedButtonPressed = 2;
+                      _buttonPressedIndex = 3;
                       topRatedSeriesButton();
                     });
                   },
                   child: Container(
                     padding:
-                    EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     decoration: BoxDecoration(
-                      color: _selectedButtonPressed == 2 ? Colors.white : Colors.transparent,
+                      color: _buttonPressedIndex == 3
+                          ? Colors.white
+                          : Colors.transparent,
                       border: Border.all(
                         color: Colors.white,
                         width: 2.0,
@@ -217,7 +222,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: Text(
                       "Top rated series",
                       style: TextStyle(
-                        color: _selectedButtonPressed == 2
+                        color: _buttonPressedIndex == 3
                             ? Color.fromRGBO(6, 10, 43, 1)
                             : Colors.white,
                         fontWeight: FontWeight.bold,
@@ -298,10 +303,16 @@ class _MyHomePageState extends State<MyHomePage> {
                                           topRatedMovies: displayMovies,
                                           currentIndex: _currentIndex,
                                           movieModel: MovieModel(
-                                              displayMovies[_currentIndex]
-                                                  ['title'],
-                                              displayMovies[_currentIndex]
-                                                  ['release_date'],
+                                              methodName == 'getTopRatedSeries'
+                                                  ? displayMovies[_currentIndex]
+                                                      ['name']
+                                                  : displayMovies[_currentIndex]
+                                                      ['title'],
+                                              methodName == 'getTopRatedSeries'
+                                                  ? displayMovies[_currentIndex]
+                                                      ['first_air_date']
+                                                  : displayMovies[_currentIndex]
+                                                      ['release_date'],
                                               displayMovies[_currentIndex]
                                                   ['vote_average'],
                                               'https://image.tmdb.org/t/p/w500' +
@@ -343,15 +354,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                           0.01),
                                   child: displayMovies.isNotEmpty
                                       ? Text(
-                                    (methodName == "getTopRatedSeries")
-                                        ? displayMovies[_currentIndex]['name']
-                                        : displayMovies[_currentIndex]['title'],
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: MediaQuery.of(context).size.height * 0.03,
-                                    ),
-                                  )
+                                          methodName == 'getTopRatedSeries'
+                                              ? displayMovies[_currentIndex]
+                                                  ['name']
+                                              : displayMovies[_currentIndex]
+                                                  ['title'],
+                                          style: TextStyle(
+                                            color: Colors.white70,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height *
+                                                0.03,
+                                          ),
+                                        )
                                       : SizedBox.shrink(),
                                 ),
                               ),
@@ -363,13 +379,20 @@ class _MyHomePageState extends State<MyHomePage> {
                                       top: MediaQuery.of(context).size.height *
                                           0.008),
                                   child: Text(
-                                    displayMovies.isNotEmpty &&
-                                            displayMovies[_currentIndex]
-                                                .containsKey('release_date')
-                                        ? displayMovies[_currentIndex]
-                                                ['release_date']
-                                            .toString()
-                                            .substring(0, 4)
+                                    (displayMovies.isNotEmpty &&
+                                            (displayMovies[_currentIndex]
+                                                    .containsKey(
+                                                        'release_date') ||
+                                                displayMovies[_currentIndex]
+                                                    .containsKey(
+                                                        'first_air_date')))
+                                        ? (methodName == 'getTopRatedSeries'
+                                            ? displayMovies[_currentIndex]
+                                                    ['first_air_date'].toString().substring(0,4)
+                                            : displayMovies[_currentIndex]
+                                                    ['release_date']
+                                                .toString()
+                                                .substring(0, 4))
                                         : '',
                                     style: TextStyle(
                                       color: Colors.white70,
