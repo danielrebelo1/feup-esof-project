@@ -1,12 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/pages/login_page.dart';
 
 class ProfilePage extends StatelessWidget {
   final String email;
+  final String username;
   final String password;
 
-  const ProfilePage({Key? key, required this.email, required this.password})
+  const ProfilePage({Key? key, required this.email, required this.username, required this.password})
       : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       ),
-      body: ImageWidget(email: email, password: password),
+      body: ImageWidget(email: email, username: username, password: password),
     );
   }
 }
@@ -24,12 +26,15 @@ class ProfilePage extends StatelessWidget {
 class ImageWidget extends StatelessWidget {
   final String email;
   final String password;
+  final String username;
 
-  const ImageWidget({Key? key, required this.email, required this.password})
+
+  const ImageWidget({Key? key, required this.email, required this.username, required this.password})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Stack(
       children: [
         Positioned(
@@ -68,10 +73,11 @@ class ImageWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(height: MediaQuery.of(context).size.height * 0.2),
             Container(
-              margin:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.15),
+              margin:  EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
               child:  Text(
-                "Your e-email associated with this account:",
+                "Your e-email:",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -84,6 +90,28 @@ class ImageWidget extends StatelessWidget {
               child: Text(
                 email,
                 style:  TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.02),
+              child: Text(
+                "Your username:",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.height * 0.03,
+                ),
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02, top: MediaQuery.of(context).size.height * 0.02),
+              child: Text(
+                username,
+                style: TextStyle(
                   fontWeight: FontWeight.normal,
                   color: Colors.white,
                   fontSize: MediaQuery.of(context).size.height * 0.03,

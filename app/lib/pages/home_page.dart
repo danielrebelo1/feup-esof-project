@@ -8,9 +8,10 @@ import 'movie_page.dart';
 
 class MyHomePage extends StatefulWidget {
   final String email;
+  final String username;
   final String password;
 
-  const MyHomePage({Key? key, required this.email, required this.password})
+  const MyHomePage({Key? key, required this.email, required this.username, required this.password})
       : super(key: key);
 
   @override
@@ -74,6 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
+        username: widget.username,
         password: widget.password,
       ),
       body: Stack(
@@ -142,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           MaterialPageRoute(
                               builder: (context) => MoviePage(
                                 email: widget.email,
+                                username: widget.username,
                                 password: widget.password,
                                 topRatedMovies: topRatedMovies,
                                 currentIndex: _currentIndex,
