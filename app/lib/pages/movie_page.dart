@@ -253,7 +253,6 @@ class _MoviePageState extends State<MoviePage> {
                       final comments = snapshot.data?.docs;
 
                       return Container(
-                        color: Colors.white,
                         child: Column(
                           children: [
                             SizedBox(height: 16.0),
@@ -280,37 +279,45 @@ class _MoviePageState extends State<MoviePage> {
                                   commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
                                 }
                                 final userID = commentData['userID'] as String;
-                                return Container(
-                                  padding: EdgeInsets.symmetric(vertical: 8.0),
-                                    child: StreamBuilder<QuerySnapshot>(
-                                    stream: FirebaseFirestore.instance
-                                        .collection('users')
-                                        .where('email', isEqualTo: userID)
-                                        .snapshots(),
-                                    builder: (BuildContext context, userSnapshot) {
-                                      if (userSnapshot.hasError) {
-                                        return Text('Error: ${userSnapshot.error}');
-                                      }
+                                return Column(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),                                      padding: EdgeInsets.symmetric(vertical: 8.0),
+                                        child: StreamBuilder<QuerySnapshot>(
+                                        stream: FirebaseFirestore.instance
+                                            .collection('users')
+                                            .where('email', isEqualTo: userID)
+                                            .snapshots(),
+                                        builder: (BuildContext context, userSnapshot) {
+                                          if (userSnapshot.hasError) {
+                                            return Text('Error: ${userSnapshot.error}');
+                                          }
 
-                                      if (userSnapshot.connectionState == ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
-                                      }
-                                      String username;
-                                      if (userSnapshot.data!.docs.isEmpty) {username = "Anonymous";}
-                                      username = userSnapshot.data!.docs[0]['username'];
-                                      return ListTile(
-                                        title: Text(
-                                          username,
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        subtitle: Text(content),
-                                        trailing: Text(
-                                          commentTime,
-                                          style: TextStyle(color: Colors.grey),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                          if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                            return CircularProgressIndicator();
+                                          }
+                                          String username;
+                                          if (userSnapshot.data!.docs.isEmpty) {username = "Anonymous";}
+                                          username = userSnapshot.data!.docs[0]['username'];
+                                          return ListTile(
+                                            title: Text(
+                                              username,
+                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                            ),
+                                            subtitle: Text(content),
+                                            trailing: Text(
+                                              commentTime,
+                                              style: TextStyle(color: Colors.grey),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    SizedBox(height: 8.0), // added SizedBox with desired height
+                                  ],
                                 );
                               }).toList(),
                           ],
