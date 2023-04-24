@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 
 class MoviePage extends StatefulWidget {
   final String email;
+  final String username;
   final String password;
   final List topRatedMovies;
   final int currentIndex;
@@ -17,6 +18,7 @@ class MoviePage extends StatefulWidget {
   const MoviePage(
       {Key? key,
       required this.email,
+        required this.username,
       required this.password,
       required this.topRatedMovies,
       required this.currentIndex,
@@ -38,6 +40,7 @@ class _MoviePageState extends State<MoviePage> {
 
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
+        username: widget.username,
         password: widget.password,
       ),
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
@@ -217,6 +220,7 @@ class _MoviePageState extends State<MoviePage> {
                             'content': userComment,
                             'idMovie': widget.movieModel!.id ?? -1,
                             'timestamp': DateTime.now(),
+                            'userID' : widget.email,
                           }).then((value) => print("Comment added!"));
                           setState(() {
                             userComment = ''; // Clear userComment after adding the comment
@@ -234,7 +238,7 @@ class _MoviePageState extends State<MoviePage> {
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('comments')
-                        .where('idMovie', isEqualTo: widget.movieModel?.id ?? -1) // replace 'comments' with your collection name
+                        .where('idMovie', isEqualTo: widget.movieModel?.id ?? -1).orderBy('timestamp', descending: true)// replace 'comments' with your collection name
                         .snapshots(),
                     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
@@ -250,27 +254,69 @@ class _MoviePageState extends State<MoviePage> {
 
                       return Container(
                         color: Colors.white,
-                        child:
-                        Column(
-                        children: [
-                          SizedBox(height: 16.0),
-                          if (comments != null && comments.isNotEmpty)
-                            ...comments.map((commentDoc) {
-                              final commentData = commentDoc.data() as Map<String, dynamic>;
-                              final content = commentData['content'] as String;
-                              final timestamp = commentData['timestamp'] as Timestamp;
-                              final commentTime = DateFormat('MMM dd, yyyy HH:mm').format(timestamp.toDate()); // or format the timestamp as desired
+                        child: Column(
+                          children: [
+                            SizedBox(height: 16.0),
+                            if (comments != null && comments.isNotEmpty)
+                              ...comments.map((commentDoc) {
+                                final commentData = commentDoc.data() as Map<String, dynamic>;
+                                final content = commentData['content'] as String;
+                                final timestamp = commentData['timestamp'] as Timestamp;
+                                final time_now = DateTime.now();
+                                final time_elapsed = time_now.difference(timestamp.toDate());
+                                final time_elapsed_sec = time_elapsed.abs().inSeconds;
+                                final commentTime;
+                                if (time_elapsed_sec < 60) commentTime = "$time_elapsed_sec seconds ago";
+                                else if (time_elapsed_sec < 3600) {
+                                  final minutes = (time_elapsed_sec / 60).round();
+                                  commentTime = '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+                                }
+                                else if(time_elapsed_sec < 86400){
+                                  final hours = (time_elapsed_sec / (60 * 60)).round();
+                                  commentTime = '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+                                }
+                                else{
+                                  final days = (time_elapsed_sec / (60 * 60)).round();
+                                  commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
+                                }
+                                final userID = commentData['userID'] as String;
+                                return Container(
+                                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                                    child: StreamBuilder<QuerySnapshot>(
+                                    stream: FirebaseFirestore.instance
+                                        .collection('users')
+                                        .where('email', isEqualTo: userID)
+                                        .snapshots(),
+                                    builder: (BuildContext context, userSnapshot) {
+                                      if (userSnapshot.hasError) {
+                                        return Text('Error: ${userSnapshot.error}');
+                                      }
 
-                              return Container(// Use the background color of the app
-                              padding: EdgeInsets.symmetric(vertical: 8.0),
-                              child: ListTile(
-                                title: Text(content),
-                                subtitle: Text(commentTime),
-                              ),
-                              );
-                            }).toList(),
-                        ],
-                        ));
+                                      if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      }
+                                      String username;
+                                      if (userSnapshot.data!.docs.isEmpty) {username = "Anonymous";}
+                                      username = userSnapshot.data!.docs[0]['username'];
+                                      return ListTile(
+                                        title: Text(
+                                          username,
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        ),
+                                        subtitle: Text(content),
+                                        trailing: Text(
+                                          commentTime,
+                                          style: TextStyle(color: Colors.grey),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                );
+                              }).toList(),
+                          ],
+                        ),
+                      );
+
                     },
                   ),
                 ]

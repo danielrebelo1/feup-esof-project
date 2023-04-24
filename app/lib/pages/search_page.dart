@@ -14,6 +14,7 @@ void clearTextInput() {
 
 class SearchPage extends StatefulWidget {
   final String email;
+  final String username;
   final String password;
   final List topRatedMovies;
   final int currentIndex;
@@ -21,6 +22,7 @@ class SearchPage extends StatefulWidget {
   SearchPage({
     Key? key,
     required this.email,
+    required this.username,
     required this.password,
     required this.topRatedMovies,
     required this.currentIndex,
@@ -158,6 +160,7 @@ class _SearchPageState extends State<SearchPage> {
                               MaterialPageRoute(
                                 builder: (context) => MoviePage(
                                   email: widget.email,
+                                  username: widget.username,
                                   password: widget.password,
                                   topRatedMovies: displayList,
                                   currentIndex: index,

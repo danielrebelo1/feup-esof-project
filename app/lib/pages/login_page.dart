@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/pages/create_account.dart';
@@ -102,49 +103,76 @@ class _LoginPageState extends State<LoginPage> {
       onPressed: () {
         FirebaseAuth.instance
             .signInWithEmailAndPassword(
-                email: emailController.text, password: passwordController.text)
+            email: emailController.text, password: passwordController.text)
             .then((value) => {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('Welcome back!'),
-                        duration: Duration(seconds: 3),
-                        backgroundColor: Color.fromRGBO(0 , 150 , 100, 1),
-                      ),
-                   ),
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                               MyHomePage(email: emailController.text, password: passwordController.text,)))
-                })
-        .catchError((e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Invalid email/password combination. Try again'),
-              duration: Duration(seconds: 5),
-              backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+              content: Text('Welcome back!'),
+              duration: Duration(seconds: 3),
+              backgroundColor: Color.fromRGBO(0, 150, 100, 1),
             ),
-        );
+          ),
+          FirebaseFirestore.instance
+              .collection('users')
+              .where('email', isEqualTo: emailController.text)
+              .get()
+              .then((QuerySnapshot querySnapshot) {
+            if (querySnapshot.docs.isNotEmpty) {
+              String username = querySnapshot.docs.first.get('username');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(
+                    email: emailController.text,
+                    username: username,
+                    password: passwordController.text,
+                  ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('No user found with that email address.'),
+                  duration: Duration(seconds: 5),
+                  backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+                ),
+              );
+            }
+          })
+              .catchError((e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Invalid email/password combination. Try again'),
+                duration: Duration(seconds: 5),
+                backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+              ),
+            );
+          }),
         });
       },
       style: ElevatedButton.styleFrom(
         foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
         shape: const StadiumBorder(),
         backgroundColor: Colors.white,
-        padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.01),
+        padding:
+        EdgeInsets.symmetric(vertical: MediaQuery.of(context).size.height * 0.01),
       ),
       child: SizedBox(
           width: double.infinity,
           child: Text(
             "Login ",
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: MediaQuery.of(context).size.width * 0.05),
+            style: TextStyle(
+                fontSize: MediaQuery.of(context).size.width * 0.05),
           )),
     );
   }
 
 
-  Widget _forgotPasswordBtn() {
+
+
+
+        Widget _forgotPasswordBtn() {
     TextEditingController emailController = TextEditingController();
 
     return Align(

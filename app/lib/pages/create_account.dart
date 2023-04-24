@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'home_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class CreateAccountPage extends StatefulWidget {
   const CreateAccountPage({Key? key}) : super(key: key);
@@ -34,12 +36,15 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
       ),
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor:const Color.fromRGBO(6, 10, 43, 1),
+          backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
           elevation: 0.0,
         ),
         backgroundColor: Colors.transparent,
         body: Padding(
-          padding:  EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.001, vertical: 0),
+          padding: EdgeInsets.symmetric(horizontal: MediaQuery
+              .of(context)
+              .size
+              .width * 0.001, vertical: 0),
           child: _page(),
         ),
       ),
@@ -49,7 +54,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   Widget _page() {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.width * 0.001, vertical: 0),
+        padding: EdgeInsets.symmetric(horizontal: MediaQuery
+            .of(context)
+            .size
+            .width * 0.001, vertical: 0),
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -71,7 +79,10 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
   }
 
   Widget _icon() {
-    final double iconSize = MediaQuery.of(context).size.width * 0.40;
+    final double iconSize = MediaQuery
+        .of(context)
+        .size
+        .width * 0.40;
     return SizedBox(
       width: iconSize,
       height: iconSize,
@@ -81,8 +92,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
   Widget _inputField(String hintText, TextEditingController controller,
       {bool isPassword = false}) {
-    final double textFieldWidth = MediaQuery.of(context).size.width * 0.8;
-    final double textFieldHeight = MediaQuery.of(context).size.height * 0.08;
+    final double textFieldWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.8;
+    final double textFieldHeight = MediaQuery
+        .of(context)
+        .size
+        .height * 0.08;
     var border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(textFieldHeight * 0.5),
         borderSide: const BorderSide(color: Colors.white));
@@ -106,38 +123,94 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
 
   Widget _createAccountBtn() {
-    final double buttonWidth = MediaQuery.of(context).size.width * 0.8;
-    final double buttonHeight = MediaQuery.of(context).size.height * 0.08;
+    final double buttonWidth = MediaQuery
+        .of(context)
+        .size
+        .width * 0.8;
+    final double buttonHeight = MediaQuery
+        .of(context)
+        .size
+        .height * 0.08;
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+
 
     return SizedBox(
       width: buttonWidth,
       height: buttonHeight,
       child: ElevatedButton(
-        onPressed: () {
-          FirebaseAuth.instance
-              .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text)
-              .then((value) {
+        onPressed: () async {
+          QuerySnapshot queryUsername = await users.where(
+              'username', isEqualTo: usernameController.text).get();
+          QuerySnapshot queryEmail = await users.where('email',isEqualTo: emailController.text).get();
+          if (queryEmail.docs.isNotEmpty){
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(
+                  'An account with this email already exists! Sign in!'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+              ),);
+          }
+          else if (queryUsername.docs.isNotEmpty) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(
+                  'The username already exists! Please try another one!'),
+                duration: Duration(seconds: 3),
+                backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+              ),);
+          }
+          if (passwordController.text.length < 7){
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text('Welcome ' + usernameController.text + ' !'),
+                content: Text(
+                    'ERROR! Please fill all fields and check if password has at least 6 characters'),
                 duration: Duration(seconds: 3),
-                backgroundColor: Color.fromRGBO(0 , 150 , 100, 1),
+                backgroundColor: Color.fromRGBO(80, 0, 100, 1),
               ),
             );
-            Navigator.push(
+          }
+          else {
+            await users.add({
+              'username': usernameController.text,
+              'email': emailController.text
+            });
+            FirebaseAuth.instance.createUserWithEmailAndPassword(
+              email: emailController.text,
+              password: passwordController.text,
+            ).then((value) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Welcome ' + usernameController.text + ' !'),
+                  duration: Duration(seconds: 3),
+                  backgroundColor: Color.fromRGBO(0, 150, 100, 1),
+                ),
+              );
+              String user_email = emailController.text;
+              String user_username = usernameController.text;
+              Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MyHomePage(email: emailController.text, password: passwordController.text,)));
-          }).onError((error, stackTrace) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('ERROR! Please fill all fields and check if password has at least 6 characters'),
-                duration: Duration(seconds: 3),
-                backgroundColor: Color.fromRGBO(80 , 0 , 100, 1),
-              ),
-            );
-          });
+                  builder: (context) =>
+                      MyHomePage(
+                        email: user_email,
+                        username: user_username,
+                        password: passwordController.text,
+                      ),
+                ),
+              );
+            }).onError((error, stackTrace) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                      'ERROR! Please fill all fields and check if password has at least 6 characters'),
+                  duration: Duration(seconds: 3),
+                  backgroundColor: Color.fromRGBO(80, 0, 100, 1),
+                ),
+              );
+            });
+            usernameController.clear();
+            emailController.clear();
+            passwordController.clear();
+          }
         },
         style: ElevatedButton.styleFrom(
           foregroundColor: const Color.fromRGBO(6, 10, 43, 1),
@@ -146,14 +219,17 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
           padding: EdgeInsets.symmetric(vertical: buttonHeight * 0.2),
         ),
         child: const SizedBox(
-            width: double.infinity,
-            child: Text(
-              "Create Account",
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20),
-            )),
+          width: double.infinity,
+          child: Text(
+            "Create Account",
+            textAlign: TextAlign.center,
+            style: TextStyle(fontSize: 20),
+          ),
+        ),
       ),
     );
   }
-
 }
+
+
+
