@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:project/pages/login_page.dart';
 import 'home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -184,15 +185,14 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                   backgroundColor: Color.fromRGBO(0, 150, 100, 1),
                 ),
               );
-              String user_email = emailController.text;
-              String user_username = usernameController.text;
+
               Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
                       MyHomePage(
-                        email: user_email,
-                        username: user_username,
+                        email: emailController.text,
+                        username: usernameController.text,
                         password: passwordController.text,
                       ),
                 ),
@@ -207,9 +207,6 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 ),
               );
             });
-            usernameController.clear();
-            emailController.clear();
-            passwordController.clear();
           }
         },
         style: ElevatedButton.styleFrom(

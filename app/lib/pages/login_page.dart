@@ -171,8 +171,7 @@ class _LoginPageState extends State<LoginPage> {
 
 
 
-
-        Widget _forgotPasswordBtn() {
+  Widget _forgotPasswordBtn() {
     TextEditingController emailController = TextEditingController();
 
     return Align(
