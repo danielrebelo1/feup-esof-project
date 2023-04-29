@@ -39,15 +39,21 @@ class _MoviePageState extends State<MoviePage> {
         result = [];
       });
     } else {
+      print('URL BEFORE GETPLATFORMS IS $url');
       getPlatforms(url).then((results) {
         setState(() {
+          print('AFTER THE GETPLATFORMS -> $results');
           result = results;
+          print('AFTER THE SETSTATE -> $result');
         });
       }).catchError((error) {
         print(error);
       });
     }
+    print('--------------');
+    print('AFTER UPDATELIST');
     print(result);
+    print('----------------');
     return result;
   }
 
@@ -57,10 +63,11 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
+    // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
+    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
     print(utellyApiPath);
     List<String> platforms = updateList(utellyApiPath);
+    print('AFTER THE UPDATELIST $platforms');
     if (platforms.isEmpty) {
       platforms.add("netflix.png");
     }

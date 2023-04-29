@@ -3,22 +3,46 @@ import 'dart:core';
 import 'package:http/http.dart' as http;
 
 Future<List<String>> getPlatforms(String utellyApiPath) async{
+  // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
+  // utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=97546&source=tmdb&country=us';
 
+
+  print('BEFORE URIPARSE $utellyApiPath');
   var url = Uri.parse(utellyApiPath);
+  print('AFTER URIPARSE $url');
   var headers = {
     "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
-    "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com"
+    "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
+    "content-type": "application/octet-stream"
   };
 
+  /*
   var response = await http.get(url, headers: headers);
-  List<String> res = [];
-  if (response.statusCode != 200) {
-    print("DEU MERDAAAAAAAAAAAAA");
+
+  if (response.statusCode < 200 || response.statusCode > 299) {
+    print("DEU MERDAAAAAAAAAAAAA ----- ${response.statusCode}");
     return res;
   }
 
   final data = jsonDecode(response.body);
   final locations = data['collection']['locations'];
+  */
+  List<String> res = [];
+  final data, locations;
+  try {
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      print("DEU MERDAAAAAAAAAAAAA ----- ${response.statusCode}");
+      return res;
+    }
+    data = jsonDecode(response.body);
+    locations = data['collection']['locations'];
+    // process the response as before
+  } catch (e) {
+    // handle any exceptions thrown by the HTTP request
+    print('Error making HTTP request: $e');
+    return res;
+  }
 
   for (int i = 0; i < locations.length; i++){
     final String platform = locations[i]['display_name'];
