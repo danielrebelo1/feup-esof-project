@@ -118,6 +118,8 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
               .createUserWithEmailAndPassword(
               email: emailController.text, password: passwordController.text)
               .then((value) {
+            return value.user?.updateDisplayName(usernameController.text);
+          }).then((value) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text('Welcome ' + usernameController.text + ' !'),
