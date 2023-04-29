@@ -12,7 +12,10 @@ Future<List<String>> getPlatforms(String utellyApiPath) async{
 
   var response = await http.get(url, headers: headers);
   List<String> res = [];
-  if (response.statusCode != 200) return res;
+  if (response.statusCode != 200) {
+    print("DEU MERDAAAAAAAAAAAAA");
+    return res;
+  }
 
   final data = jsonDecode(response.body);
   final locations = data['collection']['locations'];

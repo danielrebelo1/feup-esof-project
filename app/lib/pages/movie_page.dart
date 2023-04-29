@@ -42,28 +42,25 @@ class _MoviePageState extends State<MoviePage> {
       getPlatforms(url).then((results) {
         setState(() {
           result = results;
-          print('AFTER THE SETSTATE -> $result');
         });
       }).catchError((error) {
         print(error);
       });
     }
-    print('--------------');
-    print('AFTER UPDATELIST');
     print(result);
-    print('----------------');
     return result;
   }
+
   String userComment = "";
   TextEditingController commentController = TextEditingController();
   CollectionReference comments = FirebaseFirestore.instance.collection('comments');
+
   @override
   Widget build(BuildContext context) {
 
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=' + widget.mediaModel!.mediaType + '%2F' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
+    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
     print(utellyApiPath);
     List<String> platforms = updateList(utellyApiPath);
-    print(platforms);
     if (platforms.isEmpty) {
       platforms.add("netflix.png");
     }
@@ -143,7 +140,7 @@ class _MoviePageState extends State<MoviePage> {
                                 offset: const Offset(0, 20),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset('assets/netflix.png',
+                                  child: Image.asset('assets/' + platforms[0],
                                     height: 55,
                                     width: 50,
                                   ),
