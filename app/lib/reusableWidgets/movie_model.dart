@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-class MovieModel{
-  String movieTitle;
-  String movieReleaseYear;
-  String moviePoster;
+class MediaModel{
+  String mediaTitle;
+  String mediaType;
+  String mediaReleaseYear;
+  String poster;
   String description;
   double? rating;
   int? id;
 
-  MovieModel(this.movieTitle, this.movieReleaseYear, this.rating, this.moviePoster, this.description, this.id);
+  MediaModel(this.mediaTitle, this.mediaType, this.mediaReleaseYear, this.rating, this.poster, this.description, this.id);
 }

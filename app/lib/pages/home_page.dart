@@ -1,10 +1,11 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:tmdb_api/tmdb_api.dart';
-
+import 'package:http/http.dart' as http;
+import 'utelly-api.dart';
 import '../reusableWidgets/custom_nav_bar.dart';
-
 import 'movie_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -19,6 +20,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
+
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> displayMovies = [];
   final String apikey = '51b20269b73105d2fd84257214e53cc3';
@@ -28,6 +31,37 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   String methodName = 'getTopRatedMovies';
   int _buttonPressedIndex = 1;
+
+Future<String> getMediaType(String mediaName)async {
+    final url =
+        'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${mediaName}';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final results = data["results"][0];
+      return results['media_type'];
+    }
+    return "";
+  }
+
+  String result = "";
+
+  String updateString(String value) {
+    if (value == "") {
+      setState(() {
+        result = "";
+      });
+    } else {
+      getMediaType(value).then((results) {
+        setState(() {
+          result = results;
+        });
+      }).catchError((error) {
+        print(error);
+      });
+    }
+    return result;
+  }
 
   void topRatedMoviesButton() {
     _currentIndex = 0;
@@ -305,14 +339,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTap: () {
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(
-                                          builder: (context) => MoviePage(
+                                      MaterialPageRoute (
+                                          builder: (context)  => MoviePage(
                                                 email: widget.email,
                                                 username: widget.username,
                                                 password: widget.password,
                                                 topRatedMovies: displayMovies,
                                                 currentIndex: _currentIndex,
-                                                movieModel: MovieModel(
+                                                mediaModel: MediaModel(
                                                     methodName == 'getTopRatedSeries'
                                                         ? displayMovies[
                                                                 _currentIndex]
@@ -320,6 +354,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                                         : displayMovies[
                                                                 _currentIndex]
                                                             ['title'],
+                                                    updateString(methodName == 'getTopRatedSeries'
+                                                        ? displayMovies[
+                                                    _currentIndex]
+                                                    ['name']
+                                                        : displayMovies[
+                                                    _currentIndex]
+                                                    ['title']),
                                                     methodName ==
                                                             'getTopRatedSeries'
                                                         ? displayMovies[
