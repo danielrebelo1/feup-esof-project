@@ -38,10 +38,19 @@ hello!
 
 <h5> Retro </h5>
 
-1.This sprint was very productive. We managed to complete all the user stories assigned for these 3 weeks.
+1. This sprint was very productive. We managed to complete all the user stories assigned for these 3 weeks.
 2. We weren't able to include Unit Testing in our App this sprint.
 3. We learned how to design, in a more intuitive way, the changelog. Also, we were able to learn how to connect APIs to flutter and also databases from Firebase.
 4. All our questions were clearly explained by the professor.
+
+<h3> Sprint 2</h3>
+
+<h5> Board at sprint's beggining </h5>
+
+![Sprint 3](images/sprint3.PNG)
+
+<h5> Board at sprint's end </h5>
+
 
 
 
