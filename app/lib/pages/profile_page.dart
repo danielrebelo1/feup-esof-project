@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ImageWidget> {
             ),
           ),
 
-          Expanded( 
+          Expanded(
             child: TextField(
               style: const TextStyle(
                 fontSize: 20,
