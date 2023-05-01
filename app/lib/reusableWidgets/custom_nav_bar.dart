@@ -59,6 +59,7 @@ class CustomNavBar extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => ProfilePage(email: email,username: username, password: password,)),
+
               );
             },
             child: const Icon(
