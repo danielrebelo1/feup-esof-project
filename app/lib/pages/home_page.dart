@@ -125,7 +125,7 @@ Future<String> getMediaType(String mediaName)async {
           setState(() {
             displayMovies.addAll(movieResults['results']);
           });
-          print(displayMovies);
+          // print(displayMovies);
           break;
         case 'getPopular':
           Map movieResults =
@@ -141,7 +141,7 @@ Future<String> getMediaType(String mediaName)async {
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
-            print(movieResults);
+            //print(movieResults);
           });
           break;
 

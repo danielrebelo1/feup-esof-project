@@ -4,7 +4,7 @@ import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'utelly-api.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 
 class MoviePage extends StatefulWidget {
@@ -32,44 +32,53 @@ class MoviePage extends StatefulWidget {
 
 class _MoviePageState extends State<MoviePage> {
   List<String> result = [];
+  List<String> platforms = [];
+  String userComment = "";
+  TextEditingController commentController = TextEditingController();
+  CollectionReference comments = FirebaseFirestore.instance.collection('comments');
+
 
   List<String> updateList(String url) {
+    print(url);
     if (url == "") {
       setState(() {
         result = [];
       });
     } else {
-      print('URL BEFORE GETPLATFORMS IS $url');
+      //print('URL BEFORE GETPLATFORMS IS $url');
       getPlatforms(url).then((results) {
         setState(() {
-          print('AFTER THE GETPLATFORMS -> $results');
-          result = results;
-          print('AFTER THE SETSTATE -> $result');
+          //print('AFTER THE GETPLATFORMS -> $results');
+          platforms = results;
+          //print('AFTER THE SETSTATE -> $result');
         });
       }).catchError((error) {
         print(error);
       });
     }
+    /*
     print('--------------');
     print('AFTER UPDATELIST');
     print(result);
     print('----------------');
-    return result;
+     */
+    print('result is $platforms');
+    return platforms;
   }
-
-  String userComment = "";
-  TextEditingController commentController = TextEditingController();
-  CollectionReference comments = FirebaseFirestore.instance.collection('comments');
 
   @override
   Widget build(BuildContext context) {
     // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
     String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    print(utellyApiPath);
-    List<String> platforms = updateList(utellyApiPath);
-    print('AFTER THE UPDATELIST $platforms');
+    //print(utellyApiPath);
+    //print("ESTOU AQUI -> $platforms");
     if (platforms.isEmpty) {
-      platforms.add("netflix.png");
+      updateList(utellyApiPath);
+      //print('these are the $platforms');
+      if (platforms.isEmpty) {
+        //print("Just added netflix!");
+        platforms.add("netflix.png");
+      }
     }
     return Scaffold(
       bottomNavigationBar: CustomNavBar(
@@ -91,13 +100,20 @@ class _MoviePageState extends State<MoviePage> {
                             fit: BoxFit.cover,
                             alignment: const Alignment(0, 0.7),
                           )
-                        : Image.asset(
-                            'assets/no-image.png',
-                            height: MediaQuery.of(context).size.height * 0.35,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            alignment: const Alignment(0, 0.7),
-                          ))),
+                        : GestureDetector(onTap: () {
+                  const url = 'https://example.com'; // Replace with your desired URL
+                  launch(url);
+                },child:
+                  Image.asset(
+                  'assets/no-image.png',
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, 0.7),
+                )
+                )
+
+                  )),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
