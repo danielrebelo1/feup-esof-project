@@ -1,15 +1,13 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'movie_model.dart';
 
 
-class DisplayMovie extends StatelessWidget {
+class DisplaySideMovie extends StatelessWidget {
 
   final String moviePath;
   final bool position;
 
-  const DisplayMovie(
+  const DisplaySideMovie(
       {Key? key, required this.moviePath, required this.position})
       : super(key: key);
 
