@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
+import 'package:project/reusableWidgets/display_movie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 import '../reusableWidgets/custom_nav_bar.dart';
@@ -12,7 +13,11 @@ class MyHomePage extends StatefulWidget {
   final String username;
   final String password;
 
-  const MyHomePage({Key? key, required this.email, required this.username, required this.password})
+  const MyHomePage(
+      {Key? key,
+      required this.email,
+      required this.username,
+      required this.password})
       : super(key: key);
 
   @override
@@ -240,51 +245,25 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                   Stack(
                     children: <Widget>[
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.20,
-                        left: 5,
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              _currentIndex - 1 < 0
-                                  ? displayMovies.isEmpty
-                                      ? ''
-                                      : 'https://image.tmdb.org/t/p/w500' +
-                                          displayMovies[displayMovies.length -
-                                              1]['poster_path']
+                      DisplayMovie(
+                          moviePath: _currentIndex - 1 < 0
+                              ? displayMovies.isEmpty
+                                  ? ''
                                   : 'https://image.tmdb.org/t/p/w500' +
-                                      displayMovies[_currentIndex - 1]
-                                          ['poster_path'],
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height * 0.3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.2,
-                        right: 5,
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: displayMovies.isEmpty ||
-                                    _currentIndex + 1 >= displayMovies.length
-                                ? SizedBox.shrink()
-                                : Image.network(
-                                    'https://image.tmdb.org/t/p/w500' +
-                                        displayMovies[_currentIndex + 1]
-                                            ['poster_path'],
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                  ),
-                          ),
-                        ),
-                      ),
+                                      displayMovies[displayMovies.length - 1]
+                                          ['poster_path']
+                              : 'https://image.tmdb.org/t/p/w500' +
+                                  displayMovies[_currentIndex - 1]
+                                      ['poster_path'],
+                          position: true),
+                      DisplayMovie(
+                          moviePath: displayMovies.isEmpty ||
+                                  _currentIndex + 1 >= displayMovies.length
+                              ? ''
+                              : 'https://image.tmdb.org/t/p/w500' +
+                                  displayMovies[_currentIndex + 1]
+                                      ['poster_path'],
+                          position: false),
                       Center(
                         child: GestureDetector(
                           onHorizontalDragEnd: (DragEndDetails details) {
