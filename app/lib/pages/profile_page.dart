@@ -148,8 +148,21 @@ class _ProfilePageState extends State<ImageWidget> {
 
                     );
                   } else {
-                    setState(() {
-                      user=FirebaseAuth.instance.currentUser;
+                    setState(() async{
+
+                      final Query query = users.where('email', isEqualTo: widget.email);
+                      final QuerySnapshot querySnapshot = await query.get();
+                      final List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+
+                      if (documents.isNotEmpty) {
+                        final DocumentSnapshot document = documents.first;
+                        print(document);
+                        final DocumentReference documentRef = users.doc(document.id);
+
+                        await documentRef.update({'username': newDisplayName})
+                            .then((value) => print('Document updated successfully!'))
+                            .catchError((error) => print('Error updating document: $error'));
+                      }
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(

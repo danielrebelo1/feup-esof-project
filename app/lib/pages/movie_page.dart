@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
@@ -29,6 +31,7 @@ class MoviePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MoviePageState();
 }
 
+bool checkedApi = false;
 
 class _MoviePageState extends State<MoviePage> {
   List<String> result = [];
@@ -72,13 +75,17 @@ class _MoviePageState extends State<MoviePage> {
     String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
     //print(utellyApiPath);
     //print("ESTOU AQUI -> $platforms");
-    if (platforms.isEmpty) {
+    if (checkedApi == true) {
       updateList(utellyApiPath);
+      checkedApi = false;
+
       //print('these are the $platforms');
+      /*
       if (platforms.isEmpty) {
         //print("Just added netflix!");
         platforms.add("netflix.png");
       }
+       */
     }
     return Scaffold(
       bottomNavigationBar: CustomNavBar(
@@ -163,10 +170,10 @@ class _MoviePageState extends State<MoviePage> {
                                 offset: const Offset(0, 20),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset('assets/' + platforms[0],
+                                  child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
                                     height: 55,
                                     width: 50,
-                                  ),
+                                  )
                                 ),
                               ),
                               /*
