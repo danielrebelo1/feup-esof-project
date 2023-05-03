@@ -23,8 +23,7 @@ class DisplayMovie extends StatelessWidget {
         imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10.0),
-          child: Image.network(
-            moviePath,
+          child: moviePath == '' ? SizedBox.shrink() : Image.network(moviePath,
             width: MediaQuery.of(context).size.width * 0.4,
             height: MediaQuery.of(context).size.height * 0.3,
           ),
