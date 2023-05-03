@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/display_filter.dart';
@@ -7,9 +8,10 @@ import 'package:project/reusableWidgets/display_main_movie/display_movie_title.d
 import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:project/reusableWidgets/display_side_movie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
+import 'package:http/http.dart' as http;
+import 'utelly-api.dart';
 import 'package:project/reusableWidgets/display_main_movie/display_poster.dart';
 import '../reusableWidgets/custom_nav_bar.dart';
-
 import 'movie_page.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -28,6 +30,8 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+
+
 class _MyHomePageState extends State<MyHomePage> {
   List<dynamic> displayMovies = [];
   final String apikey = '51b20269b73105d2fd84257214e53cc3';
@@ -37,6 +41,37 @@ class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;
   String methodName = 'getTopRatedMovies';
   int _buttonPressedIndex = 1;
+
+Future<String> getMediaType(String mediaName)async {
+    final url =
+        'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${mediaName}';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final results = data["results"][0];
+      return results['media_type'];
+    }
+    return "";
+  }
+
+  String result = "";
+
+  String updateString(String value) {
+    if (value == "") {
+      setState(() {
+        result = "";
+      });
+    } else {
+      getMediaType(value).then((results) {
+        setState(() {
+          result = results;
+        });
+      }).catchError((error) {
+        print(error);
+      });
+    }
+    return result;
+  }
 
   void topRatedMoviesButton() {
     _currentIndex = 0;
@@ -63,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _incrementIndex() {
-    print(_currentIndex);
+    //print(_currentIndex);
     setState(() {
       if (_currentIndex == displayMovies.length - 2) {
         loadMovies(methodName);
@@ -118,7 +153,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _decrementIndex() {
-    print(_currentIndex);
+    // print(_currentIndex);
     setState(() {
       _currentIndex = (_currentIndex - 1) % displayMovies.length;
     });
@@ -145,7 +180,7 @@ class _MyHomePageState extends State<MyHomePage> {
           setState(() {
             displayMovies.addAll(movieResults['results']);
           });
-          print(displayMovies);
+          // print(displayMovies);
           break;
         case 'getPopular':
           Map movieResults =
@@ -161,7 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
           page_number = page_number + 1;
           setState(() {
             displayMovies.addAll(movieResults['results']);
-            print(movieResults);
+            //print(movieResults);
           });
           break;
 
@@ -251,45 +286,49 @@ class _MyHomePageState extends State<MyHomePage> {
                               children: [
                                 GestureDetector(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MoviePage(
-                                                  email: widget.email,
-                                                  username: widget.username,
-                                                  password: widget.password,
-                                                  topRatedMovies: displayMovies,
-                                                  currentIndex: _currentIndex,
-                                                  movieModel: MovieModel(
-                                                      methodName ==
-                                                              'getTopRatedSeries'
-                                                          ? displayMovies[
-                                                                  _currentIndex]
-                                                              ['name']
-                                                          : displayMovies[
-                                                                  _currentIndex]
-                                                              ['title'],
-                                                      methodName ==
-                                                              'getTopRatedSeries'
-                                                          ? displayMovies[
-                                                                  _currentIndex]
-                                                              ['first_air_date']
-                                                          : displayMovies[
-                                                                  _currentIndex]
-                                                              ['release_date'],
-                                                      displayMovies[_currentIndex]
-                                                          ['vote_average'],
-                                                      'https://image.tmdb.org/t/p/w500' +
-                                                          displayMovies[
-                                                                  _currentIndex]
-                                                              ['poster_path'],
-                                                      displayMovies[_currentIndex]
-                                                          ['overview'],
-                                                      displayMovies[_currentIndex]
-                                                          ['id']),
-                                                )),
+                                      Navigator.push( context, MaterialPageRoute (
+                                      builder: (context)  => MoviePage(
+                                      email: widget.email,
+                                      username: widget.username,
+                                      password: widget.password,
+                                      topRatedMovies: displayMovies,
+                                      currentIndex: _currentIndex,
+                                      mediaModel: MediaModel(
+                                      methodName == 'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['name']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['title'],
+                                      updateString(methodName == 'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['name']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['title']),
+                                      methodName ==
+                                      'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['first_air_date']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['release_date'],
+                                      displayMovies[_currentIndex]
+                                      ['vote_average'],
+                                      'https://image.tmdb.org/t/p/w500' +
+                                      displayMovies[
+                                      _currentIndex]
+                                      ['poster_path'],
+                                      displayMovies[_currentIndex]
+                                      ['overview'],
+                                      displayMovies[_currentIndex]
+                                      ['id']),
+                                      )),
                                       );
-                                    },
+                                      },
                                     child: DisplayMoviePoster(moviePath: displayMovies[_currentIndex]['poster_path'])),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

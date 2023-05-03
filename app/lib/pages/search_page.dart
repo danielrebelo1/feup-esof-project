@@ -39,7 +39,7 @@ class _SearchPageState extends State<SearchPage> {
     clearTextInput(); // Call the clearTextInput() function here
   }
 
-  Future<List<MovieModel>> searchMedia(String query) async {
+  Future<List<MediaModel>> searchMedia(String query) async {
     final url =
         'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${query}';
     final response = await http.get(Uri.parse(url));
@@ -47,8 +47,9 @@ class _SearchPageState extends State<SearchPage> {
       final data = jsonDecode(response.body);
       final results = data['results'] as List<dynamic>;
       return results
-          .map((result) => MovieModel(
+          .map((result) => MediaModel(
           result['title'] ?? result['name'],
+          result['media_type'],
           result['release_date'] ?? result['first_air_date'],
           double.parse(result['vote_average'].toStringAsFixed(1)),
           result['poster_path'] != null
@@ -61,8 +62,7 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Timer? _debounceTimer ;
-  List<MovieModel> displayList = [];
+  List<MediaModel> displayList = [];
 
   void updateList(String value) {
     if (value.isEmpty) {
@@ -84,7 +84,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
 
     if(displayList.isNotEmpty){
-      print(displayList[0].moviePoster);
+      print(displayList[0].poster);
     }
 
     return Scaffold(
@@ -164,7 +164,7 @@ class _SearchPageState extends State<SearchPage> {
                                   password: widget.password,
                                   topRatedMovies: displayList,
                                   currentIndex: index,
-                                  movieModel: displayList[index],
+                                  mediaModel: displayList[index],
                                 ),
                               ),
                             );
@@ -172,14 +172,14 @@ class _SearchPageState extends State<SearchPage> {
                           child: ListTile(
                             contentPadding: const EdgeInsets.all(8.0),
                             title: Text(
-                              movie.movieTitle,
+                              movie.mediaTitle,
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             subtitle: Text(
-                              movie.movieReleaseYear,
+                              movie.mediaReleaseYear,
                               style: const TextStyle(
                                 color: Colors.white60,
                               ),
@@ -188,8 +188,8 @@ class _SearchPageState extends State<SearchPage> {
                               '${movie.rating}',
                               style: const TextStyle(color: Colors.amber,fontSize: 24.0),
                             ),
-                            leading: movie.moviePoster != "null"
-                                ? Image.network(movie.moviePoster)
+                            leading: movie.poster != "null"
+                                ? Image.network(movie.poster)
                                 : Image.asset('assets/no-image.png')
                           ),
                         );
