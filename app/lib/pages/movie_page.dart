@@ -31,9 +31,9 @@ class MoviePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MoviePageState();
 }
 
-bool checkedApi = false;
 
 class _MoviePageState extends State<MoviePage> {
+  bool checkedApi = false;
   List<String> result = [];
   List<String> platforms = [];
   String userComment = "";
@@ -42,30 +42,19 @@ class _MoviePageState extends State<MoviePage> {
 
 
   List<String> updateList(String url) {
-    print(url);
     if (url == "") {
       setState(() {
         result = [];
       });
     } else {
-      //print('URL BEFORE GETPLATFORMS IS $url');
       getPlatforms(url).then((results) {
         setState(() {
-          //print('AFTER THE GETPLATFORMS -> $results');
           platforms = results;
-          //print('AFTER THE SETSTATE -> $result');
         });
       }).catchError((error) {
         print(error);
       });
     }
-    /*
-    print('--------------');
-    print('AFTER UPDATELIST');
-    print(result);
-    print('----------------');
-     */
-    print('result is $platforms');
     return platforms;
   }
 
@@ -73,19 +62,10 @@ class _MoviePageState extends State<MoviePage> {
   Widget build(BuildContext context) {
     // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
     String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    //print(utellyApiPath);
-    //print("ESTOU AQUI -> $platforms");
-    if (checkedApi == true) {
+    // print("este ${widget.mediaModel?.mediaTitle} esta $checkedApi");
+    if (checkedApi == false) {
       updateList(utellyApiPath);
-      checkedApi = false;
-
-      //print('these are the $platforms');
-      /*
-      if (platforms.isEmpty) {
-        //print("Just added netflix!");
-        platforms.add("netflix.png");
-      }
-       */
+      checkedApi = true;
     }
     return Scaffold(
       bottomNavigationBar: CustomNavBar(

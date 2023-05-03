@@ -1,10 +1,16 @@
 import 'dart:convert';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:project/reusableWidgets/display_filter.dart';
+import 'package:project/reusableWidgets/display_main_movie/display_movie_rating.dart';
+import 'package:project/reusableWidgets/display_main_movie/display_movie_release.dart';
+import 'package:project/reusableWidgets/display_main_movie/display_movie_title.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
+import 'package:project/reusableWidgets/display_side_movie.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 import 'package:http/http.dart' as http;
 import 'utelly-api.dart';
+import 'package:project/reusableWidgets/display_main_movie/display_poster.dart';
 import '../reusableWidgets/custom_nav_bar.dart';
 import 'movie_page.dart';
 
@@ -13,7 +19,11 @@ class MyHomePage extends StatefulWidget {
   final String username;
   final String password;
 
-  const MyHomePage({Key? key, required this.email, required this.username, required this.password})
+  const MyHomePage(
+      {Key? key,
+      required this.email,
+      required this.username,
+      required this.password})
       : super(key: key);
 
   @override
@@ -88,7 +98,7 @@ Future<String> getMediaType(String mediaName)async {
   }
 
   void _incrementIndex() {
-    print(_currentIndex);
+    //print(_currentIndex);
     setState(() {
       if (_currentIndex == displayMovies.length - 2) {
         loadMovies(methodName);
@@ -97,8 +107,53 @@ Future<String> getMediaType(String mediaName)async {
     });
   }
 
+  String getLeftMoviePosterPath() {
+    return _currentIndex - 1 < 0
+        ? displayMovies.isEmpty
+            ? ''
+            : 'https://image.tmdb.org/t/p/w500' +
+                displayMovies[displayMovies.length - 1]['poster_path']
+        : 'https://image.tmdb.org/t/p/w500' +
+            displayMovies[_currentIndex - 1]['poster_path'];
+  }
+
+  String getRightMoviePosterPath() {
+    return displayMovies.isEmpty || _currentIndex + 1 >= displayMovies.length
+        ? ''
+        : 'https://image.tmdb.org/t/p/w500' +
+            displayMovies[_currentIndex + 1]['poster_path'];
+  }
+
+  String getMovieTitle() {
+    return methodName == 'getTopRatedSeries'
+        ? displayMovies[_currentIndex]['name']
+        : displayMovies[_currentIndex]['title'];
+  }
+
+  String getMovieReleaseDate() {
+    return (displayMovies[_currentIndex].containsKey('release_date') ||
+            displayMovies[_currentIndex].containsKey('first_air_date'))
+        ? (methodName == 'getTopRatedSeries'
+            ? displayMovies[_currentIndex]['first_air_date']
+                .toString()
+                .substring(0, 4)
+            : displayMovies[_currentIndex]['release_date']
+                .toString()
+                .substring(0, 4))
+        : '';
+  }
+
+  String getMovieRating(){
+    return displayMovies[_currentIndex]
+        .containsKey('vote_average')
+        ? displayMovies[_currentIndex]
+    ['vote_average']
+        .toString()
+        : '';
+  }
+
   void _decrementIndex() {
-    print(_currentIndex);
+    // print(_currentIndex);
     setState(() {
       _currentIndex = (_currentIndex - 1) % displayMovies.length;
     });
@@ -184,30 +239,8 @@ Future<String> getMediaType(String mediaName)async {
                             topRatedMoviesButton();
                           });
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          decoration: BoxDecoration(
-                            color: _buttonPressedIndex == 1
-                                ? Colors.white
-                                : Colors.transparent,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text(
-                            "Top rated movies",
-                            style: TextStyle(
-                              color: _buttonPressedIndex == 1
-                                  ? Color.fromRGBO(6, 10, 43, 1)
-                                  : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                        child: DisplayFilter(filterName: "Top Rated Movies", buttonPressedIndex: _buttonPressedIndex, filterButton: 1)),
+
                       GestureDetector(
                         onTap: () {
                           setState(() {
@@ -215,29 +248,7 @@ Future<String> getMediaType(String mediaName)async {
                             popularButton();
                           });
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          decoration: BoxDecoration(
-                            color: _buttonPressedIndex == 2
-                                ? Colors.white
-                                : Colors.transparent,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text(
-                            "Popular",
-                            style: TextStyle(
-                              color: _buttonPressedIndex == 2
-                                  ? Color.fromRGBO(6, 10, 43, 1)
-                                  : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
+                        child: DisplayFilter(filterName: "Popular", buttonPressedIndex: _buttonPressedIndex, filterButton: 2,)
                       ),
                       GestureDetector(
                         onTap: () {
@@ -246,79 +257,17 @@ Future<String> getMediaType(String mediaName)async {
                             topRatedSeriesButton();
                           });
                         },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          decoration: BoxDecoration(
-                            color: _buttonPressedIndex == 3
-                                ? Colors.white
-                                : Colors.transparent,
-                            border: Border.all(
-                              color: Colors.white,
-                              width: 2.0,
-                            ),
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          child: Text(
-                            "Top rated series",
-                            style: TextStyle(
-                              color: _buttonPressedIndex == 3
-                                  ? Color.fromRGBO(6, 10, 43, 1)
-                                  : Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ),
+                        child: DisplayFilter(filterName: "Top Rated Series", buttonPressedIndex: _buttonPressedIndex, filterButton: 3)),
+
                     ],
                   ),
                   Stack(
                     children: <Widget>[
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.20,
-                        left: 5,
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: Image.network(
-                              _currentIndex - 1 < 0
-                                  ? displayMovies.isEmpty
-                                      ? ''
-                                      : 'https://image.tmdb.org/t/p/w500' +
-                                          displayMovies[displayMovies.length -
-                                              1]['poster_path']
-                                  : 'https://image.tmdb.org/t/p/w500' +
-                                      displayMovies[_currentIndex - 1]
-                                          ['poster_path'],
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              height: MediaQuery.of(context).size.height * 0.3,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Positioned(
-                        top: MediaQuery.of(context).size.height * 0.2,
-                        right: 5,
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10.0),
-                            child: displayMovies.isEmpty ||
-                                    _currentIndex + 1 >= displayMovies.length
-                                ? SizedBox.shrink()
-                                : Image.network(
-                                    'https://image.tmdb.org/t/p/w500' +
-                                        displayMovies[_currentIndex + 1]
-                                            ['poster_path'],
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                  ),
-                          ),
-                        ),
-                      ),
+                      DisplaySideMovie(
+                          moviePath: getLeftMoviePosterPath(), position: true),
+                      DisplaySideMovie(
+                          moviePath: getRightMoviePosterPath(),
+                          position: false),
                       Center(
                         child: GestureDetector(
                           onHorizontalDragEnd: (DragEndDetails details) {
@@ -336,167 +285,60 @@ Future<String> getMediaType(String mediaName)async {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute (
-                                          builder: (context)  => MoviePage(
-                                                email: widget.email,
-                                                username: widget.username,
-                                                password: widget.password,
-                                                topRatedMovies: displayMovies,
-                                                currentIndex: _currentIndex,
-                                                mediaModel: MediaModel(
-                                                    methodName == 'getTopRatedSeries'
-                                                        ? displayMovies[
-                                                                _currentIndex]
-                                                            ['name']
-                                                        : displayMovies[
-                                                                _currentIndex]
-                                                            ['title'],
-                                                    updateString(methodName == 'getTopRatedSeries'
-                                                        ? displayMovies[
-                                                    _currentIndex]
-                                                    ['name']
-                                                        : displayMovies[
-                                                    _currentIndex]
-                                                    ['title']),
-                                                    methodName ==
-                                                            'getTopRatedSeries'
-                                                        ? displayMovies[
-                                                                _currentIndex]
-                                                            ['first_air_date']
-                                                        : displayMovies[
-                                                                _currentIndex]
-                                                            ['release_date'],
-                                                    displayMovies[_currentIndex]
-                                                        ['vote_average'],
-                                                    'https://image.tmdb.org/t/p/w500' +
-                                                        displayMovies[
-                                                                _currentIndex]
-                                                            ['poster_path'],
-                                                    displayMovies[_currentIndex]
-                                                        ['overview'],
-                                                    displayMovies[_currentIndex]
-                                                        ['id']),
-                                              )),
-                                    );
-                                  },
-                                  child: Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.7,
-                                    height:
-                                        MediaQuery.of(context).size.width * 0.9,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      image: displayMovies.isNotEmpty
-                                          ? DecorationImage(
-                                              image: NetworkImage(
-                                                  'https://image.tmdb.org/t/p/w500' +
-                                                      displayMovies[
-                                                              _currentIndex]
-                                                          ['poster_path']),
-                                              fit: BoxFit.cover,
-                                            )
-                                          : null,
-                                    ),
-                                  ),
-                                ),
+                                    onTap: () {
+                                      Navigator.push( context, MaterialPageRoute (
+                                      builder: (context)  => MoviePage(
+                                      email: widget.email,
+                                      username: widget.username,
+                                      password: widget.password,
+                                      topRatedMovies: displayMovies,
+                                      currentIndex: _currentIndex,
+                                      mediaModel: MediaModel(
+                                      methodName == 'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['name']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['title'],
+                                      updateString(methodName == 'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['name']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['title']),
+                                      methodName ==
+                                      'getTopRatedSeries'
+                                      ? displayMovies[
+                                      _currentIndex]
+                                      ['first_air_date']
+                                          : displayMovies[
+                                      _currentIndex]
+                                      ['release_date'],
+                                      displayMovies[_currentIndex]
+                                      ['vote_average'],
+                                      'https://image.tmdb.org/t/p/w500' +
+                                      displayMovies[
+                                      _currentIndex]
+                                      ['poster_path'],
+                                      displayMovies[_currentIndex]
+                                      ['overview'],
+                                      displayMovies[_currentIndex]
+                                      ['id']),
+                                      )),
+                                      );
+                                      },
+                                    child: DisplayMoviePoster(moviePath: displayMovies[_currentIndex]['poster_path'])),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Flexible(
-                                      fit: FlexFit.loose,
-                                      child: Container(
-                                        margin: EdgeInsets.only(
-                                            top: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.01),
-                                        child: displayMovies.isNotEmpty
-                                            ? Text(
-                                                methodName ==
-                                                        'getTopRatedSeries'
-                                                    ? displayMovies[
-                                                        _currentIndex]['name']
-                                                    : displayMovies[
-                                                        _currentIndex]['title'],
-                                                style: TextStyle(
-                                                  color: Colors.white70,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize:
-                                                      MediaQuery.of(context)
-                                                              .size
-                                                              .height *
-                                                          0.03,
-                                                ),
-                                              )
-                                            : SizedBox.shrink(),
-                                      ),
-                                    ),
-                                    Flexible(
-                                      fit: FlexFit.loose,
-                                      child: Container(
-                                        margin: EdgeInsets.only(
-                                            left: 15,
-                                            top: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.008),
-                                        child: Text(
-                                          (displayMovies.isNotEmpty &&
-                                                  (displayMovies[_currentIndex]
-                                                          .containsKey(
-                                                              'release_date') ||
-                                                      displayMovies[
-                                                              _currentIndex]
-                                                          .containsKey(
-                                                              'first_air_date')))
-                                              ? (methodName ==
-                                                      'getTopRatedSeries'
-                                                  ? displayMovies[_currentIndex]
-                                                          ['first_air_date']
-                                                      .toString()
-                                                      .substring(0, 4)
-                                                  : displayMovies[_currentIndex]
-                                                          ['release_date']
-                                                      .toString()
-                                                      .substring(0, 4))
-                                              : '',
-                                          style: TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.02,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
+                                    DisplayMovieTitle(movieTitle: getMovieTitle()),
+                                    DisplayMovieRelease(movieRelease: getMovieReleaseDate()),
                                   ],
                                 ),
-                                Container(
-                                  margin: EdgeInsets.only(
-                                      top: MediaQuery.of(context).size.height *
-                                          0.0001),
-                                  child: Text(
-                                    displayMovies.isNotEmpty &&
-                                            displayMovies[_currentIndex]
-                                                .containsKey('vote_average')
-                                        ? displayMovies[_currentIndex]
-                                                ['vote_average']
-                                            .toString()
-                                        : '',
-                                    style: TextStyle(
-                                      color: Colors.amber,
-                                      fontSize:
-                                          MediaQuery.of(context).size.height *
-                                              0.03,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
+                                DisplayMovieRating(movieRating: getMovieRating()),
                               ],
                             ),
                           ),
