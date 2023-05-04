@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../reusableWidgets/movie_model.dart';
+import '../reusableWidgets/media_model.dart';
 import 'movie_page.dart';
 
 /*Auxiliary functions to clean the search bar*/
@@ -16,16 +16,14 @@ class SearchPage extends StatefulWidget {
   final String email;
   final String username;
   final String password;
-  final List topRatedMovies;
-  final int currentIndex;
+  final MediaModel? mediaModel;
 
   SearchPage({
     Key? key,
     required this.email,
     required this.username,
     required this.password,
-    required this.topRatedMovies,
-    required this.currentIndex,
+    this.mediaModel
   }) : super(key: key);
 
   @override
@@ -140,61 +138,59 @@ class _SearchPageState extends State<SearchPage> {
             Expanded(
               child: displayList.isEmpty
                   ? const Center(
-                      child: Text(
-                        "No results found :(",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
+                child: Text(
+                  "No results found :(",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
                   : ListView.builder(
-                      itemCount: displayList.length,
-                      itemBuilder: (context, index) {
-                        final movie = displayList[index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => MoviePage(
-                                  email: widget.email,
-                                  username: widget.username,
-                                  password: widget.password,
-                                  topRatedMovies: displayList,
-                                  currentIndex: index,
-                                  mediaModel: displayList[index],
-                                ),
-                              ),
-                            );
-                          },
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(8.0),
-                            title: Text(
-                              movie.mediaTitle,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            subtitle: Text(
-                              movie.mediaReleaseYear,
-                              style: const TextStyle(
-                                color: Colors.white60,
-                              ),
-                            ),
-                            trailing: Text(
-                              '${movie.rating}',
-                              style: const TextStyle(color: Colors.amber,fontSize: 24.0),
-                            ),
-                            leading: movie.poster != "null"
-                                ? Image.network(movie.poster)
-                                : Image.asset('assets/no-image.png')
+                itemCount: displayList.length,
+                itemBuilder: (context, index) {
+                  final movie = displayList[index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => MoviePage(
+                            email: widget.email,
+                            username: widget.username,
+                            password: widget.password,
+                            mediaModel: displayList[index],
                           ),
-                        );
-                      },
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                        contentPadding: const EdgeInsets.all(8.0),
+                        title: Text(
+                          movie.mediaTitle,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          movie.mediaReleaseYear,
+                          style: const TextStyle(
+                            color: Colors.white60,
+                          ),
+                        ),
+                        trailing: Text(
+                          '${movie.rating}',
+                          style: const TextStyle(color: Colors.amber,fontSize: 24.0),
+                        ),
+                        leading: movie.poster != "null"
+                            ? Image.network(movie.poster)
+                            : Image.asset('assets/no-image.png')
                     ),
+                  );
+                },
+              ),
             )
           ],
         ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
-import 'package:project/reusableWidgets/movie_model.dart';
+import 'package:project/reusableWidgets/media_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'utelly-api.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,18 +9,15 @@ class MoviePage extends StatefulWidget {
   final String email;
   final String username;
   final String password;
-  final List topRatedMovies;
-  final int currentIndex;
   final String path = 'https://image.tmdb.org/t/p/w500';
   final MediaModel? mediaModel;
+
   const MoviePage(
       {Key? key,
       required this.email,
       required this.username,
       required this.password,
-      required this.topRatedMovies,
-      required this.currentIndex,
-      this.mediaModel})
+      this.mediaModel,})
       : super(key: key);
 
   @override
@@ -295,14 +292,14 @@ class _MoviePageState extends State<MoviePage> {
                                   .take(_numCommentsToShow)
                                   .map((commentDoc) {
                                 final commentData =
-                                    commentDoc.data() as Map<String, dynamic>;
+                                commentDoc.data() as Map<String, dynamic>;
                                 final content =
-                                    commentData['content'] as String;
+                                commentData['content'] as String;
                                 final timestamp =
-                                    commentData['timestamp'] as Timestamp;
+                                commentData['timestamp'] as Timestamp;
                                 final time_now = DateTime.now();
                                 final time_elapsed =
-                                    time_now.difference(timestamp.toDate());
+                                time_now.difference(timestamp.toDate());
                                 final time_elapsed_sec =
                                     time_elapsed.abs().inSeconds;
                                 final commentTime;
@@ -312,20 +309,20 @@ class _MoviePageState extends State<MoviePage> {
                                   commentTime = "$time_elapsed_sec seconds ago";
                                 else if (time_elapsed_sec < 3600) {
                                   final minutes =
-                                      (time_elapsed_sec / 60).round();
+                                  (time_elapsed_sec / 60).round();
                                   commentTime =
-                                      '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+                                  '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
                                 } else if (time_elapsed_sec < 86400) {
                                   final hours =
-                                      (time_elapsed_sec / (60 * 60)).round();
+                                  (time_elapsed_sec / (60 * 60)).round();
                                   commentTime =
-                                      '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+                                  '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
                                 } else {
                                   final days =
-                                      (time_elapsed_sec / (60 * 60 * 24))
-                                          .round();
+                                  (time_elapsed_sec / (60 * 60 * 24))
+                                      .round();
                                   commentTime =
-                                      '$days ${days == 1 ? 'day' : 'days'} ago';
+                                  '$days ${days == 1 ? 'day' : 'days'} ago';
                                 }
                                 final userID = commentData['userID'] as String;
                                 return Column(
@@ -336,7 +333,7 @@ class _MoviePageState extends State<MoviePage> {
                                         borderRadius: BorderRadius.circular(10),
                                       ),
                                       padding:
-                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      EdgeInsets.symmetric(vertical: 8.0),
                                       child: StreamBuilder<QuerySnapshot>(
                                         stream: FirebaseFirestore.instance
                                             .collection('users')
@@ -358,7 +355,7 @@ class _MoviePageState extends State<MoviePage> {
                                             username = "Anonymous";
                                           }
                                           username = userSnapshot.data!.docs[0]
-                                              ['username'];
+                                          ['username'];
                                           return ListTile(
                                             title: Text(
                                               username,
@@ -369,7 +366,7 @@ class _MoviePageState extends State<MoviePage> {
                                             trailing: Text(
                                               commentTime,
                                               style:
-                                                  TextStyle(color: Colors.grey),
+                                              TextStyle(color: Colors.grey),
                                             ),
                                           );
                                         },
@@ -377,7 +374,7 @@ class _MoviePageState extends State<MoviePage> {
                                     ),
                                     SizedBox(
                                         height:
-                                            8.0), // added SizedBox with desired height
+                                        8.0), // added SizedBox with desired height
                                   ],
                                 );
                               }).toList(),
@@ -388,7 +385,7 @@ class _MoviePageState extends State<MoviePage> {
                                 onPressed: () {
                                   setState(() {
                                     _numCommentsToShow +=
-                                        5; // load 5 more comments
+                                    5; // load 5 more comments
                                   });
                                 },
                               )

@@ -10,6 +10,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'package:project/main.dart';
 
+//Basic widget test that comes along with flutter if you want to get an idea of how
+// to strucutre the widget tests.
+
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
     // Build our app and trigger a frame.

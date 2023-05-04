@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
     final double textFieldWidth = MediaQuery.of(context).size.width * 0.08;
     return Container(
       decoration: BoxDecoration(
@@ -54,9 +55,9 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _icon(),
-              _inputField("Email", emailController),
+              inputField("Email", emailController),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              _inputField("Password", passwordController, isPassword: true),
+              inputField("Password", passwordController, isPassword: true),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _loginBtn(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
@@ -79,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _inputField(String hintText, TextEditingController controller,
+  Widget inputField(String hintText, TextEditingController controller,
       {bool isPassword = false}) {
     var border = OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
