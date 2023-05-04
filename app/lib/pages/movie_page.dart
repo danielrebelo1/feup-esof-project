@@ -62,7 +62,6 @@ class _MoviePageState extends State<MoviePage> {
   Widget build(BuildContext context) {
     // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
     String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    // print("este ${widget.mediaModel?.mediaTitle} esta $checkedApi");
     if (checkedApi == false) {
       updateList(utellyApiPath);
       checkedApi = true;
@@ -88,7 +87,7 @@ class _MoviePageState extends State<MoviePage> {
                             alignment: const Alignment(0, 0.7),
                           )
                         : GestureDetector(onTap: () {
-                  const url = 'https://example.com'; // Replace with your desired URL
+                  const url = 'https://TODO.com'; // Replace with url from API
                   launch(url);
                 },child:
                   Image.asset(
@@ -254,20 +253,22 @@ class _MoviePageState extends State<MoviePage> {
                       ),
                       suffixIcon: IconButton(
                         onPressed: () async{
-                          await comments.add({
-                            'content': userComment,
-                            'idMovie': widget.mediaModel!.id ?? -1,
-                            'timestamp': DateTime.now(),
-                            'userID' : widget.email,
-                          }).then((value) => print("Comment added!"));
-                          setState(() {
-                            userComment = ''; // Clear userComment after adding the comment
-                          });
-                          commentController.clear(); // Clear the text field
-                          FocusScope.of(context).unfocus();
-                          // Add your publish comment logic here
-                        },
-                        icon: Icon(Icons.arrow_forward),
+                          if (userComment.trim().isNotEmpty) {
+                              await comments.add({
+                                'content': userComment,
+                                'idMovie': widget.mediaModel!.id ?? -1,
+                                'timestamp': DateTime.now(),
+                                'userID': widget.email,
+                              }).then((value) => print("Comment added!") );
+                              setState(() {
+                                userComment =
+                                    '';
+                              });
+                              commentController.clear();
+                              FocusScope.of(context).unfocus();
+                            }
+                          },
+                        icon: Icon(Icons.arrow_forward)
                       ),
                     ),
                   ),
