@@ -1,12 +1,21 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:project/pages/login_page.dart';
 import 'package:crypto/crypto.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:convert';
-class ProfilePage extends StatelessWidget {
 
-  const ProfilePage({Key? key})
+class ProfilePage extends StatelessWidget {
+  final String email;
+  final String username;
+  final String password;
+
+  const ProfilePage(
+      {Key? key,
+      required this.email,
+      required this.username,
+      required this.password})
       : super(key: key);
 
   @override
@@ -20,27 +29,36 @@ class ProfilePage extends StatelessWidget {
             icon: Icon(Icons.logout),
             onPressed: () {
               FirebaseAuth.instance.signOut().then((value) => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                )
-              });
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                    )
+                  });
             },
           ),
         ],
       ),
-      body: ImageWidget(),
+      body: ImageWidget(email: email, username: username, password: password),
     );
   }
 }
+
 class ImageWidget extends StatefulWidget {
+  final String email;
+  final String password;
+  final String username;
 
-
-  const ImageWidget({Key? key,})
+  const ImageWidget(
+      {Key? key,
+      required this.email,
+      required this.username,
+      required this.password})
       : super(key: key);
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
+
 class _ProfilePageState extends State<ImageWidget> {
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
@@ -48,17 +66,18 @@ class _ProfilePageState extends State<ImageWidget> {
   String? url;
   void initState() {
     super.initState();
-    user=FirebaseAuth.instance.currentUser;
+    user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      usernameController.text= user?.displayName ?? "";
+      usernameController.text = user?.displayName ?? "";
       emailController.text = user?.email ?? "";
-      url="https://0.gravatar.com/avatar/"+md5.convert(utf8.encode(emailController.text)).toString();
+      url = "https://0.gravatar.com/avatar/" +
+          md5.convert(utf8.encode(emailController.text)).toString();
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Stack(
       children: [
         Positioned(
@@ -70,38 +89,43 @@ class _ProfilePageState extends State<ImageWidget> {
             height: 100.0,
           ),
         ),
-         Positioned(
+        Positioned(
             top: MediaQuery.of(context).size.height * 0.03,
             left: 0,
             right: 0,
             child: SizedBox(
               child: Center(
                 child: Text(
-                  "Hi "+(user?.displayName?? "user"),
-                  style: TextStyle(color: Colors.white, fontSize: MediaQuery.of(context).size.height * 0.05),
+                  "Hi " + (user?.displayName ?? "user"),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: MediaQuery.of(context).size.height * 0.05),
                 ),
               ),
             )),
         Positioned(
           top: MediaQuery.of(context).size.height * 0.1,
-          left: 0,
-          right: 0,
-          child:
-              GestureDetector(
-              onLongPress: () async {
-                final uri=Uri.parse("https://gravatar.com/emails/");
-             if(await canLaunchUrl(uri)){
-              await launchUrl(uri,mode:LaunchMode.externalApplication);
-            }
+          left: MediaQuery.of(context).size.width * 0.33,
+          child: GestureDetector(
+            onLongPress: () async {
+              final uri = Uri.parse("https://gravatar.com/emails/");
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.35, // set the width of the container
+              height: MediaQuery.of(context).size.height * 0.2, // set the height of the container
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10.0), // set a circular border radius
+                image: DecorationImage(
+                  image: NetworkImage(url ?? "No image"), // use the NetworkImage to load the image
+                  fit: BoxFit.cover, // set the fit property to cover the container
+                ),
+              ),
+            ),
 
-    },
-        child:
-          Image.network(
-            url?? "No image",
-            width: MediaQuery.of(context).size.width * 0.03,
-            height: MediaQuery.of(context).size.height * 0.2,
           ),
-        ),
         ),
         Center(
             child: Column(
@@ -110,8 +134,8 @@ class _ProfilePageState extends State<ImageWidget> {
           children: [
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             _emailField(emailController.text),
-    SizedBox(height: MediaQuery.of(context).size.height * 0.03),
-            _inputField( usernameController),
+            SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+            _inputField(usernameController),
             SizedBox(height: MediaQuery.of(context).size.height * 0.05),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -127,7 +151,7 @@ class _ProfilePageState extends State<ImageWidget> {
                 final lastDisplayName = user?.displayName ?? '';
                 final newDisplayName = usernameController.text;
                 user?.updateDisplayName(newDisplayName).then((value) {
-                  user=FirebaseAuth.instance.currentUser;
+                  user = FirebaseAuth.instance.currentUser;
                   if (newDisplayName == lastDisplayName) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -135,11 +159,23 @@ class _ProfilePageState extends State<ImageWidget> {
                         duration: Duration(seconds: 3),
                         backgroundColor: Colors.red,
                       ),
-
                     );
                   } else {
-                    setState(() {
-                      user=FirebaseAuth.instance.currentUser;
+                    setState(() async{
+
+                      final Query query = users.where('email', isEqualTo: widget.email);
+                      final QuerySnapshot querySnapshot = await query.get();
+                      final List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+
+                      if (documents.isNotEmpty) {
+                        final DocumentSnapshot document = documents.first;
+                        print(document);
+                        final DocumentReference documentRef = users.doc(document.id);
+
+                        await documentRef.update({'username': newDisplayName})
+                            .then((value) => print('Document updated successfully!'))
+                            .catchError((error) => print('Error updating document: $error'));
+                      }
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
@@ -150,24 +186,22 @@ class _ProfilePageState extends State<ImageWidget> {
                     );
                   }
                 });
-
-
               }, // Add space between email and logout button
               child: Text(
                 'Update Profile',
-                style: TextStyle(fontSize: MediaQuery.of(context).size.height * 0.03, color: Color.fromRGBO(6, 10, 43, 1)),
+                style: TextStyle(
+                    fontSize: MediaQuery.of(context).size.height * 0.03,
+                    color: Color.fromRGBO(6, 10, 43, 1)),
               ),
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.01),
-
-
           ],
         ))
       ],
     );
   }
 
-  Widget _inputField( TextEditingController controller,
+  Widget _inputField(TextEditingController controller,
       {bool isPassword = false}) {
     final double textFieldWidth = MediaQuery.of(context).size.width * 0.8;
     final double textFieldHeight = MediaQuery.of(context).size.height * 0.08;
@@ -195,17 +229,16 @@ class _ProfilePageState extends State<ImageWidget> {
               ),
             ),
           ),
-
           Expanded(
             child: TextField(
               style: const TextStyle(
                 fontSize: 20,
-                color: Color.fromRGBO(6, 10, 43, 1),),
+                color: Color.fromRGBO(6, 10, 43, 1),
+              ),
               controller: controller,
               decoration: InputDecoration(
                 enabledBorder: border,
                 focusedBorder: border,
-
               ),
               obscureText: isPassword,
             ),
@@ -222,39 +255,36 @@ class _ProfilePageState extends State<ImageWidget> {
     );
   }
 
-
   Widget _emailField(String email) {
     final double textFieldWidth = MediaQuery.of(context).size.width * 0.8;
     final double textFieldHeight = MediaQuery.of(context).size.height * 0.08;
 
     return Container(
-      width: textFieldWidth,
-      height: textFieldHeight,
-      decoration: BoxDecoration(
-        color: Colors.white, // change this to your desired background color
-        borderRadius: BorderRadius.circular(textFieldHeight * 0.2),
-      ),
-      child: Row(
-        children: [
-          Text(
-            '  Email: ',
-            style: TextStyle(
-              fontSize: 20,
-              color: Color.fromRGBO(6, 10, 43, 1),
-            ),
-          ),
-          Text(
-            email,
-            style: TextStyle(
-              fontSize: 17,
-              color: Color.fromRGBO(6, 10, 43, 1),
-            ),
-          ),
-        ],
-      ),
-    );
+        width: textFieldWidth,
+        height: textFieldHeight,
+        decoration: BoxDecoration(
+          color: Colors.white, // change this to your desired background color
+          borderRadius: BorderRadius.circular(textFieldHeight * 0.2),
+        ),
+        child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                Text(
+                  '  Email: ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: Color.fromRGBO(6, 10, 43, 1),
+                  ),
+                ),
+                Text(
+                  email,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: Color.fromRGBO(6, 10, 43, 1),
+                  ),
+                ),
+              ],
+            )));
   }
-
-
-
 }

@@ -7,8 +7,9 @@ import '../pages/home_page.dart';
 class CustomNavBar extends StatelessWidget {
   final String email;
   final String password;
+  final String username;
 
-  const CustomNavBar({Key? key, required this.email, required this.password})
+  const CustomNavBar({Key? key, required this.email, required this.username, required this.password})
       : super(key: key);
 
   @override
@@ -30,7 +31,7 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => MyHomePage(email: email, password: password,)),
+                MaterialPageRoute(builder: (context) => MyHomePage(email: email, username: username, password: password,)),
               );
             },
             child: const Icon(
@@ -43,7 +44,7 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchPage(email: email, password: password, topRatedMovies: [], currentIndex: 0,)),
+                MaterialPageRoute(builder: (context) => SearchPage(email: email, username: username, password: password, topRatedMovies: [], currentIndex: 0,)),
               );
             },
             child: const Icon(
@@ -57,7 +58,8 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ProfilePage()),
+                MaterialPageRoute(builder: (context) => ProfilePage(email: email,username: username, password: password,)),
+
               );
             },
             child: const Icon(
