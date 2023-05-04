@@ -44,7 +44,7 @@ class CustomNavBar extends StatelessWidget {
             onTap: (){
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SearchPage(email: email, username: username, password: password, topRatedMovies: [], currentIndex: 0,)),
+                MaterialPageRoute(builder: (context) => SearchPage(email: email, username: username, password: password)),
               );
             },
             child: const Icon(
