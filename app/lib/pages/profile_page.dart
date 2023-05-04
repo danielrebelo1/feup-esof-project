@@ -60,6 +60,7 @@ class ImageWidget extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ImageWidget> {
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   User? user;
@@ -77,7 +78,6 @@ class _ProfilePageState extends State<ImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
     return Stack(
       children: [
         Positioned(
