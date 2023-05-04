@@ -8,7 +8,6 @@ import 'package:intl/intl.dart';
 import 'utelly-api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 class MoviePage extends StatefulWidget {
   final String email;
   final String username;
@@ -20,7 +19,7 @@ class MoviePage extends StatefulWidget {
   const MoviePage(
       {Key? key,
       required this.email,
-        required this.username,
+      required this.username,
       required this.password,
       required this.topRatedMovies,
       required this.currentIndex,
@@ -31,15 +30,15 @@ class MoviePage extends StatefulWidget {
   State<StatefulWidget> createState() => _MoviePageState();
 }
 
-
 class _MoviePageState extends State<MoviePage> {
   bool checkedApi = false;
   List<String> result = [];
   List<String> platforms = [];
   String userComment = "";
+  int _numCommentsToShow = 5;
   TextEditingController commentController = TextEditingController();
-  CollectionReference comments = FirebaseFirestore.instance.collection('comments');
-
+  CollectionReference comments =
+      FirebaseFirestore.instance.collection('comments');
 
   List<String> updateList(String url) {
     if (url == "") {
@@ -61,7 +60,10 @@ class _MoviePageState extends State<MoviePage> {
   @override
   Widget build(BuildContext context) {
     // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
+    String utellyApiPath =
+        'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
+            widget.mediaModel!.id.toString() +
+            '&source=tmdb&country=us';
     // print("este ${widget.mediaModel?.mediaTitle} esta $checkedApi");
     if (checkedApi == false) {
       updateList(utellyApiPath);
@@ -80,27 +82,26 @@ class _MoviePageState extends State<MoviePage> {
             Opacity(
                 opacity: 0.4,
                 child: (widget.mediaModel?.poster != "null"
-                        ? Image.network(
-                            widget.mediaModel?.poster ?? "",
-                            height: MediaQuery.of(context).size.height * 0.35,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            alignment: const Alignment(0, 0.7),
-                          )
-                        : GestureDetector(onTap: () {
-                  const url = 'https://example.com'; // Replace with your desired URL
-                  launch(url);
-                },child:
-                  Image.asset(
-                  'assets/no-image.png',
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                )
-
-                  )),
+                    ? Image.network(
+                        widget.mediaModel?.poster ?? "",
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        alignment: const Alignment(0, 0.7),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          const url =
+                              'https://example.com'; // Replace with your desired URL
+                          launch(url);
+                        },
+                        child: Image.asset(
+                          'assets/no-image.png',
+                          height: MediaQuery.of(context).size.height * 0.35,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          alignment: const Alignment(0, 0.7),
+                        )))),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
@@ -133,12 +134,12 @@ class _MoviePageState extends State<MoviePage> {
                           child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: (widget.mediaModel?.poster != "null"
-                                      ? Image.network(
-                                          widget.mediaModel?.poster ?? "",
-                                          height: 220,
-                                          width: 180)
-                                      : Image.asset('assets/no-image.png',
-                                          height: 220, width: 180))),
+                                  ? Image.network(
+                                      widget.mediaModel?.poster ?? "",
+                                      height: 220,
+                                      width: 180)
+                                  : Image.asset('assets/no-image.png',
+                                      height: 220, width: 180))),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -149,12 +150,14 @@ class _MoviePageState extends State<MoviePage> {
                               Transform.translate(
                                 offset: const Offset(0, 20),
                                 child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
-                                    height: 55,
-                                    width: 50,
-                                  )
-                                ),
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: platforms.isEmpty == true
+                                        ? null
+                                        : Image.asset(
+                                            'assets/' + platforms[0],
+                                            height: 55,
+                                            width: 50,
+                                          )),
                               ),
                               /*
                               const SizedBox(width: 15),
@@ -197,8 +200,9 @@ class _MoviePageState extends State<MoviePage> {
                                     MediaQuery.of(context).size.height * 0.02),
                             Text(
                               widget.mediaModel?.mediaReleaseYear
-                                          .toString().substring(0, 4) ??
-                                      "",
+                                      .toString()
+                                      .substring(0, 4) ??
+                                  "",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -228,7 +232,8 @@ class _MoviePageState extends State<MoviePage> {
                           widget.mediaModel?.description.toString() ?? "",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.025,
+                            fontSize:
+                                MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
                       ],
@@ -239,46 +244,53 @@ class _MoviePageState extends State<MoviePage> {
                     onTap: () {
                       // Call function to dismiss the keyboard
                     },
-                    child:
-                  TextField(
-                    onChanged: (value){userComment = value;},
-                    maxLines: null,
-                    controller: commentController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Colors.white,
-                      hintText: 'Give us your opinion',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                        borderSide: BorderSide.none,
-                      ),
-                      suffixIcon: IconButton(
-                        onPressed: () async{
-                          await comments.add({
-                            'content': userComment,
-                            'idMovie': widget.mediaModel!.id ?? -1,
-                            'timestamp': DateTime.now(),
-                            'userID' : widget.email,
-                          }).then((value) => print("Comment added!"));
-                          setState(() {
-                            userComment = ''; // Clear userComment after adding the comment
-                          });
-                          commentController.clear(); // Clear the text field
-                          FocusScope.of(context).unfocus();
-                          // Add your publish comment logic here
-                        },
-                        icon: Icon(Icons.arrow_forward),
+                    child: TextField(
+                      onChanged: (value) {
+                        userComment = value;
+                      },
+                      maxLines: null,
+                      controller: commentController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Give us your opinion',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                          borderSide: BorderSide.none,
+                        ),
+                        suffixIcon: IconButton(
+                          onPressed: () async {
+                            await comments.add({
+                              'content': userComment,
+                              'idMovie': widget.mediaModel!.id ?? -1,
+                              'timestamp': DateTime.now(),
+                              'userID': widget.email,
+                            }).then((value) => print("Comment added!"));
+                            setState(() {
+                              userComment =
+                                  ''; // Clear userComment after adding the comment
+                            });
+                            commentController.clear(); // Clear the text field
+                            FocusScope.of(context).unfocus();
+                            // Add your publish comment logic here
+                          },
+                          icon: Icon(Icons.arrow_forward),
+                        ),
                       ),
                     ),
                   ),
-                  ),
-                SizedBox(height: 16.0),
+                  SizedBox(height: 16.0),
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('comments')
-                        .where('idMovie', isEqualTo: widget.mediaModel?.id ?? -1).orderBy('timestamp', descending: true)// replace 'comments' with your collection name
+                        .where('idMovie',
+                            isEqualTo: widget.mediaModel?.id ?? -1)
+                        .orderBy('timestamp',
+                            descending:
+                                true) // replace 'comments' with your collection name
                         .snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       }
@@ -295,27 +307,41 @@ class _MoviePageState extends State<MoviePage> {
                           children: [
                             SizedBox(height: 16.0),
                             if (comments != null && comments.isNotEmpty)
-                              ...comments.map((commentDoc) {
-                                final commentData = commentDoc.data() as Map<String, dynamic>;
-                                final content = commentData['content'] as String;
-                                final timestamp = commentData['timestamp'] as Timestamp;
+                              ...comments
+                                  .take(_numCommentsToShow)
+                                  .map((commentDoc) {
+                                final commentData =
+                                    commentDoc.data() as Map<String, dynamic>;
+                                final content =
+                                    commentData['content'] as String;
+                                final timestamp =
+                                    commentData['timestamp'] as Timestamp;
                                 final time_now = DateTime.now();
-                                final time_elapsed = time_now.difference(timestamp.toDate());
-                                final time_elapsed_sec = time_elapsed.abs().inSeconds;
+                                final time_elapsed =
+                                    time_now.difference(timestamp.toDate());
+                                final time_elapsed_sec =
+                                    time_elapsed.abs().inSeconds;
                                 final commentTime;
-                                if (time_elapsed_sec == 0) commentTime = "just now";
-                                else if (time_elapsed_sec < 60) commentTime = "$time_elapsed_sec seconds ago";
+                                if (time_elapsed_sec == 0)
+                                  commentTime = "just now";
+                                else if (time_elapsed_sec < 60)
+                                  commentTime = "$time_elapsed_sec seconds ago";
                                 else if (time_elapsed_sec < 3600) {
-                                  final minutes = (time_elapsed_sec / 60).round();
-                                  commentTime = '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
-                                }
-                                else if(time_elapsed_sec < 86400){
-                                  final hours = (time_elapsed_sec / (60 * 60)).round();
-                                  commentTime = '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
-                                }
-                                else{
-                                  final days = (time_elapsed_sec / (60 * 60 * 24)).round();
-                                  commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
+                                  final minutes =
+                                      (time_elapsed_sec / 60).round();
+                                  commentTime =
+                                      '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+                                } else if (time_elapsed_sec < 86400) {
+                                  final hours =
+                                      (time_elapsed_sec / (60 * 60)).round();
+                                  commentTime =
+                                      '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+                                } else {
+                                  final days =
+                                      (time_elapsed_sec / (60 * 60 * 24))
+                                          .round();
+                                  commentTime =
+                                      '$days ${days == 1 ? 'day' : 'days'} ago';
                                 }
                                 final userID = commentData['userID'] as String;
                                 return Column(
@@ -324,51 +350,73 @@ class _MoviePageState extends State<MoviePage> {
                                       decoration: BoxDecoration(
                                         color: Colors.white,
                                         borderRadius: BorderRadius.circular(10),
-                                      ),                                      padding: EdgeInsets.symmetric(vertical: 8.0),
-                                        child: StreamBuilder<QuerySnapshot>(
+                                      ),
+                                      padding:
+                                          EdgeInsets.symmetric(vertical: 8.0),
+                                      child: StreamBuilder<QuerySnapshot>(
                                         stream: FirebaseFirestore.instance
                                             .collection('users')
                                             .where('email', isEqualTo: userID)
                                             .snapshots(),
-                                        builder: (BuildContext context, userSnapshot) {
+                                        builder: (BuildContext context,
+                                            userSnapshot) {
                                           if (userSnapshot.hasError) {
-                                            return Text('Error: ${userSnapshot.error}');
+                                            return Text(
+                                                'Error: ${userSnapshot.error}');
                                           }
 
-                                          if (userSnapshot.connectionState == ConnectionState.waiting) {
+                                          if (userSnapshot.connectionState ==
+                                              ConnectionState.waiting) {
                                             return CircularProgressIndicator();
                                           }
                                           String username;
-                                          if (userSnapshot.data!.docs.isEmpty) {username = "Anonymous";}
-                                          username = userSnapshot.data!.docs[0]['username'];
+                                          if (userSnapshot.data!.docs.isEmpty) {
+                                            username = "Anonymous";
+                                          }
+                                          username = userSnapshot.data!.docs[0]
+                                              ['username'];
                                           return ListTile(
                                             title: Text(
                                               username,
-                                              style: TextStyle(fontWeight: FontWeight.bold),
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
                                             ),
                                             subtitle: Text(content),
                                             trailing: Text(
                                               commentTime,
-                                              style: TextStyle(color: Colors.grey),
+                                              style:
+                                                  TextStyle(color: Colors.grey),
                                             ),
                                           );
                                         },
                                       ),
                                     ),
-                                    SizedBox(height: 8.0), // added SizedBox with desired height
+                                    SizedBox(
+                                        height:
+                                            8.0), // added SizedBox with desired height
                                   ],
                                 );
                               }).toList(),
+                            if (comments != null &&
+                                comments.length > _numCommentsToShow)
+                              TextButton(
+                                child: Text('Load More'),
+                                onPressed: () {
+                                  setState(() {
+                                    _numCommentsToShow +=
+                                        5; // load 5 more comments
+                                  });
+                                },
+                              )
                           ],
                         ),
                       );
-
                     },
                   ),
-                ]
+                ]),
               ),
-            ),
-            )],
+            )
+          ],
         ),
       ),
     );
