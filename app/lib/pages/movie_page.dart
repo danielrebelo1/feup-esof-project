@@ -1,10 +1,7 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/movie_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'utelly-api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,12 +56,8 @@ class _MoviePageState extends State<MoviePage> {
 
   @override
   Widget build(BuildContext context) {
-    // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-    String utellyApiPath =
-        'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
-            widget.mediaModel!.id.toString() +
-            '&source=tmdb&country=us';
-    // print("este ${widget.mediaModel?.mediaTitle} esta $checkedApi");
+// https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
+    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
     if (checkedApi == false) {
       updateList(utellyApiPath);
       checkedApi = true;
@@ -83,25 +76,26 @@ class _MoviePageState extends State<MoviePage> {
                 opacity: 0.4,
                 child: (widget.mediaModel?.poster != "null"
                     ? Image.network(
-                        widget.mediaModel?.poster ?? "",
-                        height: MediaQuery.of(context).size.height * 0.35,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                        alignment: const Alignment(0, 0.7),
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          const url =
-                              'https://example.com'; // Replace with your desired URL
-                          launch(url);
-                        },
-                        child: Image.asset(
-                          'assets/no-image.png',
-                          height: MediaQuery.of(context).size.height * 0.35,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          alignment: const Alignment(0, 0.7),
-                        )))),
+                  widget.mediaModel?.poster ?? "",
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, 0.7),
+                )
+                    : GestureDetector(onTap: () {
+                  const url = 'https://TODO.com'; // Replace with url from API
+                  launch(url);
+                },child:
+                Image.asset(
+                  'assets/no-image.png',
+                  height: MediaQuery.of(context).size.height * 0.35,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: const Alignment(0, 0.7),
+                )
+                )
+
+                )),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
@@ -135,11 +129,11 @@ class _MoviePageState extends State<MoviePage> {
                               borderRadius: BorderRadius.circular(20),
                               child: (widget.mediaModel?.poster != "null"
                                   ? Image.network(
-                                      widget.mediaModel?.poster ?? "",
-                                      height: 220,
-                                      width: 180)
+                                  widget.mediaModel?.poster ?? "",
+                                  height: 220,
+                                  width: 180)
                                   : Image.asset('assets/no-image.png',
-                                      height: 220, width: 180))),
+                                  height: 220, width: 180))),
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -151,13 +145,11 @@ class _MoviePageState extends State<MoviePage> {
                                 offset: const Offset(0, 20),
                                 child: ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
-                                    child: platforms.isEmpty == true
-                                        ? null
-                                        : Image.asset(
-                                            'assets/' + platforms[0],
-                                            height: 55,
-                                            width: 50,
-                                          )),
+                                    child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
+                                      height: 55,
+                                      width: 50,
+                                    )
+                                ),
                               ),
                               /*
                               const SizedBox(width: 15),
@@ -191,35 +183,34 @@ class _MoviePageState extends State<MoviePage> {
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize:
-                                      MediaQuery.of(context).size.height * 0.04,
+                                  MediaQuery.of(context).size.height * 0.04,
                                 ),
                               ),
                             ),
                             SizedBox(
                                 width:
-                                    MediaQuery.of(context).size.height * 0.02),
+                                MediaQuery.of(context).size.height * 0.02),
                             Text(
                               widget.mediaModel?.mediaReleaseYear
-                                      .toString()
-                                      .substring(0, 4) ??
+                                  .toString().substring(0, 4) ??
                                   "",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize:
-                                    MediaQuery.of(context).size.height * 0.02,
+                                MediaQuery.of(context).size.height * 0.02,
                               ),
                             ),
                             SizedBox(
                                 width:
-                                    MediaQuery.of(context).size.width * 0.05),
+                                MediaQuery.of(context).size.width * 0.05),
                             Text(
                               widget.mediaModel?.rating.toString() ?? "",
                               style: TextStyle(
                                 color: Colors.amber,
                                 fontWeight: FontWeight.bold,
                                 fontSize:
-                                    MediaQuery.of(context).size.height * 0.04,
+                                MediaQuery.of(context).size.height * 0.04,
                               ),
                             ),
                           ],
@@ -232,8 +223,7 @@ class _MoviePageState extends State<MoviePage> {
                           widget.mediaModel?.description.toString() ?? "",
                           style: TextStyle(
                             color: Colors.white,
-                            fontSize:
-                                MediaQuery.of(context).size.height * 0.025,
+                            fontSize: MediaQuery.of(context).size.height * 0.025,
                           ),
                         ),
                       ],
@@ -244,10 +234,9 @@ class _MoviePageState extends State<MoviePage> {
                     onTap: () {
                       // Call function to dismiss the keyboard
                     },
-                    child: TextField(
-                      onChanged: (value) {
-                        userComment = value;
-                      },
+                    child:
+                    TextField(
+                      onChanged: (value){userComment = value;},
                       maxLines: null,
                       controller: commentController,
                       decoration: InputDecoration(
@@ -259,22 +248,23 @@ class _MoviePageState extends State<MoviePage> {
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
-                          onPressed: () async {
-                            await comments.add({
-                              'content': userComment,
-                              'idMovie': widget.mediaModel!.id ?? -1,
-                              'timestamp': DateTime.now(),
-                              'userID': widget.email,
-                            }).then((value) => print("Comment added!"));
-                            setState(() {
-                              userComment =
-                                  ''; // Clear userComment after adding the comment
-                            });
-                            commentController.clear(); // Clear the text field
-                            FocusScope.of(context).unfocus();
-                            // Add your publish comment logic here
-                          },
-                          icon: Icon(Icons.arrow_forward),
+                            onPressed: () async{
+                              if (userComment.trim().isNotEmpty) {
+                                await comments.add({
+                                  'content': userComment,
+                                  'idMovie': widget.mediaModel!.id ?? -1,
+                                  'timestamp': DateTime.now(),
+                                  'userID': widget.email,
+                                }).then((value) => print("Comment added!") );
+                                setState(() {
+                                  userComment =
+                                  '';
+                                });
+                                commentController.clear();
+                                FocusScope.of(context).unfocus();
+                              }
+                            },
+                            icon: Icon(Icons.arrow_forward)
                         ),
                       ),
                     ),
@@ -283,14 +273,9 @@ class _MoviePageState extends State<MoviePage> {
                   StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('comments')
-                        .where('idMovie',
-                            isEqualTo: widget.mediaModel?.id ?? -1)
-                        .orderBy('timestamp',
-                            descending:
-                                true) // replace 'comments' with your collection name
+                        .where('idMovie', isEqualTo: widget.mediaModel?.id ?? -1).orderBy('timestamp', descending: true)// replace 'comments' with your collection name
                         .snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                    builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
                         return Text('Error: ${snapshot.error}');
                       }
@@ -301,7 +286,6 @@ class _MoviePageState extends State<MoviePage> {
 
                       // Extract comments from the snapshot
                       final comments = snapshot.data?.docs;
-
                       return Container(
                         child: Column(
                           children: [
