@@ -10,7 +10,8 @@ class DisplayMovieTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return                                     Flexible(
+    return
+      Flexible(
       fit: FlexFit.loose,
       child: Container(
           margin: EdgeInsets.only(

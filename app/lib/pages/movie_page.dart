@@ -1,30 +1,23 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
-import 'package:project/reusableWidgets/movie_model.dart';
+import 'package:project/reusableWidgets/media_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-import 'utelly-api.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 
 class MoviePage extends StatefulWidget {
   final String email;
   final String username;
   final String password;
-  final List topRatedMovies;
-  final int currentIndex;
   final String path = 'https://image.tmdb.org/t/p/w500';
   final MediaModel? mediaModel;
+
   const MoviePage(
       {Key? key,
       required this.email,
         required this.username,
       required this.password,
-      required this.topRatedMovies,
-      required this.currentIndex,
-      this.mediaModel})
+      this.mediaModel,})
       : super(key: key);
 
   @override
@@ -33,41 +26,13 @@ class MoviePage extends StatefulWidget {
 
 
 class _MoviePageState extends State<MoviePage> {
-  bool checkedApi = false;
-  List<String> result = [];
-  List<String> platforms = [];
   String userComment = "";
   TextEditingController commentController = TextEditingController();
   CollectionReference comments = FirebaseFirestore.instance.collection('comments');
-
-
-  List<String> updateList(String url) {
-    if (url == "") {
-      setState(() {
-        result = [];
-      });
-    } else {
-      getPlatforms(url).then((results) {
-        setState(() {
-          platforms = results;
-        });
-      }).catchError((error) {
-        print(error);
-      });
-    }
-    return platforms;
-  }
-
   @override
   Widget build(BuildContext context) {
-    // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    // print("este ${widget.mediaModel?.mediaTitle} esta $checkedApi");
-    if (checkedApi == false) {
-      updateList(utellyApiPath);
-      checkedApi = true;
-    }
     return Scaffold(
+
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
         username: widget.username,
@@ -87,20 +52,13 @@ class _MoviePageState extends State<MoviePage> {
                             fit: BoxFit.cover,
                             alignment: const Alignment(0, 0.7),
                           )
-                        : GestureDetector(onTap: () {
-                  const url = 'https://example.com'; // Replace with your desired URL
-                  launch(url);
-                },child:
-                  Image.asset(
-                  'assets/no-image.png',
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                )
-
-                  )),
+                        : Image.asset(
+                            'assets/no-image.png',
+                            height: MediaQuery.of(context).size.height * 0.35,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            alignment: const Alignment(0, 0.7),
+                          ))),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
@@ -150,13 +108,13 @@ class _MoviePageState extends State<MoviePage> {
                                 offset: const Offset(0, 20),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
+                                  child: Image.asset(
+                                    "assets/hbo-max.png",
                                     height: 55,
                                     width: 50,
-                                  )
+                                  ),
                                 ),
                               ),
-                              /*
                               const SizedBox(width: 15),
                               Transform.translate(
                                 offset: const Offset(0, 20),
@@ -166,7 +124,6 @@ class _MoviePageState extends State<MoviePage> {
                                       height: 55, width: 50),
                                 ),
                               ),
-                              */
                             ],
                           ),
                         ),
@@ -303,8 +260,7 @@ class _MoviePageState extends State<MoviePage> {
                                 final time_elapsed = time_now.difference(timestamp.toDate());
                                 final time_elapsed_sec = time_elapsed.abs().inSeconds;
                                 final commentTime;
-                                if (time_elapsed_sec == 0) commentTime = "just now";
-                                else if (time_elapsed_sec < 60) commentTime = "$time_elapsed_sec seconds ago";
+                                if (time_elapsed_sec < 60) commentTime = "$time_elapsed_sec seconds ago";
                                 else if (time_elapsed_sec < 3600) {
                                   final minutes = (time_elapsed_sec / 60).round();
                                   commentTime = '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
@@ -314,7 +270,7 @@ class _MoviePageState extends State<MoviePage> {
                                   commentTime = '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
                                 }
                                 else{
-                                  final days = (time_elapsed_sec / (60 * 60 * 24)).round();
+                                  final days = (time_elapsed_sec / (60 * 60)).round();
                                   commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
                                 }
                                 final userID = commentData['userID'] as String;
