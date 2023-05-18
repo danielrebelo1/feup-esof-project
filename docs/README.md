@@ -16,7 +16,7 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 ## Domain Model
-<img src="domain.png"> 
+<img src="finalDomain.png"> 
 This model contains the following classes:
 
     
