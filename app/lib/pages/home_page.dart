@@ -279,7 +279,7 @@ class MyHomePageState extends State<MyHomePage> {
                     },
                     child: Padding(
                       padding: EdgeInsets.only(
-                          top: MediaQuery.of(context).size.height * 0.08),
+                          top: MediaQuery.of(context).size.height * 0.07),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
