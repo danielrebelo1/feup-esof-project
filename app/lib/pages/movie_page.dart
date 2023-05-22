@@ -11,7 +11,6 @@ class MoviePage extends StatefulWidget {
   final String password;
   final String path = 'https://image.tmdb.org/t/p/w500';
   final MediaModel? mediaModel;
-
   const MoviePage(
       {Key? key,
       required this.email,
