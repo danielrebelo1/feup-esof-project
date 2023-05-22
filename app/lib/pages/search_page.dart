@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../reusableWidgets/media_model.dart';
 import 'movie_page.dart';
+import 'utelly-api.dart';
+
 
 /*Auxiliary functions to clean the search bar*/
 TextEditingController _textEditingController = TextEditingController();
@@ -61,6 +63,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<MediaModel> displayList = [];
+  List<String> platforms = [];
 
   void updateList(String value) {
     if (value.isEmpty) {
@@ -78,11 +81,28 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  void updateListPlatforms(String url) {
+    if (url == "") {
+      setState(() {
+        platforms = [];
+      });
+    } else {
+      getPlatforms(url).then((results) {
+        setState(() {
+          platforms = results;
+        });
+      }).catchError((error) {
+        print(error);
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
     if(displayList.isNotEmpty){
-      print(displayList[0].poster);
+      // print(displayList[0].poster);
     }
 
     return Scaffold(
@@ -153,13 +173,18 @@ class _SearchPageState extends State<SearchPage> {
                   final movie = displayList[index];
                   return GestureDetector(
                     onTap: () {
+                      print("got here");
+                      String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
+                      updateListPlatforms(utellyApiPath);
+                      print("got here2");
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MoviePage(
+                          builder: (context) => MediaPage(
                             email: widget.email,
                             username: widget.username,
                             password: widget.password,
+                            platform: platforms.isEmpty == true ? "" : platforms[0],
                             mediaModel: displayList[index],
                           ),
                         ),
