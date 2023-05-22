@@ -50,7 +50,7 @@ class _SearchPageState extends State<SearchPage> {
           .map((result) => MediaModel(
           result['title'] ?? result['name'],
           result['media_type'],
-          result['release_date'] ?? result['first_air_date'],
+          (result['release_date'] != "" ? result['release_date'] : (result['first_air_date'] != null ? result['first_air_date'] : "No data")),
           double.parse(result['vote_average'].toStringAsFixed(1)),
           result['poster_path'] != null
               ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}'
@@ -128,29 +128,29 @@ class _SearchPageState extends State<SearchPage> {
               height: 20.0,
             ),
             TextField(
-              controller: _textEditingController,
-              onChanged: (value) async {
-                await Future.delayed(const Duration(seconds: 1));
-                updateList(value);
-              },
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color(0xff302360),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
+                controller: _textEditingController,
+                onChanged: (value) async {
+                  await Future.delayed(const Duration(seconds: 1));
+                  updateList(value);
+                },
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color(0xff302360),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: "example: Mad men",
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(Icons.search, size: 30.0),
+                  prefixIconColor: Colors.white,
+                  suffixIcon: const IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: clearTextInput,
+                  ),
+                  suffixIconColor: Colors.white,
                 ),
-                hintText: "example: Mad men",
-                hintStyle: TextStyle(color: Colors.white),
-                prefixIcon: const Icon(Icons.search, size: 30.0),
-                prefixIconColor: Colors.white,
-                suffixIcon: const IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: clearTextInput,
-                ),
-                suffixIconColor: Colors.white,
-              ),
             ),
             const SizedBox(
               height: 20.0,
@@ -200,7 +200,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         ),
                         subtitle: Text(
-                          movie.mediaReleaseYear,
+                          movie.mediaReleaseYear ?? "",
                           style: const TextStyle(
                             color: Colors.white60,
                           ),
@@ -213,13 +213,36 @@ class _SearchPageState extends State<SearchPage> {
                             ? Image.network(movie.poster)
                             : Image.asset('assets/no-image.png')
                     ),
-                  );
-                },
-              ),
-            )
+            );
           ],
         ),
       ),
     );
   }
+}
+
+Widget drawMovieInfoLine(BuildContext context , MediaModel movie){
+  return ListTile(
+      contentPadding: const EdgeInsets.all(8.0),
+      title: Text(
+        movie.mediaTitle,
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      subtitle: Text(
+        movie.mediaReleaseYear ?? "",
+        style: const TextStyle(
+          color: Colors.white60,
+        ),
+      ),
+      trailing: Text(
+        '${movie.rating}',
+        style: const TextStyle(color: Colors.amber,fontSize: 24.0),
+      ),
+      leading: movie.poster != "null"
+          ? Image.network(movie.poster)
+          : Image.asset('assets/no-image.png')
+  );
 }

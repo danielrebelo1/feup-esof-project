@@ -236,7 +236,6 @@
       List<String> updatedPlatforms = await getPlatforms(utellyApiPath);
       print(updatedPlatforms);
       foundPlatform = updatedPlatforms.isEmpty ? "" : updatedPlatforms[0];
-      // setState(() {foundPlatform = updatedPlatforms[0];});
       print("inside platformsTrim $foundPlatform");
     }
 
@@ -319,10 +318,7 @@
                                   while (foundPlatform == "a"){
                                     platformsTrim('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + displayMovies[_currentIndex]
                                     ['id'].toString() + '&source=tmdb&country=us');
-                                    print("checking $foundPlatform");
                                   }
-                                  print("checking twice $foundPlatform");
-                                  // print("after updatelist $platforms2 and is ${platforms2.isEmpty}");
                                   Navigator.push( context, MaterialPageRoute (
                                       builder: (context)  => MediaPage(
                                         email: widget.email,

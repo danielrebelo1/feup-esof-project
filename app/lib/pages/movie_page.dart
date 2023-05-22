@@ -48,30 +48,8 @@ class _MediaPageState extends State<MediaPage> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Opacity(
-                opacity: 0.4,
-                child: (widget.mediaModel?.poster != "null"
-                    ? Image.network(
-                  widget.mediaModel?.poster ?? "",
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                    : GestureDetector(onTap: () {
-                  const url = 'https://TODO.com'; // Replace with url from API
-                  launch(url);
-                },child:
-                Image.asset(
-                  'assets/no-image.png',
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                )
+            drawMoviePoster(context, widget.mediaModel),
 
-                )),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
@@ -111,90 +89,15 @@ class _MediaPageState extends State<MediaPage> {
                                   : Image.asset('assets/no-image.png',
                                   height: 220, width: 180))),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Transform.translate(
-                                offset: const Offset(0, 20),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: widget.platform == "" ? null : Image.asset('assets/' + widget.platform,
-                                      height: 55,
-                                      width: 50,
-                                    )
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        drawMediaPlatforms(context, platforms),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                widget.mediaModel?.mediaTitle ?? "",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:
-                                  MediaQuery.of(context).size.height * 0.04,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                MediaQuery.of(context).size.height * 0.02),
-                            Text(
-                              widget.mediaModel?.mediaReleaseYear
-                                  .toString().substring(0, 4) ??
-                                  "",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                MediaQuery.of(context).size.height * 0.02,
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                MediaQuery.of(context).size.width * 0.05),
-                            Text(
-                              widget.mediaModel?.rating.toString() ?? "",
-                              style: TextStyle(
-                                color: Colors.amber,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                MediaQuery.of(context).size.height * 0.04,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.mediaModel?.description.toString() ?? "",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.025,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                  drawMovieInfo(context, widget.mediaModel),
+
                   const SizedBox(height: 20),
+
                   GestureDetector(
                     onTap: () {
                       // Call function to dismiss the keyboard
@@ -270,28 +173,8 @@ class _MediaPageState extends State<MediaPage> {
                                 time_now.difference(timestamp.toDate());
                                 final time_elapsed_sec =
                                     time_elapsed.abs().inSeconds;
-                                final commentTime;
-                                if (time_elapsed_sec == 0)
-                                  commentTime = "just now";
-                                else if (time_elapsed_sec < 60)
-                                  commentTime = "$time_elapsed_sec seconds ago";
-                                else if (time_elapsed_sec < 3600) {
-                                  final minutes =
-                                  (time_elapsed_sec / 60).round();
-                                  commentTime =
-                                  '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
-                                } else if (time_elapsed_sec < 86400) {
-                                  final hours =
-                                  (time_elapsed_sec / (60 * 60)).round();
-                                  commentTime =
-                                  '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
-                                } else {
-                                  final days =
-                                  (time_elapsed_sec / (60 * 60 * 24))
-                                      .round();
-                                  commentTime =
-                                  '$days ${days == 1 ? 'day' : 'days'} ago';
-                                }
+                                final commentTime = getCommentTime(time_elapsed_sec);
+
                                 final userID = commentData['userID'] as String;
                                 return Column(
                                   children: [
@@ -371,3 +254,134 @@ class _MediaPageState extends State<MediaPage> {
     );
   }
 }
+
+
+String getCommentTime(int timeElapsedSec) {
+  String commentTime;
+
+  if (timeElapsedSec == 0)
+    commentTime = "just now";
+  else if (timeElapsedSec < 60)
+    commentTime = "$timeElapsedSec seconds ago";
+  else if (timeElapsedSec < 3600) {
+    final minutes = (timeElapsedSec / 60).round();
+    commentTime = '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+  } else if (timeElapsedSec < 86400) {
+    final hours = (timeElapsedSec / (60 * 60)).round();
+    commentTime = '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+  } else {
+    final days = (timeElapsedSec / (60 * 60 * 24)).round();
+    commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
+  }
+
+  return commentTime;
+}
+
+Widget drawMoviePoster(BuildContext context, MediaModel ?mediaModel){
+  return             Opacity(
+      opacity: 0.4,
+      child: (mediaModel?.poster != "null"
+          ? Image.network(
+        mediaModel?.poster ?? "",
+        height: MediaQuery.of(context).size.height * 0.35,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, 0.7),
+      )
+          : GestureDetector(onTap: () {
+        const url = 'https://TODO.com'; // Replace with url from API
+        launch(url);
+      },child:
+      Image.asset(
+        'assets/no-image.png',
+        height: MediaQuery.of(context).size.height * 0.35,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, 0.7),
+      )
+      )
+      )
+  );
+}
+
+Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                mediaModel?.mediaTitle ?? "",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.of(context).size.height * 0.04,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Text(
+              mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height * 0.02,
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.width * 0.05,
+            ),
+            Text(
+              mediaModel?.rating.toString() ?? "",
+              style: TextStyle(
+                color: Colors.amber,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height * 0.04,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        const SizedBox(height: 10),
+        Text(
+          mediaModel?.description.toString() ?? "",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: MediaQuery.of(context).size.height * 0.025,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
+  return                         Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 5),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Transform.translate(
+          offset: const Offset(0, 20),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
+                height: 55,
+                width: 50,
+              )
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+
