@@ -114,17 +114,21 @@ class _ProfilePageState extends State<ImageWidget> {
               }
             },
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.35, // set the width of the container
-              height: MediaQuery.of(context).size.height * 0.2, // set the height of the container
+              width: MediaQuery.of(context).size.width *
+                  0.35, // set the width of the container
+              height: MediaQuery.of(context).size.height *
+                  0.2, // set the height of the container
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0), // set a circular border radius
+                borderRadius:
+                    BorderRadius.circular(10.0), // set a circular border radius
                 image: DecorationImage(
-                  image: NetworkImage(url ?? "No image"), // use the NetworkImage to load the image
-                  fit: BoxFit.cover, // set the fit property to cover the container
+                  image: NetworkImage(url ??
+                      "No image"), // use the NetworkImage to load the image
+                  fit: BoxFit
+                      .cover, // set the fit property to cover the container
                 ),
               ),
             ),
-
           ),
         ),
         Center(
@@ -161,20 +165,25 @@ class _ProfilePageState extends State<ImageWidget> {
                       ),
                     );
                   } else {
-                    setState(() async{
-
-                      final Query query = users.where('email', isEqualTo: widget.email);
+                    setState(() async {
+                      final Query query =
+                          users.where('email', isEqualTo: widget.email);
                       final QuerySnapshot querySnapshot = await query.get();
-                      final List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+                      final List<QueryDocumentSnapshot> documents =
+                          querySnapshot.docs;
 
                       if (documents.isNotEmpty) {
                         final DocumentSnapshot document = documents.first;
                         print(document);
-                        final DocumentReference documentRef = users.doc(document.id);
+                        final DocumentReference documentRef =
+                            users.doc(document.id);
 
-                        await documentRef.update({'username': newDisplayName})
-                            .then((value) => print('Document updated successfully!'))
-                            .catchError((error) => print('Error updating document: $error'));
+                        await documentRef
+                            .update({'username': newDisplayName})
+                            .then((value) =>
+                                print('Document updated successfully!'))
+                            .catchError((error) =>
+                                print('Error updating document: $error'));
                       }
                     });
                     ScaffoldMessenger.of(context).showSnackBar(
