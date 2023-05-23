@@ -12,8 +12,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
 
 
   @override
@@ -55,21 +55,30 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _icon(),
-              inputField("Email", emailController),
+              KeyedSubtree(
+                key: Key("emailField"), // Unique key for the email TextField
+                child: inputField("Email", emailController),
+              ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
-              inputField("Password", passwordController, isPassword: true),
+              KeyedSubtree(
+                key: Key("passwordField"), // Unique key for the password TextField
+                child: inputField("Password", passwordController, isPassword: true),
+              ),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _loginBtn(),
               SizedBox(height: MediaQuery.of(context).size.height * 0.02),
               _forgotPasswordBtn(),
               SizedBox(height: 0),
-              _createAccountBtn(),
+              KeyedSubtree(
+                key: Key("GoToSignUp"),
+                child: _createAccountBtn()),
             ],
           ),
         ),
       ),
     );
   }
+
 
 
   Widget _icon() {
@@ -100,7 +109,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _loginBtn() {
+    final loginButtonKey = Key("loginButton");
     return ElevatedButton(
+      key: loginButtonKey,
       onPressed: () {
         FirebaseAuth.instance
             .signInWithEmailAndPassword(
@@ -124,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MyHomePage(
+                    key: Key("HomePage"),
                     email: emailController.text,
                     username: username,
                     password: passwordController.text,
@@ -253,7 +265,7 @@ class _LoginPageState extends State<LoginPage> {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const CreateAccountPage()),
+              MaterialPageRoute(builder: (context) => const CreateAccountPage(key: Key("SignUpPage"),)),
             );
           },
           child: Text(
