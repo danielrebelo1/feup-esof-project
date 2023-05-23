@@ -46,16 +46,17 @@ class _SearchPageState extends State<SearchPage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final results = data['results'] as List<dynamic>;
+      print(results);
       return results
-          .map((result) => MediaModel(
-          result['title'] ?? result['name'],
-          result['media_type'],
-          (result['release_date'] != "" ? result['release_date'] : (result['first_air_date'] != null ? result['first_air_date'] : "No data")),
-          double.parse(result['vote_average'].toStringAsFixed(1)),
-          result['poster_path'] != null
-              ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}'
-              : 'null',
-          result['overview'], result['id']))
+          .map((result) =>
+          MediaModel(
+              result['title'] != null ? result['title'] : result['name'],
+              result['media_type'],
+              result['release_date'] != null ? result['release_date'] : (result['first_air_date'] != null ? result['first_air_date'] : "No data"),
+              result['vote_average'] != null ? double.parse(result['vote_average'].toStringAsFixed(1)) : 0.0,
+              result['poster_path'] != null ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}' : 'null',
+              result['overview'],
+              result['id']))
           .toList();
     } else {
       throw Exception('Failed to load search results');
@@ -63,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   List<MediaModel> displayList = [];
-  List<String> platforms = [];
+  String foundPlatform = "";
 
   void updateList(String value) {
     if (value.isEmpty) {
@@ -81,29 +82,8 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  void updateListPlatforms(String url) {
-    if (url == "") {
-      setState(() {
-        platforms = [];
-      });
-    } else {
-      getPlatforms(url).then((results) {
-        setState(() {
-          platforms = results;
-        });
-      }).catchError((error) {
-        print(error);
-      });
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
-
-    if(displayList.isNotEmpty){
-      // print(displayList[0].poster);
-    }
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
@@ -128,29 +108,29 @@ class _SearchPageState extends State<SearchPage> {
               height: 20.0,
             ),
             TextField(
-                controller: _textEditingController,
-                onChanged: (value) async {
-                  await Future.delayed(const Duration(seconds: 1));
-                  updateList(value);
-                },
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: const Color(0xff302360),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  hintText: "example: Mad men",
-                  hintStyle: TextStyle(color: Colors.white),
-                  prefixIcon: const Icon(Icons.search, size: 30.0),
-                  prefixIconColor: Colors.white,
-                  suffixIcon: const IconButton(
-                    icon: Icon(Icons.clear),
-                    onPressed: clearTextInput,
-                  ),
-                  suffixIconColor: Colors.white,
+              controller: _textEditingController,
+              onChanged: (value) async {
+                await Future.delayed(const Duration(seconds: 1));
+                updateList(value);
+              },
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: const Color(0xff302360),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.0),
+                  borderSide: BorderSide.none,
                 ),
+                hintText: "example: Mad men",
+                hintStyle: TextStyle(color: Colors.white),
+                prefixIcon: const Icon(Icons.search, size: 30.0),
+                prefixIconColor: Colors.white,
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.clear),
+                  onPressed: clearTextInput,
+                ),
+                suffixIconColor: Colors.white,
+              ),
             ),
             const SizedBox(
               height: 20.0,
@@ -172,77 +152,125 @@ class _SearchPageState extends State<SearchPage> {
                 itemBuilder: (context, index) {
                   final movie = displayList[index];
                   return GestureDetector(
-                    onTap: () {
-                      print("got here");
-                      String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-                      updateListPlatforms(utellyApiPath);
-                      print("got here2");
+                    onTap: () async {
+                      String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
+                            movie.id.toString() +
+                          '&source=tmdb&country=us';
+                      var url = Uri.parse(utellyApiPath);
+                      print(url);
+                      var headers = {
+                        "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
+                        "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
+                        "content-type": "application/octet-stream"
+                      };
+                      var data, locations = [];
+                      try {
+                        var response = await http.get(url, headers: headers);
+                        if (response.statusCode < 200 || response.statusCode > 299) {print("error");}
+                        data = jsonDecode(response.body);
+                        locations = data['collection']['locations'];
+                      } catch (e) {
+                        print('Error making HTTP request: $e');
+                        locations = [];
+                      }
+
+                      for (int i = 0; i < locations.length; i++){
+                        final String platform = locations[i]['display_name'];
+                        switch(platform){
+                          case "Netflix":
+                            {
+                              foundPlatform = "netflix.png";
+                              break;
+                            }
+                          case "Disney+":
+                            {
+                              foundPlatform = "disney.jpg";
+                              break;
+                            }
+                          case "Amazon Prime Video":
+                            {
+                              foundPlatform = "amazon-prime.png";
+                              break;
+                            }
+                          case "AppleTV+":
+                            {
+                              foundPlatform = "appletv.png";
+                              break;
+                            }
+                        }
+                      }
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => MediaPage(
-                            email: widget.email,
-                            username: widget.username,
-                            password: widget.password,
-                            platform: platforms.isEmpty == true ? "" : platforms[0],
-                            mediaModel: displayList[index],
-                          ),
+                          builder: (context) =>
+                              MediaPage(
+                                email: widget.email,
+                                username: widget.username,
+                                password: widget.password,
+                                platform: foundPlatform,
+                                mediaModel: displayList[index],
+                              ),
                         ),
                       );
                     },
                     child: ListTile(
-                        contentPadding: const EdgeInsets.all(8.0),
-                        title: Text(
-                          movie.mediaTitle,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      contentPadding: const EdgeInsets.all(8.0),
+                      title: Text(
+                        movie.mediaTitle,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        subtitle: Text(
-                          movie.mediaReleaseYear ?? "",
-                          style: const TextStyle(
-                            color: Colors.white60,
-                          ),
+                      ),
+                      subtitle: Text(
+                        movie.mediaReleaseYear ?? "",
+                        style: const TextStyle(
+                          color: Colors.white60,
                         ),
-                        trailing: Text(
-                          '${movie.rating}',
-                          style: const TextStyle(color: Colors.amber,fontSize: 24.0),
-                        ),
-                        leading: movie.poster != "null"
-                            ? Image.network(movie.poster)
-                            : Image.asset('assets/no-image.png')
+                      ),
+                      trailing: Text(
+                        '${movie.rating}',
+                        style: const TextStyle(color: Colors.amber,
+                            fontSize: 24.0),
+                      ),
+                      leading: movie.poster != "null"
+                          ? Image.network(movie.poster)
+                          : Image.asset('assets/no-image.png'),
                     ),
-            );
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-Widget drawMovieInfoLine(BuildContext context , MediaModel movie){
-  return ListTile(
-      contentPadding: const EdgeInsets.all(8.0),
-      title: Text(
-        movie.mediaTitle,
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
+
+  Widget drawMovieInfoLine(BuildContext context, MediaModel movie) {
+    return ListTile(
+        contentPadding: const EdgeInsets.all(8.0),
+        title: Text(
+          movie.mediaTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      subtitle: Text(
-        movie.mediaReleaseYear ?? "",
-        style: const TextStyle(
-          color: Colors.white60,
+        subtitle: Text(
+          movie.mediaReleaseYear ?? "",
+          style: const TextStyle(
+            color: Colors.white60,
+          ),
         ),
-      ),
-      trailing: Text(
-        '${movie.rating}',
-        style: const TextStyle(color: Colors.amber,fontSize: 24.0),
-      ),
-      leading: movie.poster != "null"
-          ? Image.network(movie.poster)
-          : Image.asset('assets/no-image.png')
-  );
+        trailing: Text(
+          '${movie.rating}',
+          style: const TextStyle(color: Colors.amber, fontSize: 24.0),
+        ),
+        leading: movie.poster != "null"
+            ? Image.network(movie.poster)
+            : Image.asset('assets/no-image.png')
+    );
+  }
 }

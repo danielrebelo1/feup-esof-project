@@ -43,7 +43,7 @@
     String methodName = 'getTopRatedMovies';
     int _buttonPressedIndex = 1;
     List<String> platforms = [];
-    String   foundPlatform = "a";
+    String   foundPlatform = "";
 
     /*
     Future<List<String>> updateListPlatforms(String url) async {
@@ -64,7 +64,7 @@
     }
     */
 
-    Future<String> getMediaType(String mediaName)async {
+    Future<String> getMediaType(String mediaName) async {
       final url =
           'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${mediaName}';
       final response = await http.get(Uri.parse(url));
@@ -184,7 +184,6 @@
     @override
     void initState() {
       loadMovies(methodName);
-      print("init state");
       super.initState();
     }
 
@@ -313,12 +312,53 @@
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
-                                onTap: () {
-                                  print("checking $foundPlatform");
-                                  while (foundPlatform == "a"){
-                                    platformsTrim('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + displayMovies[_currentIndex]
-                                    ['id'].toString() + '&source=tmdb&country=us');
+                                onTap: () async {
+                                  var url = Uri.parse('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
+                                       displayMovies[_currentIndex]['id'].toString() +
+                                      '&source=tmdb&country=us');
+                                  print(url);
+                                  var headers = {
+                                    "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
+                                    "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
+                                    "content-type": "application/octet-stream"
+                                  };
+                                  var data, locations = [];
+                                  try {
+                                    var response = await http.get(url, headers: headers);
+                                    if (response.statusCode < 200 || response.statusCode > 299) {print("error");}
+                                    data = jsonDecode(response.body);
+                                    locations = data['collection']['locations'];
+                                  } catch (e) {
+                                    print('Error making HTTP request: $e');
+                                    locations = [];
                                   }
+
+                                  for (int i = 0; i < locations.length; i++){
+                                    final String platform = locations[i]['display_name'];
+                                    switch(platform){
+                                      case "Netflix":
+                                        {
+                                          foundPlatform = "netflix.png";
+                                          break;
+                                        }
+                                      case "Disney+":
+                                        {
+                                          foundPlatform = "disney.jpg";
+                                          break;
+                                        }
+                                      case "Amazon Prime Video":
+                                        {
+                                          foundPlatform = "amazon-prime.png";
+                                          break;
+                                        }
+                                      case "AppleTV+":
+                                        {
+                                          foundPlatform = "appletv.png";
+                                          break;
+                                        }
+                                    }
+                                  }
+
                                   Navigator.push( context, MaterialPageRoute (
                                       builder: (context)  => MediaPage(
                                         email: widget.email,

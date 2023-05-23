@@ -15,9 +15,8 @@ Future<List<String>> getPlatforms(String utellyApiPath) async{
   List<String> res = [];
   final data, locations;
   try {
-    var response = await http.get(url, headers: headers);
+    final response = await http.get(url, headers: headers);
     if (response.statusCode < 200 || response.statusCode > 299) {
-      print("ERRO");
       return res;
     }
     data = jsonDecode(response.body);

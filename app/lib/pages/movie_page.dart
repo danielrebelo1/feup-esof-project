@@ -25,6 +25,7 @@ class MediaPage extends StatefulWidget {
   State<StatefulWidget> createState() => _MediaPageState();
 }
 
+
 class _MediaPageState extends State<MediaPage> {
   bool checkedApi = false;
   String userComment = "";
@@ -36,8 +37,6 @@ class _MediaPageState extends State<MediaPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("this is the ${widget.platform}");
-    print( widget.platform == "" ? null : 'assets/' + widget.platform);
     return Scaffold(
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
@@ -89,7 +88,7 @@ class _MediaPageState extends State<MediaPage> {
                                   : Image.asset('assets/no-image.png',
                                   height: 220, width: 180))),
                         ),
-                        drawMediaPlatforms(context, platforms),
+                        drawMediaPlatforms(context, widget.platform),
                       ],
                     ),
                   ),
@@ -330,20 +329,22 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).size.height * 0.02,
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.05,
-            ),
-            Text(
-              mediaModel?.rating.toString() ?? "",
-              style: TextStyle(
-                color: Colors.amber,
-                fontWeight: FontWeight.bold,
                 fontSize: MediaQuery.of(context).size.height * 0.04,
               ),
             ),
+              Expanded(
+              child:
+                Align(
+                  alignment: Alignment.centerRight,
+                    child: Text(
+                      mediaModel?.rating.toString() ?? "",
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.height * 0.04,),
+                    ),
+                ),
+              ),
           ],
         ),
         const SizedBox(width: 10),
@@ -360,8 +361,9 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
   );
 }
 
-Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
-  return                         Padding(
+Widget drawMediaPlatforms(BuildContext context, String platform){
+  return
+    Padding(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     child: Row(
       mainAxisSize: MainAxisSize.min,
@@ -371,9 +373,9 @@ Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
           offset: const Offset(0, 20),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
-                height: 55,
-                width: 50,
+              child: platform == "" ? null : Image.asset('assets/' + platform,
+                height: 70,
+                width: 70,
               )
           ),
         ),
