@@ -45,6 +45,7 @@ class _MediaPageState extends State<MediaPage> {
       ),
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       body: SingleChildScrollView(
+
         child: Stack(
           children: [
             drawMoviePoster(context, widget.mediaModel),
@@ -94,7 +95,6 @@ class _MediaPageState extends State<MediaPage> {
                   ),
 
                   drawMovieInfo(context, widget.mediaModel),
-
                   const SizedBox(height: 20),
 
                   GestureDetector(
@@ -325,7 +325,7 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
               width: MediaQuery.of(context).size.height * 0.02,
             ),
             Text(
-              mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "",
+              mediaModel?.mediaReleaseYear != "No data" ? (mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "") : "No data",
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

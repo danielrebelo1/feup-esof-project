@@ -51,7 +51,7 @@ class _SearchPageState extends State<SearchPage> {
           MediaModel(
               result['title'] != null ? result['title'] : result['name'],
               result['media_type'],
-              result['release_date'] != null ? result['release_date'] : (result['first_air_date'] != null ? result['first_air_date'] : "No data"),
+              result['release_date'] != "" ? (result['release_date'] != null ? result['release_date'] : (result['first_air_date'] != null ? result['first_air_date'] : "No data")) : "No data",
               result['vote_average'] != null ? double.parse(result['vote_average'].toStringAsFixed(1)) : 0.0,
               result['poster_path'] != null ? 'https://image.tmdb.org/t/p/w500${result['poster_path']}' : 'null',
               result['overview'],
