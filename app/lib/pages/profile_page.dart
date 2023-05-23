@@ -39,17 +39,19 @@ class ProfilePage extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () {
-              FirebaseAuth.instance.signOut().then((value) => {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const LoginPage()),
-                )
-              });
-            },
+          KeyedSubtree(
+            key: Key("LogOutButton"), // Provide the desired key here
+            child: IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: () {
+                FirebaseAuth.instance.signOut().then((value) => {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const LoginPage(key: Key("LoginPage"))),
+                  )
+                });
+              },
+            ),
           ),
         ],
       ),
