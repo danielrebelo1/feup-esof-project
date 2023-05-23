@@ -3,79 +3,60 @@ import 'dart:core';
 import 'package:http/http.dart' as http;
 
 Future<List<String>> getPlatforms(String utellyApiPath) async{
-  // https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-  // utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=97546&source=tmdb&country=us';
 
-
-  //print('BEFORE URIPARSE $utellyApiPath');
   var url = Uri.parse(utellyApiPath);
-  //print('AFTER URIPARSE $url');
+
   var headers = {
     "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
     "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
     "content-type": "application/octet-stream"
   };
-
-  /*
-  var response = await http.get(url, headers: headers);
-
-  if (response.statusCode < 200 || response.statusCode > 299) {
-    print("DEU MERDAAAAAAAAAAAAA ----- ${response.statusCode}");
-    return res;
-  }
-
-  final data = jsonDecode(response.body);
-  final locations = data['collection']['locations'];
-  */
+  print("BEFORE THE TRY");
   List<String> res = [];
   final data, locations;
   try {
-    var response = await http.get(url, headers: headers);
+    final response = await http.get(url, headers: headers);
     if (response.statusCode < 200 || response.statusCode > 299) {
-      print("DEU MERDAAAAAAAAAAAAA ----- ${response.statusCode}");
       return res;
     }
     data = jsonDecode(response.body);
     locations = data['collection']['locations'];
-    // process the response as before
   } catch (e) {
-    // handle any exceptions thrown by the HTTP request
     print('Error making HTTP request: $e');
     return res;
   }
-
+  print("before the for");
   for (int i = 0; i < locations.length; i++){
     final String platform = locations[i]['display_name'];
     switch(platform){
       case "Netflix":
         {
           res.add("netflix.png");
-          break;
+          print("vou retornar $res");
+          return res;
         }
       case "Disney+":
         {
           res.add("disney.jpg");
-          break;
+          print("vou retornar $res");
+          return res;
         }
       case "Amazon Prime Video":
         {
           res.add("amazon-prime.png");
-          break;
+          print("vou retornar $res");
+          return res;
         }
       case "AppleTV+":
         {
           res.add("appletv.png");
-          break;
+          print("vou retornar $res");
+          return res;
         }
     }
   }
-  /*
-  print('--------------');
-  print('AFTER GETPLATFORMS');
-  print(res);
-  print('----------------');
-   */
-  return res;
+  print("nao encontrei nada");
+  return [];
 }
 
 Future<List<String>> getMediaURL(String utellyApiPath) async{
@@ -94,9 +75,7 @@ Future<List<String>> getMediaURL(String utellyApiPath) async{
   }
   data = jsonDecode(response.body);
   locations = data['collection']['locations'];
-  // process the response as before
   } catch (e) {
-  // handle any exceptions thrown by the HTTP request
   print('Error making HTTP request: $e');
   return res;
   }
@@ -128,3 +107,5 @@ Future<List<String>> getMediaURL(String utellyApiPath) async{
   }
   return res;
 }
+
+
