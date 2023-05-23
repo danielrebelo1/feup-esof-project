@@ -46,7 +46,6 @@ class _SearchPageState extends State<SearchPage> {
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final results = data['results'] as List<dynamic>;
-      print(results);
       return results
           .map((result) =>
           MediaModel(
