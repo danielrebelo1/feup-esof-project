@@ -10,7 +10,6 @@
   import 'package:project/reusableWidgets/display_side_movie.dart';
   import 'package:tmdb_api/tmdb_api.dart';
   import 'package:http/http.dart' as http;
-  import 'utelly-api.dart';
   import 'package:project/reusableWidgets/display_main_movie/display_poster.dart';
   import '../reusableWidgets/custom_nav_bar.dart';
   import 'movie_page.dart';
@@ -44,26 +43,6 @@
     int _buttonPressedIndex = 1;
     List<String> platforms = [];
     String   foundPlatform = "";
-
-    /*
-    Future<List<String>> updateListPlatforms(String url) async {
-      if (url == "") {
-        print("Empty URL");
-        return platforms;
-      } else {
-        try {
-          List<String> results = await getPlatforms(url);
-          foundPlatform = true;
-          platforms = results;
-          return platforms;
-        } catch (error) {
-          print(error);
-          return platforms;
-        }
-      }
-    }
-    */
-
     Future<String> getMediaType(String mediaName) async {
       final url =
           'https://api.themoviedb.org/3/search/multi?api_key=51b20269b73105d2fd84257214e53cc3&query=${mediaName}';
@@ -120,7 +99,6 @@
     }
 
     void _incrementIndex() {
-      //print(_currentIndex);
       setState(() {
         if (_currentIndex == displayMovies.length - 2) {
           loadMovies(methodName);
@@ -175,7 +153,6 @@
     }
 
     void _decrementIndex() {
-      // print(_currentIndex);
       setState(() {
         _currentIndex = (_currentIndex - 1) % displayMovies.length;
       });
@@ -202,7 +179,6 @@
             setState(() {
               displayMovies.addAll(movieResults['results']);
             });
-            // print(displayMovies);
             break;
           case 'getPopular':
             Map movieResults =
@@ -218,7 +194,6 @@
             page_number = page_number + 1;
             setState(() {
               displayMovies.addAll(movieResults['results']);
-              //print(movieResults);
             });
             break;
 
@@ -229,13 +204,6 @@
       } catch (e) {
         print('Error occurred while loading movies: $e');
       }
-    }
-
-    void platformsTrim(String utellyApiPath) async {
-      List<String> updatedPlatforms = await getPlatforms(utellyApiPath);
-      print(updatedPlatforms);
-      foundPlatform = updatedPlatforms.isEmpty ? "" : updatedPlatforms[0];
-      print("inside platformsTrim $foundPlatform");
     }
 
     @override
@@ -316,7 +284,6 @@
                                   var url = Uri.parse('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
                                        displayMovies[_currentIndex]['id'].toString() +
                                       '&source=tmdb&country=us');
-                                  print(url);
                                   var headers = {
                                     "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
                                     "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
@@ -327,7 +294,7 @@
                                     var response = await http.get(url, headers: headers);
                                     if (response.statusCode < 200 || response.statusCode > 299) {print("error");}
                                     data = jsonDecode(response.body);
-                                    locations = data['collection']['locations'];
+                                    if (data['collection'] != null && data['collection']['locations'] != null) locations = data['collection']['locations'];
                                   } catch (e) {
                                     print('Error making HTTP request: $e');
                                     locations = [];
