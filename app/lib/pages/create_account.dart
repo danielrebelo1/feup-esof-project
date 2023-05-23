@@ -64,11 +64,20 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             children: [
               _icon(),
               const SizedBox(height: 15),
-              _inputField("Email", emailController),
+              KeyedSubtree(
+                key: Key("emailField"), // Unique key for the email TextField
+                child: _inputField("Email", emailController),
+              ),
               const SizedBox(height: 20),
-              _inputField("Username", usernameController),
+              KeyedSubtree(
+                key: Key("usernameField"), // Unique key for the email TextField
+                child: _inputField("Username", usernameController),
+              ),
               const SizedBox(height: 20),
-              _inputField("Password", passwordController, isPassword: true),
+              KeyedSubtree(
+                key: Key("passwordField"), // Unique key for the password TextField
+                child: _inputField("Password", passwordController, isPassword: true),
+              ),
               const SizedBox(height: 50),
               _createAccountBtn(),
             ],
@@ -123,6 +132,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
 
   Widget _createAccountBtn() {
+    final signUpButtonKey = Key("signUpButton");
     final double buttonWidth = MediaQuery
         .of(context)
         .size
@@ -135,6 +145,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
 
 
     return SizedBox(
+      key: signUpButtonKey,
       width: buttonWidth,
       height: buttonHeight,
       child: ElevatedButton(
@@ -162,7 +173,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                    'ERROR! Please fill all fields and check if password has at least 6 characters'),
+                    'ERROR! Please fill all fields and check if password has at least 7 characters'),
                 duration: Duration(seconds: 3),
                 backgroundColor: Color.fromRGBO(80, 0, 100, 1),
               ),
@@ -190,6 +201,7 @@ class _CreateAccountPageState extends State<CreateAccountPage> {
                 MaterialPageRoute(
                   builder: (context) =>
                       MyHomePage(
+                        key: Key("HomePage"),
                         email: emailController.text,
                         username: usernameController.text,
                         password: passwordController.text,
