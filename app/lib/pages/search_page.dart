@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../reusableWidgets/media_model.dart';
 import 'movie_page.dart';
-import 'utelly-api.dart';
 
 
-/*Auxiliary functions to clean the search bar*/
 TextEditingController _textEditingController = TextEditingController();
 
 void clearTextInput() {
@@ -156,7 +154,6 @@ class _SearchPageState extends State<SearchPage> {
                             movie.id.toString() +
                           '&source=tmdb&country=us';
                       var url = Uri.parse(utellyApiPath);
-                      print(url);
                       var headers = {
                         "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
                         "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",

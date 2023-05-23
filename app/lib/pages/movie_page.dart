@@ -122,7 +122,7 @@ class _MediaPageState extends State<MediaPage> {
                                   'idMovie': widget.mediaModel!.id ?? -1,
                                   'timestamp': DateTime.now(),
                                   'userID': widget.email,
-                                }).then((value) => print("Comment added!") );
+                                });
                                 setState(() {
                                   userComment =
                                   '';

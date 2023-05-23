@@ -237,12 +237,9 @@ class _ProfilePageState extends State<ImageWidget> {
 
                                       if (documents.isNotEmpty) {
                                         final DocumentSnapshot document = documents.first;
-                                        print(document);
                                         final DocumentReference documentRef = users.doc(document.id);
 
-                                        await documentRef.update({'username': newDisplayName})
-                                            .then((value) => print('Document updated successfully!'))
-                                            .catchError((error) => print('Error updating document: $error'));
+                                        await documentRef.update({'username': newDisplayName});
                                       }
                                     });
                                     ScaffoldMessenger.of(context).showSnackBar(
