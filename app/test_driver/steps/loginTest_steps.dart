@@ -61,7 +61,7 @@ class VerifyHomePage extends Then1WithWorld<String, FlutterWorld> {
   @override
   Future<void> executeStep(String expectedPage) async {
     final homePageFinder = find.byValueKey(expectedPage);
-    await Future.delayed(Duration(seconds: 9));
+    await Future.delayed(Duration(seconds: 7));
     bool isHomePageVisible = await FlutterDriverUtils.isPresent(world.driver, homePageFinder);
     expect(isHomePageVisible, true);
   }

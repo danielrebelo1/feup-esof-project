@@ -228,6 +228,7 @@
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   GestureDetector(
+                      key: Key("movieFilter1"),
                       onTap: () {
                         setState(() {
                           _buttonPressedIndex = 1;
@@ -237,6 +238,7 @@
                       child: DisplayFilter(filterName: "Top Rated Movies", buttonPressedIndex: _buttonPressedIndex, filterButton: 1)),
 
                   GestureDetector(
+                      key: Key("movieFilter2"),
                       onTap: () {
                         setState(() {
                           _buttonPressedIndex = 2;
@@ -246,6 +248,7 @@
                       child: DisplayFilter(filterName: "Popular", buttonPressedIndex: _buttonPressedIndex, filterButton: 2,)
                   ),
                   GestureDetector(
+                      key: Key("movieFilter3"),
                       onTap: () {
                         setState(() {
                           _buttonPressedIndex = 3;
@@ -280,6 +283,7 @@
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             GestureDetector(
+                                key: Key("moviePoster"),
                                 onTap: () async {
                                   var url = Uri.parse('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
                                        displayMovies[_currentIndex]['id'].toString() +
@@ -328,6 +332,7 @@
 
                                   Navigator.push( context, MaterialPageRoute (
                                       builder: (context)  => MediaPage(
+                                        key: Key("moviePage"),
                                         email: widget.email,
                                         username: widget.username,
                                         password: widget.password,
@@ -373,7 +378,7 @@
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                DisplayMovieTitle(movieTitle: getMovieTitle()),
+                                DisplayMovieTitle(key:Key("movieTitleBox"),movieTitle: getMovieTitle()),
                                 DisplayMovieRelease(movieRelease: getMovieReleaseDate()),
                               ],
                             ),

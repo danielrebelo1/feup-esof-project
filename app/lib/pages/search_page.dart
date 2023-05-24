@@ -104,29 +104,32 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(
               height: 20.0,
             ),
-            TextField(
-              controller: _textEditingController,
-              onChanged: (value) async {
-                await Future.delayed(const Duration(seconds: 1));
-                updateList(value);
-              },
-              style: const TextStyle(color: Colors.white),
-              decoration: InputDecoration(
-                filled: true,
-                fillColor: const Color(0xff302360),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                  borderSide: BorderSide.none,
+            KeyedSubtree(
+              key: Key("searchBar"),
+              child: TextField(
+                controller: _textEditingController,
+                onChanged: (value) async {
+                  await Future.delayed(const Duration(seconds: 1));
+                  updateList(value);
+                },
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  filled: true,
+                  fillColor: const Color(0xff302360),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                    borderSide: BorderSide.none,
+                  ),
+                  hintText: "example: Mad men",
+                  hintStyle: TextStyle(color: Colors.white),
+                  prefixIcon: const Icon(Icons.search, size: 30.0),
+                  prefixIconColor: Colors.white,
+                  suffixIcon: const IconButton(
+                    icon: Icon(Icons.clear),
+                    onPressed: clearTextInput,
+                  ),
+                  suffixIconColor: Colors.white,
                 ),
-                hintText: "example: Mad men",
-                hintStyle: TextStyle(color: Colors.white),
-                prefixIcon: const Icon(Icons.search, size: 30.0),
-                prefixIconColor: Colors.white,
-                suffixIcon: IconButton(
-                  icon: Icon(Icons.clear),
-                  onPressed: clearTextInput,
-                ),
-                suffixIconColor: Colors.white,
               ),
             ),
             const SizedBox(
