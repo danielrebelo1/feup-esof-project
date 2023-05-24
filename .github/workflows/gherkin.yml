@@ -16,18 +16,19 @@ jobs:
       - name: Install dependencies
         working-directory: ./app
         run: flutter pub get
-      - name: Install Ninja
-        run: sudo apt-get install ninja-build
+      - name: Install Ninja and pkg-config
+        run: |
+          sudo apt-get update
+          sudo apt-get install ninja-build pkg-config
       - name: Set up environment variables
         env:
           CMAKE_MAKE_PROGRAM: ninja
           CMAKE_CXX_COMPILER: g++
+          PKG_CONFIG: pkg-config
         run: |
-          sudo apt-get update
           echo "CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}" >> $GITHUB_ENV
           echo "CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}" >> $GITHUB_ENV
-          sudo apt-get install pkg-config
-          sudo apt-get install libegl-mesa0 libegl1-mesa-dev
+          echo "PKG_CONFIG=${PKG_CONFIG}" >> $GITHUB_ENV
       - name: Run Gherkin tests
         working-directory: ./app
         run: flutter drive --target=test_driver/app.dart --driver=test_driver/test_config.dart -d linux
