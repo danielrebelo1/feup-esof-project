@@ -233,6 +233,7 @@ class MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 GestureDetector(
+                    key: Key("movieFilter1"),
                     onTap: () {
                       setState(() {
                         _buttonPressedIndex = 1;
@@ -242,6 +243,7 @@ class MyHomePageState extends State<MyHomePage> {
                     child: DisplayFilter(filterName: "Top Rated Movies", buttonPressedIndex: _buttonPressedIndex, filterButton: 1)),
 
                 GestureDetector(
+                  key: Key("movieFilter2"),
                     onTap: () {
                       setState(() {
                         _buttonPressedIndex = 2;
@@ -251,6 +253,7 @@ class MyHomePageState extends State<MyHomePage> {
                     child: DisplayFilter(filterName: "Popular", buttonPressedIndex: _buttonPressedIndex, filterButton: 2,)
                 ),
                 GestureDetector(
+                    key: Key("movieFilter3"),
                     onTap: () {
                       setState(() {
                         _buttonPressedIndex = 3;
@@ -285,9 +288,11 @@ class MyHomePageState extends State<MyHomePage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           GestureDetector(
+                            key: Key("moviePoster"),
                               onTap: () {
                                 Navigator.push( context, MaterialPageRoute (
                                     builder: (context)  => MoviePage(
+                                      key: Key("moviePage"),
                                       email: widget.email,
                                       username: widget.username,
                                       password: widget.password,
@@ -332,7 +337,7 @@ class MyHomePageState extends State<MyHomePage> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              DisplayMovieTitle(movieTitle: getMovieTitle()),
+                              DisplayMovieTitle(key:Key("movieTitleBox"),movieTitle: getMovieTitle()),
                               DisplayMovieRelease(movieRelease: getMovieReleaseDate()),
                             ],
                           ),

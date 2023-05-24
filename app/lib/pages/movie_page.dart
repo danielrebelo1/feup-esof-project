@@ -125,6 +125,7 @@ class _MoviePageState extends State<MoviePage> {
                     },
                     child:
                     TextField(
+                      key: Key("commentBar"),
                       onChanged: (value){userComment = value;},
                       maxLines: null,
                       controller: commentController,
@@ -137,6 +138,7 @@ class _MoviePageState extends State<MoviePage> {
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
+                          key: Key("postButton"),
                             onPressed: () async{
                               if (userComment.trim().isNotEmpty) {
                                 await comments.add({
@@ -359,6 +361,7 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
             ),
             Text(
               mediaModel?.rating.toString() ?? "",
+              key: Key("movieRating"),
               style: TextStyle(
                 color: Colors.amber,
                 fontWeight: FontWeight.bold,
@@ -385,6 +388,7 @@ Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
   return                         Padding(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     child: Row(
+      key: Key("moviePlatforms"),
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

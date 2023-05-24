@@ -1,0 +1,19 @@
+name: Gherkin Tests
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.x.x' # Replace with the Flutter version you are using
+      - name: Install dependencies
+        run: flutter pub get
+      - name: Run Gherkin tests
+        run: flutter drive --target=test_driver/app.dart --driver=test_driver/test_config.dart

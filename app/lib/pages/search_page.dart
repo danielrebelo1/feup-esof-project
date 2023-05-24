@@ -107,7 +107,9 @@ class _SearchPageState extends State<SearchPage> {
             const SizedBox(
               height: 20.0,
             ),
-            TextField(
+            KeyedSubtree(
+              key: Key("searchBar"), // Add the key to the KeyedSubtree
+              child: TextField(
                 controller: _textEditingController,
                 onChanged: (value) async {
                   await Future.delayed(const Duration(seconds: 1));
@@ -131,6 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                   suffixIconColor: Colors.white,
                 ),
+              ),
             ),
             const SizedBox(
               height: 20.0,

@@ -21,6 +21,7 @@ class DisplayMovieTitle extends StatelessWidget {
                   0.01),
           child:
           Text(
+            key:Key("movieTitle"),
             movieTitle,
             style: TextStyle(
               color: Colors.white70,
