@@ -18,10 +18,13 @@ jobs:
         run: flutter pub get
       - name: Install Ninja
         run: sudo apt-get install ninja-build
-      - name: Set CMAKE_MAKE_PROGRAM
-        run: echo "::set-env name=CMAKE_MAKE_PROGRAM::ninja"
-      - name: Set CMAKE_CXX_COMPILER
-        run: echo "::set-env name=CMAKE_CXX_COMPILER::g++"
+      - name: Set up environment variables
+        env:
+          CMAKE_MAKE_PROGRAM: ninja
+          CMAKE_CXX_COMPILER: g++
+        run: |
+          echo "CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}" >> $GITHUB_ENV
+          echo "CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}" >> $GITHUB_ENV
       - name: Run Gherkin tests
         working-directory: ./app
         run: flutter drive --target=test_driver/app.dart --driver=test_driver/test_config.dart -d linux
