@@ -10,8 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: subosito/flutter-action@v1
-      - name: Install dependencies
-        run: flutter pub get
       - name: Run Gherkin tests
         run:  |
           cd app
