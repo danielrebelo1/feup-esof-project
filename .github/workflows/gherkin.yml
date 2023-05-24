@@ -12,7 +12,7 @@ jobs:
       - uses: subosito/flutter-action@v1
       - name: Run Gherkin tests
         run:  |
-          apt install cmake
+          sudo apt install cmake
           cd app
           flutter drive --target=test_driver/app.dart --driver=test_driver/test_config.dart
           
