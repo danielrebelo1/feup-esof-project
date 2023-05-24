@@ -9,22 +9,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Start Xvfb
+        run: |
+          sudo apt-get install xvfb
+          Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 &
+          sleep 3 # Allow time for Xvfb to start
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '3.7.12' # Replace with the Flutter version you are using
+          flutter-version: 'stable'
       - name: Install dependencies
         working-directory: ./app
         run: flutter pub get
       - name: Install Ninja and pkg-config
         run: |
           sudo apt-get update
-          sudo apt-get install ninja-build pkg-config
+          sudo apt-get install ninja-build pkg-config libgtk-3-dev libwebkit2gtk-4.0-dev
       - name: Set up environment variables
         env:
           CMAKE_MAKE_PROGRAM: ninja
           CMAKE_CXX_COMPILER: g++
           PKG_CONFIG: pkg-config
+          DISPLAY: ":99.0"
+          GITHUB_HEAD_REF: ${{ github.head_ref }}
+          GITHUB_BASE_REF: ${{ github.base_ref }}
         run: |
           echo "CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}" >> $GITHUB_ENV
           echo "CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}" >> $GITHUB_ENV
