@@ -12,7 +12,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v1
         with:
-          flutter-version: '2.x.x' # Replace with the Flutter version you are using
+          flutter-version: '3.7.12' # Replace with the Flutter version you are using
       - name: Install dependencies
         run: flutter pub get
       - name: Run Gherkin tests
