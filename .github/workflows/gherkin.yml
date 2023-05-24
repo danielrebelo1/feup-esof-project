@@ -25,6 +25,7 @@ jobs:
         run: |
           echo "CMAKE_MAKE_PROGRAM=${CMAKE_MAKE_PROGRAM}" >> $GITHUB_ENV
           echo "CMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}" >> $GITHUB_ENV
+          sudo apt-get install pkg-config
       - name: Run Gherkin tests
         working-directory: ./app
         run: flutter drive --target=test_driver/app.dart --driver=test_driver/test_config.dart -d linux
