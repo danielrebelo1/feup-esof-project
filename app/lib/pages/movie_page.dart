@@ -2,62 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/media_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'utelly-api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MoviePage extends StatefulWidget {
+class MediaPage extends StatefulWidget {
   final String email;
   final String username;
   final String password;
   final String path = 'https://image.tmdb.org/t/p/w500';
+  final String platform;
   final MediaModel? mediaModel;
-  const MoviePage(
+
+  const MediaPage(
       {Key? key,
       required this.email,
       required this.username,
       required this.password,
+        required this.platform,
       this.mediaModel,})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MoviePageState();
+  State<StatefulWidget> createState() => _MediaPageState();
 }
 
-class _MoviePageState extends State<MoviePage> {
+
+class _MediaPageState extends State<MediaPage> {
   bool checkedApi = false;
-  List<String> result = [];
-  List<String> platforms = [];
   String userComment = "";
   int _numCommentsToShow = 5;
   TextEditingController commentController = TextEditingController();
   CollectionReference comments =
       FirebaseFirestore.instance.collection('comments');
 
-  List<String> updateList(String url) {
-    if (url == "") {
-      setState(() {
-        result = [];
-      });
-    } else {
-      getPlatforms(url).then((results) {
-        setState(() {
-          platforms = results;
-        });
-      }).catchError((error) {
-        print(error);
-      });
-    }
-    return platforms;
-  }
 
   @override
   Widget build(BuildContext context) {
-// https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    if (checkedApi == false) {
-      updateList(utellyApiPath);
-      checkedApi = true;
-    }
     return Scaffold(
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
@@ -66,6 +45,7 @@ class _MoviePageState extends State<MoviePage> {
       ),
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       body: SingleChildScrollView(
+
         child: Stack(
           children: [
             drawMoviePoster(context, widget.mediaModel),
@@ -109,14 +89,12 @@ class _MoviePageState extends State<MoviePage> {
                                   : Image.asset('assets/no-image.png',
                                   height: 220, width: 180))),
                         ),
-
-                        drawMediaPlatforms(context, platforms),
+                        drawMediaPlatforms(context, widget.platform),
                       ],
                     ),
                   ),
 
                   drawMovieInfo(context, widget.mediaModel),
-
                   const SizedBox(height: 20),
 
                   GestureDetector(
@@ -125,7 +103,6 @@ class _MoviePageState extends State<MoviePage> {
                     },
                     child:
                     TextField(
-                      key: Key("commentBar"),
                       onChanged: (value){userComment = value;},
                       maxLines: null,
                       controller: commentController,
@@ -138,7 +115,6 @@ class _MoviePageState extends State<MoviePage> {
                           borderSide: BorderSide.none,
                         ),
                         suffixIcon: IconButton(
-                          key: Key("postButton"),
                             onPressed: () async{
                               if (userComment.trim().isNotEmpty) {
                                 await comments.add({
@@ -146,7 +122,7 @@ class _MoviePageState extends State<MoviePage> {
                                   'idMovie': widget.mediaModel!.id ?? -1,
                                   'timestamp': DateTime.now(),
                                   'userID': widget.email,
-                                }).then((value) => print("Comment added!") );
+                                });
                                 setState(() {
                                   userComment =
                                   '';
@@ -349,25 +325,26 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
               width: MediaQuery.of(context).size.height * 0.02,
             ),
             Text(
-              mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "",
+              mediaModel?.mediaReleaseYear != "No data" ? (mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "") : "No data",
               style: TextStyle(
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: MediaQuery.of(context).size.height * 0.02,
-              ),
-            ),
-            SizedBox(
-              width: MediaQuery.of(context).size.width * 0.05,
-            ),
-            Text(
-              mediaModel?.rating.toString() ?? "",
-              key: Key("movieRating"),
-              style: TextStyle(
-                color: Colors.amber,
                 fontWeight: FontWeight.bold,
                 fontSize: MediaQuery.of(context).size.height * 0.04,
               ),
             ),
+              Expanded(
+              child:
+                Align(
+                  alignment: Alignment.centerRight,
+                    child: Text(
+                      mediaModel?.rating.toString() ?? "",
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.height * 0.04,),
+                    ),
+                ),
+              ),
           ],
         ),
         const SizedBox(width: 10),
@@ -384,11 +361,11 @@ Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
   );
 }
 
-Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
-  return                         Padding(
+Widget drawMediaPlatforms(BuildContext context, String platform){
+  return
+    Padding(
     padding: const EdgeInsets.symmetric(horizontal: 5),
     child: Row(
-      key: Key("moviePlatforms"),
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -396,9 +373,9 @@ Widget drawMediaPlatforms(BuildContext context, List<String> platforms){
           offset: const Offset(0, 20),
           child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
-                height: 55,
-                width: 50,
+              child: platform == "" ? null : Image.asset('assets/' + platform,
+                height: 70,
+                width: 70,
               )
           ),
         ),
