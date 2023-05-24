@@ -13,5 +13,6 @@ jobs:
       - name: Run Gherkin tests
         run:  |
           cd app
+          flutter pub get
           dart test_driver/test_config.dart
           
