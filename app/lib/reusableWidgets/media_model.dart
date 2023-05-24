@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class MediaModel{
   String mediaTitle;
   String mediaType;
-  String mediaReleaseYear;
+  String? mediaReleaseYear;
   String poster;
   String description;
   double? rating;

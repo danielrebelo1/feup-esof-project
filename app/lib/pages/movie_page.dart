@@ -2,63 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:project/reusableWidgets/custom_nav_bar.dart';
 import 'package:project/reusableWidgets/media_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'utelly-api.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MoviePage extends StatefulWidget {
+class MediaPage extends StatefulWidget {
   final String email;
   final String username;
   final String password;
   final String path = 'https://image.tmdb.org/t/p/w500';
+  final String platform;
   final MediaModel? mediaModel;
 
-  const MoviePage(
+  const MediaPage(
       {Key? key,
       required this.email,
       required this.username,
       required this.password,
+        required this.platform,
       this.mediaModel,})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _MoviePageState();
+  State<StatefulWidget> createState() => _MediaPageState();
 }
 
-class _MoviePageState extends State<MoviePage> {
+
+class _MediaPageState extends State<MediaPage> {
   bool checkedApi = false;
-  List<String> result = [];
-  List<String> platforms = [];
   String userComment = "";
   int _numCommentsToShow = 5;
   TextEditingController commentController = TextEditingController();
   CollectionReference comments =
       FirebaseFirestore.instance.collection('comments');
 
-  List<String> updateList(String url) {
-    if (url == "") {
-      setState(() {
-        result = [];
-      });
-    } else {
-      getPlatforms(url).then((results) {
-        setState(() {
-          platforms = results;
-        });
-      }).catchError((error) {
-        print(error);
-      });
-    }
-    return platforms;
-  }
 
   @override
   Widget build(BuildContext context) {
-// https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup/source_id=97546&source=tmdb&country=us
-    String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' + widget.mediaModel!.id.toString() + '&source=tmdb&country=us';
-    if (checkedApi == false) {
-      updateList(utellyApiPath);
-      checkedApi = true;
-    }
     return Scaffold(
       bottomNavigationBar: CustomNavBar(
         email: widget.email,
@@ -67,32 +45,11 @@ class _MoviePageState extends State<MoviePage> {
       ),
       backgroundColor: const Color.fromRGBO(6, 10, 43, 1),
       body: SingleChildScrollView(
+
         child: Stack(
           children: [
-            Opacity(
-                opacity: 0.4,
-                child: (widget.mediaModel?.poster != "null"
-                    ? Image.network(
-                  widget.mediaModel?.poster ?? "",
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                    : GestureDetector(onTap: () {
-                  const url = 'https://TODO.com'; // Replace with url from API
-                  launch(url);
-                },child:
-                Image.asset(
-                  'assets/no-image.png',
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: const Alignment(0, 0.7),
-                )
-                )
+            drawMoviePoster(context, widget.mediaModel),
 
-                )),
             SingleChildScrollView(
               child: SafeArea(
                 child: Column(children: [
@@ -132,101 +89,14 @@ class _MoviePageState extends State<MoviePage> {
                                   : Image.asset('assets/no-image.png',
                                   height: 220, width: 180))),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Transform.translate(
-                                offset: const Offset(0, 20),
-                                child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: platforms.isEmpty == true ? null : Image.asset('assets/' + platforms[0],
-                                      height: 55,
-                                      width: 50,
-                                    )
-                                ),
-                              ),
-                              /*
-                              const SizedBox(width: 15),
-                              Transform.translate(
-                                offset: const Offset(0, 20),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset("assets/netflix.png",
-                                      height: 55, width: 50),
-                                ),
-                              ),
-                              */
-                            ],
-                          ),
-                        ),
+                        drawMediaPlatforms(context, widget.platform),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 20, horizontal: 10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                widget.mediaModel?.mediaTitle ?? "",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize:
-                                  MediaQuery.of(context).size.height * 0.04,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                MediaQuery.of(context).size.height * 0.02),
-                            Text(
-                              widget.mediaModel?.mediaReleaseYear
-                                  .toString().substring(0, 4) ??
-                                  "",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                MediaQuery.of(context).size.height * 0.02,
-                              ),
-                            ),
-                            SizedBox(
-                                width:
-                                MediaQuery.of(context).size.width * 0.05),
-                            Text(
-                              widget.mediaModel?.rating.toString() ?? "",
-                              style: TextStyle(
-                                color: Colors.amber,
-                                fontWeight: FontWeight.bold,
-                                fontSize:
-                                MediaQuery.of(context).size.height * 0.04,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const SizedBox(height: 10),
-                        Text(
-                          widget.mediaModel?.description.toString() ?? "",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: MediaQuery.of(context).size.height * 0.025,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+
+                  drawMovieInfo(context, widget.mediaModel),
                   const SizedBox(height: 20),
+
                   GestureDetector(
                     onTap: () {
                       // Call function to dismiss the keyboard
@@ -252,7 +122,7 @@ class _MoviePageState extends State<MoviePage> {
                                   'idMovie': widget.mediaModel!.id ?? -1,
                                   'timestamp': DateTime.now(),
                                   'userID': widget.email,
-                                }).then((value) => print("Comment added!") );
+                                });
                                 setState(() {
                                   userComment =
                                   '';
@@ -302,28 +172,8 @@ class _MoviePageState extends State<MoviePage> {
                                 time_now.difference(timestamp.toDate());
                                 final time_elapsed_sec =
                                     time_elapsed.abs().inSeconds;
-                                final commentTime;
-                                if (time_elapsed_sec == 0)
-                                  commentTime = "just now";
-                                else if (time_elapsed_sec < 60)
-                                  commentTime = "$time_elapsed_sec seconds ago";
-                                else if (time_elapsed_sec < 3600) {
-                                  final minutes =
-                                  (time_elapsed_sec / 60).round();
-                                  commentTime =
-                                  '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
-                                } else if (time_elapsed_sec < 86400) {
-                                  final hours =
-                                  (time_elapsed_sec / (60 * 60)).round();
-                                  commentTime =
-                                  '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
-                                } else {
-                                  final days =
-                                  (time_elapsed_sec / (60 * 60 * 24))
-                                      .round();
-                                  commentTime =
-                                  '$days ${days == 1 ? 'day' : 'days'} ago';
-                                }
+                                final commentTime = getCommentTime(time_elapsed_sec);
+
                                 final userID = commentData['userID'] as String;
                                 return Column(
                                   children: [
@@ -403,3 +253,137 @@ class _MoviePageState extends State<MoviePage> {
     );
   }
 }
+
+
+String getCommentTime(int timeElapsedSec) {
+  String commentTime;
+
+  if (timeElapsedSec == 0)
+    commentTime = "just now";
+  else if (timeElapsedSec < 60)
+    commentTime = "$timeElapsedSec seconds ago";
+  else if (timeElapsedSec < 3600) {
+    final minutes = (timeElapsedSec / 60).round();
+    commentTime = '$minutes ${minutes == 1 ? 'minute' : 'minutes'} ago';
+  } else if (timeElapsedSec < 86400) {
+    final hours = (timeElapsedSec / (60 * 60)).round();
+    commentTime = '$hours ${hours == 1 ? 'hour' : 'hours'} ago';
+  } else {
+    final days = (timeElapsedSec / (60 * 60 * 24)).round();
+    commentTime = '$days ${days == 1 ? 'day' : 'days'} ago';
+  }
+
+  return commentTime;
+}
+
+Widget drawMoviePoster(BuildContext context, MediaModel ?mediaModel){
+  return             Opacity(
+      opacity: 0.4,
+      child: (mediaModel?.poster != "null"
+          ? Image.network(
+        mediaModel?.poster ?? "",
+        height: MediaQuery.of(context).size.height * 0.35,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, 0.7),
+      )
+          : GestureDetector(onTap: () {
+        const url = 'https://TODO.com'; // Replace with url from API
+        launch(url);
+      },child:
+      Image.asset(
+        'assets/no-image.png',
+        height: MediaQuery.of(context).size.height * 0.35,
+        width: double.infinity,
+        fit: BoxFit.cover,
+        alignment: const Alignment(0, 0.7),
+      )
+      )
+      )
+  );
+}
+
+Widget drawMovieInfo(BuildContext context, MediaModel ?mediaModel) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                mediaModel?.mediaTitle ?? "",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: MediaQuery.of(context).size.height * 0.04,
+                ),
+              ),
+            ),
+            SizedBox(
+              width: MediaQuery.of(context).size.height * 0.02,
+            ),
+            Text(
+              mediaModel?.mediaReleaseYear != "No data" ? (mediaModel?.mediaReleaseYear.toString().substring(0, 4) ?? "") : "No data",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: MediaQuery.of(context).size.height * 0.04,
+              ),
+            ),
+              Expanded(
+              child:
+                Align(
+                  alignment: Alignment.centerRight,
+                    child: Text(
+                      mediaModel?.rating.toString() ?? "",
+                      style: TextStyle(
+                        color: Colors.amber,
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.height * 0.04,),
+                    ),
+                ),
+              ),
+          ],
+        ),
+        const SizedBox(width: 10),
+        const SizedBox(height: 10),
+        Text(
+          mediaModel?.description.toString() ?? "",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: MediaQuery.of(context).size.height * 0.025,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget drawMediaPlatforms(BuildContext context, String platform){
+  return
+    Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 5),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Transform.translate(
+          offset: const Offset(0, 20),
+          child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: platform == "" ? null : Image.asset('assets/' + platform,
+                height: 70,
+                width: 70,
+              )
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+
+
+

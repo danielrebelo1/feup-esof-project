@@ -14,6 +14,7 @@ class CustomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ProfilePageButtonKey = Key("ProfilePageIcon");
     return Container(
       height: MediaQuery.of(context).size.height * 0.1,
       padding: EdgeInsets.symmetric(horizontal: MediaQuery.of(context).size.height * 0.05),
@@ -53,19 +54,27 @@ class CustomNavBar extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-
-          InkWell(
-            onTap: (){
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfilePage(email: email,username: username, password: password,)),
-
-              );
-            },
-            child: const Icon(
-              Icons.person_outline,
-              size: 35,
-              color: Colors.white,
+          KeyedSubtree(
+            key: ProfilePageButtonKey,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                      key: Key("ProfilePage"),
+                      email: email,
+                      username: username,
+                      password: password,
+                    ),
+                  ),
+                );
+              },
+              child: const Icon(
+                Icons.person_outline,
+                size: 35,
+                color: Colors.white,
+              ),
             ),
           ),
         ],
