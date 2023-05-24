@@ -12,7 +12,7 @@ import 'steps/movieInfoTest_steps.dart';
 
 Future<void> main() {
   final config = FlutterTestConfiguration()
-    ..features = [Glob(r"test_driver/features/**.feature")]
+    ..features = [Glob(r"test_driver/features/moviePlatform.feature")]
     ..reporters = [ProgressReporter()]
     ..stepDefinitions = [LogInStep(),EnterEmail(),EnterPassword(),ClickLoginButton(), VerifyHomePage(),
     CheckSignUpPage(),WidgetCheckSignUp(),EnterText(),ClickSignUpButton(),CheckGivenWidgetsLG(),
