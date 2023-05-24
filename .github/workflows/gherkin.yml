@@ -14,5 +14,6 @@ jobs:
         run:  |
           cd app
           flutter pub get
+          sudo apt-get install cmake
           dart test_driver/test_config.dart
           
