@@ -361,7 +361,7 @@
                                             _currentIndex]
                                             ['release_date'],
                                             displayMovies[_currentIndex]
-                                            ['vote_average'],
+                                            ['vote_average'].toDouble(),
                                             'https://image.tmdb.org/t/p/w500' +
                                                 displayMovies[
                                                 _currentIndex]

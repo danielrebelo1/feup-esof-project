@@ -198,6 +198,7 @@ class _SearchPageState extends State<SearchPage> {
                             }
                         }
                       }
+                      print(foundPlatform);
                       Navigator.push(
                         context,
                         MaterialPageRoute(
