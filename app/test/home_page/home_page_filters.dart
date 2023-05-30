@@ -2,9 +2,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tmdb_api/tmdb_api.dart';
 
 void main() {
-  final String apikey = '51b20269b73105d2fd84257214e53cc3';
+  final String apikey = '';
   final readAcessToken =
-      'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI1MWIyMDI2OWI3MzEwNWQyZmQ4NDI1NzIxNGU1M2NjMyIsInN1YiI6IjY0MjdmZGU4OWNjNjdiMDViZjZlZWZmMCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.rXi6vsFhTtCqdUNv2UPukvqW5_D3wUbnTlamH8UzhA4';
+      '';
   TMDB tmdb = TMDB(ApiKeys(apikey, readAcessToken),
       logConfig: ConfigLogger(
         showLogs: true,

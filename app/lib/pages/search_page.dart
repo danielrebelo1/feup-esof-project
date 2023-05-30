@@ -153,14 +153,14 @@ class _SearchPageState extends State<SearchPage> {
                   final movie = displayList[index];
                   return GestureDetector(
                     onTap: () async {
-                      String utellyApiPath = 'https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
+                      String utellyApiPath = '' +
                             movie.id.toString() +
                           '&source=tmdb&country=us';
                       var url = Uri.parse(utellyApiPath);
                       var headers = {
-                        "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
-                        "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
-                        "content-type": "application/octet-stream"
+                        "X-RapidAPI-Key": "" ,
+                        "X-RapidAPI-Host": "",
+                        "content-type": ""
                       };
                       var data, locations = [];
                       try {

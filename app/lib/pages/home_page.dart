@@ -285,13 +285,13 @@
                             GestureDetector(
                                 key: Key("moviePoster"),
                                 onTap: () async {
-                                  var url = Uri.parse('https://utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com/idlookup?source_id=' +
+                                  var url = Uri.parse('' +
                                        displayMovies[_currentIndex]['id'].toString() +
                                       '&source=tmdb&country=us');
                                   var headers = {
-                                    "X-RapidAPI-Key": "7869397766msheb6b77052e949d0p158ab7jsncc989e850d45" ,
-                                    "X-RapidAPI-Host": "utelly-tv-shows-and-movies-availability-v1.p.rapidapi.com",
-                                    "content-type": "application/octet-stream"
+                                    "X-RapidAPI-Key": "" ,
+                                    "X-RapidAPI-Host": "",
+                                    "content-type": ""
                                   };
                                   var data, locations = [];
                                   try {
